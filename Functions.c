@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#ifdef WIN64
+#ifdef _MSC_VER
     #include <windows.h>
 #else
     # include <sys/time.h>
@@ -114,7 +114,7 @@ void print_board()
             }
 
             // print different piece set depending on OS
-            #ifdef WIN64
+            #ifdef _MSC_VER
                 printf(" %c", (piece == -1) ? '.' : ascii_pieces[piece]);
             #else
                 printf(" %s", (piece == -1) ? "." : unicode_pieces[piece]);
@@ -735,7 +735,7 @@ void print_move_list(moves *move_list)
         // init move
         int move = move_list->moves[move_count];
 
-        #ifdef WIN64
+        #ifdef _MSC_VER
             // print move
             printf("      %s%s%c   %c         %d         %d         %d         %d\n", square_to_coordinates[get_move_source(move)],
                                                                                   square_to_coordinates[get_move_target(move)],
@@ -1383,7 +1383,7 @@ void init_all()
 
 int get_time_ms()
 {
-    #ifdef WIN64
+    #ifdef _MSC_VER
         return GetTickCount();
     #else
         struct timeval time_value;
