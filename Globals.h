@@ -89,7 +89,7 @@ extern const char *default_pieces[0xC];
 extern const char char_pieces[0x80];
 
 // promoted pieces
-const char promoted_pieces[0x80];
+extern const char promoted_pieces[0x80];
 
 // not A file constant
 static const U64 not_a_file = 0xFEFEFEFEFEFEFEFEULL;
