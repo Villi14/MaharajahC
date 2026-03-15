@@ -82,11 +82,8 @@ enum { wk = 0x1, wq = 0x2, bk = 0x4, bq = 0x8 };
 // convert squares to coordinates
 extern const char *square_to_coordinates[0x40];
 
-// ASCII pieces
-extern const char *ascii_pieces[0xC];
-
-// Unicode pieces
-extern const char *unicode_pieces[0xC];
+// default pieces
+extern const char *default_pieces[0xC];
 
 // convert ASCII character pieces to encoded constants
 extern const char char_pieces[0x80];

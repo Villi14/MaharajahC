@@ -29,12 +29,11 @@ const char *square_to_coordinates[0x40] = {
   "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1",
 };
 
-// ASCII pieces
-const char *ascii_pieces[0xC] = {"P", "N", "B", "R", "Q", "K", "p", "n", "b", "r", "q", "k"};
-
-// Unicode pieces
-const char *unicode_pieces[0xC] = {"♙", "♘", "♗", "♖", "♕", "♔", "♟︎", "♞", "♝", "♜", "♛", "♚"};
-
+#ifdef _MSC_VER
+const char *default_pieces[0xC] = {"P", "N", "B", "R", "Q", "K", "p", "n", "b", "r", "q", "k"};
+#else
+const char *default_pieces[0xC] = {"♙", "♘", "♗", "♖", "♕", "♔", "♟︎", "♞", "♝", "♜", "♛", "♚"};
+#endif
 
 // convert ASCII character pieces to encoded constants
 const char char_pieces[0x80] = {

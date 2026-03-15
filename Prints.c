@@ -63,12 +63,8 @@ void print_board() {
           piece = bb_piece;
       }
 
-// print different piece set depending on OS
-#ifdef _MSC_VER
-      printf(" %c", (piece == -1) ? '.' : ascii_pieces[piece]);
-#else
-      printf(" %s", (piece == -1) ? "." : unicode_pieces[piece]);
-#endif
+     // print different piece set depending on OS
+      printf(" %s", (piece == -1) ? "." : default_pieces[piece]);
     }
 
     // print new line every rank
@@ -132,28 +128,15 @@ void print_move_list(const moves *move_list) {
   for (int move_count = 0; move_count < move_list->count; move_count++) {
     // init move
     int move = move_list->moves[move_count];
-
-#ifdef _MSC_VER
-    // print move
-    printf("      %s%s%c   %c         %d         %d         %d         %d\n",
-           square_to_coordinates[get_move_source(move)],
-           square_to_coordinates[get_move_target(move)],
-           get_move_promoted(move) ? promoted_pieces[get_move_promoted(move)]
-                                   : ' ',
-           ascii_pieces[get_move_piece(move)], get_move_capture(move) ? 1 : 0,
-           get_move_double(move) ? 1 : 0, get_move_enpassant(move) ? 1 : 0,
-           get_move_castling(move) ? 1 : 0);
-#else
     // print move
     printf("     %s%s%c   %s         %d         %d         %d         %d\n",
            square_to_coordinates[get_move_source(move)],
            square_to_coordinates[get_move_target(move)],
            get_move_promoted(move) ? promoted_pieces[get_move_promoted(move)]
                                    : ' ',
-           unicode_pieces[get_move_piece(move)], get_move_capture(move) ? 1 : 0,
+           default_pieces[get_move_piece(move)], get_move_capture(move) ? 1 : 0,
            get_move_double(move) ? 1 : 0, get_move_enpassant(move) ? 1 : 0,
            get_move_castling(move) ? 1 : 0);
-#endif
   }
 
   // print total number of moves
