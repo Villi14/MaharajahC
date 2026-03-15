@@ -6,6 +6,7 @@
 #include "Functions.h"
 #include "Globals.h"
 #include "MagicNumbers.h"
+#include "Attacks.h"
 
 // generate 32-bit pseudo legal numbers
 unsigned int get_random_U32_number() {

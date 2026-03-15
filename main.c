@@ -1,7 +1,10 @@
 #include <stdio.h>
 
-#include "Functions.h"
 #include "Globals.h"
+#include "Prints.h"
+#include "Inits.h"
+#include "Fen.h"  
+#include "Perft.h"
 
 int main(void) {
   // init all
