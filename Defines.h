@@ -30,14 +30,14 @@
 
 // encode move
 #define encode_move(source, target, piece, promoted, capture, double_push, enpassant, castling) \
-  (source) |              \
+  ((source) |               \
   ((target) << 6) |         \
   ((piece) << 0xC) |        \
   ((promoted) << 0x10) |    \
   ((capture) << 0x14) |     \
   ((double_push) << 0x15) | \
   ((enpassant) << 0x16) |   \
-  ((castling) << 0x17)      \
+  ((castling) << 0x17))     \
 
 // extract source square
 #define get_move_source(move) (move & 0x3f)

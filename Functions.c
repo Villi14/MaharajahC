@@ -3,7 +3,6 @@
 
 #include "Functions.h"
 #include "Globals.h"
-#include "MagicNumbers.h"
 #include "Attacks.h"
 
 // count bits within a bitboard (Brian Kernighan's way)
