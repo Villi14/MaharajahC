@@ -28,13 +28,12 @@ unsigned int get_random_U32_number() {
 // generate 64-bit pseudo legal numbers
 U64 get_random_U64_number() {
   // define 4 random numbers
-  U64 n1, n2, n3, n4;
 
   // init random numbers slicing 16 bits from MS1B side
-  n1 = (U64)(get_random_U32_number()) & 0xFFFF;
-  n2 = (U64)(get_random_U32_number()) & 0xFFFF;
-  n3 = (U64)(get_random_U32_number()) & 0xFFFF;
-  n4 = (U64)(get_random_U32_number()) & 0xFFFF;
+  U64 n1 = (U64) (get_random_U32_number()) & 0xFFFF;
+  U64 n2 = (U64) (get_random_U32_number()) & 0xFFFF;
+  U64 n3 = (U64) (get_random_U32_number()) & 0xFFFF;
+  U64 n4 = (U64) (get_random_U32_number()) & 0xFFFF;
 
   // return random number
   return n1 | (n2 << 16) | (n3 << 32) | (n4 << 48);
@@ -49,7 +48,7 @@ U64 generate_magic_number() {
 // find appropriate magic number
 U64 find_magic_number(int square, int relevant_bits, int bishop) {
   // init occupancies
-  U64 occupancies[0x1000];
+  U64 occupancies_[0x1000];
 
   // init attack tables
   U64 attacks[0x1000];
@@ -61,18 +60,18 @@ U64 find_magic_number(int square, int relevant_bits, int bishop) {
   U64 attack_mask =
       bishop ? mask_bishop_attacks(square) : mask_rook_attacks(square);
 
-  // init occupancy indicies
-  int occupancy_indicies = 1 << relevant_bits;
+  // init occupancy indices
+  const int occupancy_indices = 1 << relevant_bits;
 
-  // loop over occupancy indicies
-  for (int index = 0; index < occupancy_indicies; index++) {
+  // loop over occupancy indices
+  for (int index = 0; index < occupancy_indices; index++) {
     // init occupancies
-    occupancies[index] = set_occupancy(index, relevant_bits, attack_mask);
+    occupancies_[index] = set_occupancy(index, relevant_bits, attack_mask);
 
     // init attacks
     attacks[index] = bishop
-                         ? bishop_attacks_on_the_fly(square, occupancies[index])
-                         : rook_attacks_on_the_fly(square, occupancies[index]);
+                         ? bishop_attacks_on_the_fly(square, occupancies_[index])
+                         : rook_attacks_on_the_fly(square, occupancies_[index]);
   }
 
   // test magic numbers loop
@@ -91,10 +90,10 @@ U64 find_magic_number(int square, int relevant_bits, int bishop) {
     int index, fail;
 
     // test magic index loop
-    for (index = 0, fail = 0; !fail && index < occupancy_indicies; index++) {
+    for (index = 0, fail = 0; !fail && index < occupancy_indices; index++) {
       // init magic index
       int magic_index =
-          (int)((occupancies[index] * magic_number) >> (64 - relevant_bits));
+          (int)((occupancies_[index] * magic_number) >> (64 - relevant_bits));
 
       // if magic index works
       if (used_attacks[magic_index] == 0ULL)

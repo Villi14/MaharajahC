@@ -9,8 +9,6 @@
 #include "Functions.h"
 #include "Globals.h"
 #include "Prints.h"
-#include "Inits.h"
-#include "Attacks.h"
 #include "Constants.h"
 
 int get_time_ms() {
@@ -25,7 +23,7 @@ int get_time_ms() {
 
 // perft driver
 void perft_driver(int depth) {
-  // reccursion escape condition
+  // recursion escape condition
   if (depth == 0) {
     // increment nodes count (count reached positions)
     nodes++;

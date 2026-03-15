@@ -4,7 +4,7 @@
 #include "MagicNumbers.h"
 
 // generate pawn attacks
-U64 mask_pawn_attacks(int side, int square) {
+U64 mask_pawn_attacks(int side_, int square) {
   // result attacks bitboard
   U64 attacks = 0ULL;
 
@@ -15,7 +15,7 @@ U64 mask_pawn_attacks(int side, int square) {
   set_bit(bitboard, square);
 
   // white pawns
-  if (!side) {
+  if (!side_) {
     // generate pawn attacks
     if ((bitboard >> 7) & not_a_file)
       attacks |= (bitboard >> 7);
@@ -290,36 +290,36 @@ U64 get_queen_attacks(int square, U64 occupancy) {
 }
 
 // is square current given attacked by the current given side
-int is_square_attacked(int square, int side) {
+int is_square_attacked(int square, int side_) {
   // attacked by white pawns
-  if ((side == white) && (pawn_attacks[black][square] & bitboards[P]))
+  if ((side_ == white) && (pawn_attacks[black][square] & bitboards[P]))
     return 1;
 
   // attacked by black pawns
-  if ((side == black) && (pawn_attacks[white][square] & bitboards[p]))
+  if ((side_ == black) && (pawn_attacks[white][square] & bitboards[p]))
     return 1;
 
   // attacked by knights
-  if (knight_attacks[square] & ((side == white) ? bitboards[N] : bitboards[n]))
+  if (knight_attacks[square] & ((side_ == white) ? bitboards[N] : bitboards[n]))
     return 1;
 
   // attacked by bishops
   if (get_bishop_attacks(square, occupancies[both]) &
-      ((side == white) ? bitboards[B] : bitboards[b]))
+      ((side_ == white) ? bitboards[B] : bitboards[b]))
     return 1;
 
   // attacked by rooks
   if (get_rook_attacks(square, occupancies[both]) &
-      ((side == white) ? bitboards[R] : bitboards[r]))
+      ((side_ == white) ? bitboards[R] : bitboards[r]))
     return 1;
 
   // attacked by bishops
   if (get_queen_attacks(square, occupancies[both]) &
-      ((side == white) ? bitboards[Q] : bitboards[q]))
+      ((side_ == white) ? bitboards[Q] : bitboards[q]))
     return 1;
 
   // attacked by kings
-  if (king_attacks[square] & ((side == white) ? bitboards[K] : bitboards[k]))
+  if (king_attacks[square] & ((side_ == white) ? bitboards[K] : bitboards[k]))
     return 1;
 
   // by default return false

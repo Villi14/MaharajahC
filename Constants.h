@@ -33,7 +33,7 @@ enum { P, N, B, R, Q, K, p, n, b, r, q, k };
 
    examples
 
-   1111       both sides an castle both directions
+   1111       both sides a castle both directions
    1001       black king => queen side
               white king => king side
 */
@@ -84,7 +84,7 @@ extern const int bishop_relevant_bits[0x40];
 // rook relevant occupancy bit count for every square on board
 extern const int rook_relevant_bits[0x40];
 
-/*                         castling   move     in      in
+/*                         castling   move           in
                               right update     binary  decimal
 
  king & rooks didn't move:     1111 & 1111  =  1111    15

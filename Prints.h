@@ -5,6 +5,6 @@
 
 void print_board();
 void print_bitboard(U64 bitboard);
-void print_attacked_squares(int side);
+void print_attacked_squares(int side_);
 
 #endif // !PRINTS_H_

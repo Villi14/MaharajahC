@@ -39,7 +39,7 @@ extern U64 rook_masks[0x40];
 // bishop attacks table [square][occupancies]
 extern U64 bishop_attacks[0x40][0x200];
 
-// rook attacks rable [square][occupancies]
+// rook attacks table [square][occupancies]
 extern U64 rook_attacks[0x40][0x1000];
 
 extern long nodes;

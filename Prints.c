@@ -34,7 +34,7 @@ void print_bitboard(U64 bitboard) {
   printf("\n     a b c d e f g h\n\n");
 
   // print bitboard as unsigned decimal number
-  printf("     Bitboard: %llud\n\n", bitboard);
+  printf("     Bitboard: %llu\n\n", bitboard);
 }
 
 // print board
@@ -44,7 +44,7 @@ void print_board() {
 
   // loop over board ranks
   for (int rank = 0; rank < 8; rank++) {
-    // loop ober board files
+    // loop over board files
     for (int file = 0; file < 8; file++) {
       // init square
       int square = rank * 8 + file;
@@ -93,7 +93,7 @@ void print_board() {
 }
 
 // print attacked squares
-void print_attacked_squares(int side) {
+void print_attacked_squares(int side_) {
   printf("\n");
 
   // loop over board ranks
@@ -108,7 +108,7 @@ void print_attacked_squares(int side) {
         printf("  %d ", 8 - rank);
 
       // check whether current square is attacked or not
-      printf(" %d", is_square_attacked(square, side) ? 1 : 0);
+      printf(" %d", is_square_attacked(square, side_) ? 1 : 0);
     }
 
     // print new line every rank
@@ -120,7 +120,7 @@ void print_attacked_squares(int side) {
 }
 
 // print move list
-void print_move_list(moves *move_list) {
+void print_move_list(const moves *move_list) {
   // do nothing on empty move list
   if (!move_list->count) {
     printf("\n     No move in the move list!\n");

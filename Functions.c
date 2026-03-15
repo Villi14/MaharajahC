@@ -8,7 +8,7 @@
 
 // count bits within a bitboard (Brian Kernighan's way)
 int count_bits(U64 bitboard) {
-  // bit counter
+  // a bit counter
   int count = 0;
 
   // consecutively reset least significant 1st bit
@@ -63,7 +63,7 @@ U64 set_occupancy(int index, int bits_in_mask, U64 attack_mask) {
 
 // add move to the move list
 void add_move(moves *move_list, int move) {
-  // strore move
+  // store move
   move_list->moves[move_list->count] = move;
 
   // increment move count
@@ -147,7 +147,7 @@ int make_move(int move, int move_flag) {
 
     // handle double pawn push
     if (double_push) {
-      // set enpassant aquare depending on side to move
+      // set enpassant square depending on side to move
       (side == white) ? (enpassant = target_square + 8)
                       : (enpassant = target_square - 8);
     }
@@ -183,6 +183,8 @@ int make_move(int move, int move_flag) {
         pop_bit(bitboards[r], a8);
         set_bit(bitboards[r], d8);
         break;
+      default:
+          break;
       }
     }
 
@@ -251,12 +253,12 @@ void generate_moves(moves *move_list) {
   int source_square, target_square;
 
   // define current piece's bitboard copy & it's attacks
-  U64 bitboard, attacks;
+  U64 attacks;
 
   // loop over all the bitboards
   for (int piece = P; piece <= k; piece++) {
     // init piece bitboard copy
-    bitboard = bitboards[piece];
+    U64 bitboard = bitboards[piece];
 
     // generate white pawns & white king castling moves
     if (side == white) {
@@ -271,7 +273,7 @@ void generate_moves(moves *move_list) {
           target_square = source_square - 8;
 
           // generate quiet pawn moves
-          if (!(target_square < a8) &&
+          if (target_square >= a8 &&
               !get_bit(occupancies[both], target_square)) {
             // pawn promotion
             if (source_square >= a7 && source_square <= h7) {
@@ -390,7 +392,7 @@ void generate_moves(moves *move_list) {
           target_square = source_square + 8;
 
           // generate quiet pawn moves
-          if (!(target_square > h1) &&
+          if (target_square <= h1 &&
               !get_bit(occupancies[both], target_square)) {
             // pawn promotion
             if (source_square >= a2 && source_square <= h2) {
@@ -408,7 +410,6 @@ void generate_moves(moves *move_list) {
               // one square ahead pawn move
               add_move(move_list, encode_move(source_square, target_square,
                                               piece, 0, 0, 0, 0, 0));
-
               // two squares ahead pawn move
               if ((source_square >= a7 && source_square <= h7) &&
                   !get_bit(occupancies[both], target_square + 8))
@@ -496,7 +497,7 @@ void generate_moves(moves *move_list) {
       }
     }
 
-    // genarate knight moves
+    // generate knight moves
     if ((side == white) ? piece == N : piece == n) {
       // loop over source squares of piece bitboard copy
       while (bitboard) {

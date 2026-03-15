@@ -6,7 +6,7 @@
 #include "Constants.h"
 
 // parse FEN string
-void parse_fen(char *fen) {
+void parse_fen(const char *fen) {
   // reset board position (bitboards)
   memset(bitboards, 0ULL, sizeof(bitboards));
 

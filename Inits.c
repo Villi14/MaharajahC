@@ -19,11 +19,11 @@ void init_sliders_attacks(int bishop) {
     // init relevant occupancy bit count
     int relevant_bits_count = count_bits(attack_mask);
 
-    // init occupancy indicies
-    int occupancy_indicies = (1 << relevant_bits_count);
+    // init occupancy indices
+    int occupancy_indices = (1 << relevant_bits_count);
 
-    // loop over occupancy indicies
-    for (int index = 0; index < occupancy_indicies; index++) {
+    // loop over occupancy indices
+    for (int index = 0; index < occupancy_indices; index++) {
       // bishop
       if (bishop) {
         // init current occupancy variation
