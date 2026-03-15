@@ -1,24 +1,23 @@
 #include "Globals.h"
 
-U64 bitboards[12];
-U64 occupancies[3];
 int side;
 int enpassant = no_sq;
 int castle;
-unsigned int random_state = 1804289383;
-
-U64 pawn_attacks[2][64];
-U64 knight_attacks[64];
-U64 king_attacks[64];
-U64 bishop_masks[64];
-U64 rook_masks[64];
-U64 bishop_attacks[64][512];
-U64 rook_attacks[64][4096];
-
+unsigned int random_state = 0x6B8B4567;
 long nodes;
 
+U64 bitboards[0xC];
+U64 occupancies[3];
+U64 pawn_attacks[2][0x40];
+U64 knight_attacks[0x40];
+U64 king_attacks[0x40];
+U64 bishop_masks[0x40];
+U64 rook_masks[0x40];
+U64 bishop_attacks[0x40][0x200];
+U64 rook_attacks[0x40][0x1000];
+
 // convert squares to coordinates
-const char *square_to_coordinates[64] = {
+const char *square_to_coordinates[0x40] = {
   "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
   "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7",
   "a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6",
@@ -30,7 +29,7 @@ const char *square_to_coordinates[64] = {
 };
 
 // convert ASCII character pieces to encoded constants
-const int char_pieces[128] = {
+const int char_pieces[0x80] = {
   ['P'] = P,
   ['N'] = N,
   ['B'] = B,
@@ -46,7 +45,7 @@ const int char_pieces[128] = {
 };
 
 // bishop relevant occupancy bit count for every square on board
-const int bishop_relevant_bits[64] = {
+const int bishop_relevant_bits[0x40] = {
   6, 5, 5, 5, 5, 5, 5, 6,
   5, 5, 5, 5, 5, 5, 5, 5,
   5, 5, 7, 7, 7, 7, 5, 5,
@@ -58,7 +57,7 @@ const int bishop_relevant_bits[64] = {
 };
 
 // rook relevant occupancy bit count for every square on board
-const int rook_relevant_bits[64] = {
+const int rook_relevant_bits[0x40] = {
   12, 11, 11, 11, 11, 11, 11, 12,
   11, 10, 10, 10, 10, 10, 10, 11,
   11, 10, 10, 10, 10, 10, 10, 11,
@@ -70,7 +69,7 @@ const int rook_relevant_bits[64] = {
 };
 
 // castling rights update constants
-const int castling_rights[64] = {
+const int castling_rights[0x40] = {
    7, 15, 15, 15,  3, 15, 15, 11,
   15, 15, 15, 15, 15, 15, 15, 15,
   15, 15, 15, 15, 15, 15, 15, 15,

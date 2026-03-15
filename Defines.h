@@ -30,14 +30,14 @@
 
 // encode move
 #define encode_move(source, target, piece, promoted, capture, double_push, enpassant, castling) \
-  (source) |          \
-  (target << 6) |     \
-  (piece << 12) |     \
-  (promoted << 16) |  \
-  (capture << 20) |   \
-  (double_push << 21) |    \
-  (enpassant << 22) | \
-  (castling << 23)    \
+  (source) |              \
+  (target << 6) |         \
+  (piece << 0xC) |        \
+  (promoted << 0x10) |    \
+  (capture << 0x14) |     \
+  (double_push << 0x15) | \
+  (enpassant << 0x16) |   \
+  (castling << 0x17)      \
 
 // extract source square
 #define get_move_source(move) (move & 0x3f)
@@ -46,10 +46,10 @@
 #define get_move_target(move) ((move & 0xfc0) >> 6)
 
 // extract piece
-#define get_move_piece(move) ((move & 0xf000) >> 12)
+#define get_move_piece(move) ((move & 0xf000) >> 0xC)
 
 // extract promoted piece
-#define get_move_promoted(move) ((move & 0xf0000) >> 16)
+#define get_move_promoted(move) ((move & 0xf0000) >> 0x10)
 
 // extract capture flag
 #define get_move_capture(move) (move & 0x100000)
@@ -66,7 +66,7 @@
 // move list structure
 typedef struct {
   // moves
-  int moves[256];
+  int moves[0x100];
   // move count
   int count;
 } moves;
@@ -75,15 +75,14 @@ typedef struct {
 #define copy_board()                                                    \
   U64 bitboards_copy[12], occupancies_copy[3];                          \
   int side_copy, enpassant_copy, castle_copy;                           \
-  memcpy(bitboards_copy, bitboards, 96);                                \
-  memcpy(occupancies_copy, occupancies, 24);                            \
+  memcpy(bitboards_copy, bitboards, 0x60);                              \
+  memcpy(occupancies_copy, occupancies, 0x18);                          \
   side_copy = side, enpassant_copy = enpassant, castle_copy = castle;   \
 
 // restore board state
 #define take_back()                                                     \
-  memcpy(bitboards, bitboards_copy, 96);                                \
-  memcpy(occupancies, occupancies_copy, 24);                            \
+  memcpy(bitboards, bitboards_copy, 0x60);                              \
+  memcpy(occupancies, occupancies_copy, 0x18);                          \
   side = side_copy, enpassant = enpassant_copy, castle = castle_copy;   \
 
   #endif // DEFINES_H_
-
