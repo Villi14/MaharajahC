@@ -85,4 +85,4 @@ typedef struct {
   memcpy(occupancies, occupancies_copy, 0x18);                          \
   side = side_copy, enpassant = enpassant_copy, castle = castle_copy;   \
 
-  #endif // DEFINES_H_
+#endif // DEFINES_H_

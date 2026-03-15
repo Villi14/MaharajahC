@@ -3,7 +3,6 @@
 #include "Prints.h"
 #include "Functions.h"
 #include "Globals.h"
-#include "Constants.h"
 #include "Attacks.h"
 
 // print bitboard

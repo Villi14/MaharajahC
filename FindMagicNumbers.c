@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "Constants.h"
 #include "FindMagicNumbers.h"
 #include "Functions.h"
 #include "Globals.h"

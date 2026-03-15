@@ -1,4 +1,5 @@
 #include "Globals.h"
+#include "Defines.h"
 
 int side;
 int enpassant = no_sq;
@@ -28,8 +29,15 @@ const char *square_to_coordinates[0x40] = {
   "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1",
 };
 
+// ASCII pieces
+const char *ascii_pieces[0xC] = {"P", "N", "B", "R", "Q", "K", "p", "n", "b", "r", "q", "k"};
+
+// Unicode pieces
+const char *unicode_pieces[0xC] = {"♙", "♘", "♗", "♖", "♕", "♔", "♟︎", "♞", "♝", "♜", "♛", "♚"};
+
+
 // convert ASCII character pieces to encoded constants
-const int char_pieces[0x80] = {
+const char char_pieces[0x80] = {
   ['P'] = P,
   ['N'] = N,
   ['B'] = B,
@@ -42,6 +50,17 @@ const int char_pieces[0x80] = {
   ['r'] = r,
   ['q'] = q,
   ['k'] = k
+};
+
+const char promoted_pieces[0x80] = {
+  [Q] = 'q',
+  [R] = 'r',
+  [B] = 'b',
+  [N] = 'n',
+  [q] = 'q',
+  [r] = 'r',
+  [b] = 'b',
+  [n] = 'n'
 };
 
 // bishop relevant occupancy bit count for every square on board

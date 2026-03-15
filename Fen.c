@@ -3,7 +3,6 @@
 #include "Fen.h"
 #include "Globals.h"
 #include "MagicNumbers.h"
-#include "Constants.h"
 
 // parse FEN string
 void parse_fen(const char *fen) {

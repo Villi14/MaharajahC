@@ -8,8 +8,6 @@
 
 #include "Functions.h"
 #include "Globals.h"
-#include "Prints.h"
-#include "Constants.h"
 
 int get_time_ms() {
 #ifdef _MSC_VER
