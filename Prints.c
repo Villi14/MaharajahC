@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-#include "Prints.h"
+#include "Attacks.h"
 #include "Functions.h"
 #include "Globals.h"
-#include "Attacks.h"
+#include "Prints.h"
 
 // print bitboard
 void print_bitboard(U64 bitboard) {
@@ -63,7 +63,7 @@ void print_board() {
           piece = bb_piece;
       }
 
-     // print different piece set depending on OS
+      // print different piece set depending on OS
       printf(" %s", (piece == -1) ? "." : default_pieces[piece]);
     }
 
@@ -141,4 +141,11 @@ void print_move_list(const moves *move_list) {
 
   // print total number of moves
   printf("\n\n     Total number of moves: %d\n\n", move_list->count);
+}
+
+// print move (for UCI purposes)
+void print_move(int move) {
+  printf("%s%s%c\n", square_to_coordinates[get_move_source(move)],
+         square_to_coordinates[get_move_target(move)],
+         promoted_pieces[get_move_promoted(move)]);
 }

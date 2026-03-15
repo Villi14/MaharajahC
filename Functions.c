@@ -69,13 +69,6 @@ void add_move(moves *move_list, int move) {
   ++move_list->count;
 }
 
-// print move (for UCI purposes)
-void print_move(int move) {
-  printf("%s%s%c\n", square_to_coordinates[get_move_source(move)],
-         square_to_coordinates[get_move_target(move)],
-         promoted_pieces[get_move_promoted(move)]);
-}
-
 // make move on chess board
 int make_move(int move, int move_flag) {
   // quiet moves
@@ -221,8 +214,6 @@ int make_move(int move, int move_flag) {
       // return illegal move
       return 0;
     }
-
-    //
     else
       // return legal move
       return 1;
@@ -234,7 +225,6 @@ int make_move(int move, int move_flag) {
     // make sure move is the capture
     if (get_move_capture(move))
       make_move(move, all_moves);
-
     // otherwise the move is not a capture
     else
       // don't make it
@@ -358,7 +348,8 @@ void generate_moves(moves *move_list) {
               !get_bit(occupancies[both], g1)) {
             // make sure king and the f1 squares are not under attacks
             if (!is_square_attacked(e1, black) &&
-                !is_square_attacked(f1, black))
+                !is_square_attacked(f1, black) &&
+                !is_square_attacked(g1, black))
               add_move(move_list, encode_move(e1, g1, piece, 0, 0, 0, 0, 1));
           }
         }
@@ -371,7 +362,8 @@ void generate_moves(moves *move_list) {
               !get_bit(occupancies[both], b1)) {
             // make sure king and the d1 squares are not under attacks
             if (!is_square_attacked(e1, black) &&
-                !is_square_attacked(d1, black))
+                !is_square_attacked(d1, black) &&
+                !is_square_attacked(c1, black))
               add_move(move_list, encode_move(e1, c1, piece, 0, 0, 0, 0, 1));
           }
         }
@@ -476,7 +468,8 @@ void generate_moves(moves *move_list) {
               !get_bit(occupancies[both], g8)) {
             // make sure king and the f8 squares are not under attacks
             if (!is_square_attacked(e8, white) &&
-                !is_square_attacked(f8, white))
+                !is_square_attacked(f8, white) && 
+                !is_square_attacked(g8, white))
               add_move(move_list, encode_move(e8, g8, piece, 0, 0, 0, 0, 1));
           }
         }
@@ -489,7 +482,8 @@ void generate_moves(moves *move_list) {
               !get_bit(occupancies[both], b8)) {
             // make sure king and the d8 squares are not under attacks
             if (!is_square_attacked(e8, white) &&
-                !is_square_attacked(d8, white))
+                !is_square_attacked(d8, white) &&
+                !is_square_attacked(c8, white))
               add_move(move_list, encode_move(e8, c8, piece, 0, 0, 0, 0, 1));
           }
         }
