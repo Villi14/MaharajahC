@@ -24,7 +24,7 @@ void perft_driver(int depth) {
   // recursion escape condition
   if (depth == 0) {
     // increment nodes count (count reached positions)
-    nodes++;
+    ++nodes;
     return;
   }
 
@@ -35,7 +35,7 @@ void perft_driver(int depth) {
   generate_moves(move_list);
 
   // loop over generated moves
-  for (int move_count = 0; move_count < move_list->count; move_count++) {
+  for (int move_count = 0; move_count < move_list->count; ++move_count) {
     // preserve board state
     copy_board();
 

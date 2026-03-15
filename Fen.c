@@ -18,9 +18,9 @@ void parse_fen(const char *fen) {
   castle = 0;
 
   // loop over board ranks
-  for (int rank = 0; rank < 8; rank++) {
+  for (int rank = 0; rank < 8; ++rank) {
     // loop over board files
-    for (int file = 0; file < 8; file++) {
+    for (int file = 0; file < 8; ++file) {
       // init current square
       int square = rank * 8 + file;
 
@@ -33,7 +33,7 @@ void parse_fen(const char *fen) {
         set_bit(bitboards[piece], square);
 
         // increment pointer to FEN string
-        fen++;
+        ++fen;
       }
 
       // match empty square numbers within FEN string
@@ -45,7 +45,7 @@ void parse_fen(const char *fen) {
         int piece = -1;
 
         // loop over all piece bitboards
-        for (int bb_piece = P; bb_piece <= k; bb_piece++) {
+        for (int bb_piece = P; bb_piece <= k; ++bb_piece) {
           // if there is a piece on current square
           if (get_bit(bitboards[bb_piece], square))
             // get piece code
@@ -55,24 +55,24 @@ void parse_fen(const char *fen) {
         // on empty current square
         if (piece == -1)
           // decrement file
-          file--;
+          --file;
 
         // adjust file counter
         file += offset;
 
         // increment pointer to FEN string
-        fen++;
+        ++fen;
       }
 
       // match rank separator
       if (*fen == '/')
         // increment pointer to FEN string
-        fen++;
+        ++fen;
     }
   }
 
   // got to parsing side to move (increment pointer to FEN string)
-  fen++;
+  ++fen;
 
   // parse side to move
   (*fen == 'w') ? (side = white) : (side = black);
@@ -101,11 +101,11 @@ void parse_fen(const char *fen) {
     }
 
     // increment pointer to FEN string
-    fen++;
+    ++fen;
   }
 
   // got to parsing enpassant square (increment pointer to FEN string)
-  fen++;
+  ++fen;
 
   // parse enpassant square
   if (*fen != '-') {
@@ -122,12 +122,12 @@ void parse_fen(const char *fen) {
     enpassant = no_sq;
 
   // loop over white pieces bitboards
-  for (int piece = P; piece <= K; piece++)
+  for (int piece = P; piece <= K; ++piece)
     // populate white occupancy bitboard
     occupancies[white] |= bitboards[piece];
 
   // loop over black pieces bitboards
-  for (int piece = p; piece <= k; piece++)
+  for (int piece = p; piece <= k; ++piece)
     // populate white occupancy bitboard
     occupancies[black] |= bitboards[piece];
 

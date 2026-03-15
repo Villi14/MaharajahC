@@ -11,9 +11,9 @@ void print_bitboard(U64 bitboard) {
   printf("\n");
 
   // loop over board ranks
-  for (int rank = 0; rank < 8; rank++) {
+  for (int rank = 0; rank < 8; ++rank) {
     // loop over board files
-    for (int file = 0; file < 8; file++) {
+    for (int file = 0; file < 8; ++file) {
       // convert file & rank into square index
       int square = rank * 8 + file;
 
@@ -42,9 +42,9 @@ void print_board() {
   printf("\n");
 
   // loop over board ranks
-  for (int rank = 0; rank < 8; rank++) {
+  for (int rank = 0; rank < 8; ++rank) {
     // loop over board files
-    for (int file = 0; file < 8; file++) {
+    for (int file = 0; file < 8; ++file) {
       // init square
       int square = rank * 8 + file;
 
@@ -56,7 +56,7 @@ void print_board() {
       int piece = -1;
 
       // loop over all piece bitboards
-      for (int bb_piece = P; bb_piece <= k; bb_piece++) {
+      for (int bb_piece = P; bb_piece <= k; ++bb_piece) {
         // if there is a piece on current square
         if (get_bit(bitboards[bb_piece], square))
           // get piece code
@@ -92,9 +92,9 @@ void print_attacked_squares(int side_) {
   printf("\n");
 
   // loop over board ranks
-  for (int rank = 0; rank < 8; rank++) {
+  for (int rank = 0; rank < 8; ++rank) {
     // loop over board files
-    for (int file = 0; file < 8; file++) {
+    for (int file = 0; file < 8; ++file) {
       // init square
       int square = rank * 8 + file;
 
@@ -125,7 +125,7 @@ void print_move_list(const moves *move_list) {
   printf("\n     move    piece     capture   double    enpass    castling\n\n");
 
   // loop over moves within a move list
-  for (int move_count = 0; move_count < move_list->count; move_count++) {
+  for (int move_count = 0; move_count < move_list->count; ++move_count) {
     // init move
     int move = move_list->moves[move_count];
     // print move

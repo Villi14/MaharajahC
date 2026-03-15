@@ -8,7 +8,7 @@
 // init slider piece's attack tables
 void init_sliders_attacks(int bishop) {
   // loop over 64 board squares
-  for (int square = 0; square < 64; square++) {
+  for (int square = 0; square < 64; ++square) {
     // init bishop & rook masks
     bishop_masks[square] = mask_bishop_attacks(square);
     rook_masks[square] = mask_rook_attacks(square);
@@ -23,7 +23,7 @@ void init_sliders_attacks(int bishop) {
     int occupancy_indices = (1 << relevant_bits_count);
 
     // loop over occupancy indices
-    for (int index = 0; index < occupancy_indices; index++) {
+    for (int index = 0; index < occupancy_indices; ++index) {
       // bishop
       if (bishop) {
         // init current occupancy variation
@@ -58,7 +58,7 @@ void init_sliders_attacks(int bishop) {
 // init leaper pieces attacks
 void init_leapers_attacks() {
   // loop over 64 board squares
-  for (int square = 0; square < 64; square++) {
+  for (int square = 0; square < 64; ++square) {
     // init pawn attacks
     pawn_attacks[white][square] = mask_pawn_attacks(white, square);
     pawn_attacks[black][square] = mask_pawn_attacks(black, square);

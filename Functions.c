@@ -14,7 +14,7 @@ int count_bits(U64 bitboard) {
   // consecutively reset least significant 1st bit
   while (bitboard) {
     // increment count
-    count++;
+    ++count;
 
     // reset least significant 1st bit
     bitboard &= bitboard - 1;
@@ -44,7 +44,7 @@ U64 set_occupancy(int index, int bits_in_mask, U64 attack_mask) {
   U64 occupancy = 0ULL;
 
   // loop over the range of bits within attack mask
-  for (int count = 0; count < bits_in_mask; count++) {
+  for (int count = 0; count < bits_in_mask; ++count) {
     // get LS1B index of attacks mask
     int square = get_ls1b_index(attack_mask);
 
@@ -67,7 +67,7 @@ void add_move(moves *move_list, int move) {
   move_list->moves[move_list->count] = move;
 
   // increment move count
-  move_list->count++;
+  ++move_list->count;
 }
 
 // print move (for UCI purposes)
@@ -116,7 +116,7 @@ int make_move(int move, int move_flag) {
       }
 
       // loop over bitboards opposite to the current side to move
-      for (int bb_piece = start_piece; bb_piece <= end_piece; bb_piece++) {
+      for (int bb_piece = start_piece; bb_piece <= end_piece; ++bb_piece) {
         // if there's a piece on the target square
         if (get_bit(bitboards[bb_piece], target_square)) {
           // remove it from corresponding bitboard
@@ -196,12 +196,12 @@ int make_move(int move, int move_flag) {
     memset(occupancies, 0ULL, 24);
 
     // loop over white pieces bitboards
-    for (int bb_piece = P; bb_piece <= K; bb_piece++)
+    for (int bb_piece = P; bb_piece <= K; ++bb_piece)
       // update white occupancies
       occupancies[white] |= bitboards[bb_piece];
 
     // loop over black pieces bitboards
-    for (int bb_piece = p; bb_piece <= k; bb_piece++)
+    for (int bb_piece = p; bb_piece <= k; ++bb_piece)
       // update black occupancies
       occupancies[black] |= bitboards[bb_piece];
 
@@ -256,7 +256,7 @@ void generate_moves(moves *move_list) {
   U64 attacks;
 
   // loop over all the bitboards
-  for (int piece = P; piece <= k; piece++) {
+  for (int piece = P; piece <= k; ++piece) {
     // init piece bitboard copy
     U64 bitboard = bitboards[piece];
 
@@ -683,4 +683,3 @@ void generate_moves(moves *move_list) {
     }
   }
 }
-
