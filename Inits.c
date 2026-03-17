@@ -1,8 +1,7 @@
-
 #include "Inits.h"
 #include "Attacks.h"
-#include "Globals.h"
 #include "Functions.h"
+#include "Globals.h"
 #include "MagicNumbers.h"
 
 // init slider piece's attack tables
