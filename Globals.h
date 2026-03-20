@@ -93,6 +93,7 @@ extern U64 bishop_attacks[0x40][0x200];
 // rook attacks table [square][occupancies]
 extern U64 rook_attacks[0x40][0x1000];
 
+// leaf nodes (number of positions reached during the test of the move generator at a given depth)
 extern long nodes;
 
 // convert squares to coordinates

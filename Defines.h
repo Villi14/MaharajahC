@@ -65,9 +65,7 @@
 
 // move list structure
 typedef struct {
-  // moves
   int moves[0x100];
-  // move count
   int count;
 } moves;
 
