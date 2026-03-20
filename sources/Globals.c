@@ -1,5 +1,5 @@
-#include "Globals.h"
-#include "Defines.h"
+#include "../headers/Globals.h"
+#include "../headers/Defines.h"
 
 int side;
 int enpassant = no_sq;

@@ -1,4 +1,4 @@
-#include "MagicNumbers.h"
+#include "../headers/MagicNumbers.h"
 
 // rook magic numbers
 U64 rook_magic_numbers[0x40] = {

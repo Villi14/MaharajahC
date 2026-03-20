@@ -7,9 +7,9 @@
 #  include <sys/time.h>
 #endif
 
-#include "Functions.h"
-#include "Globals.h"
-#include "Perft.h"
+#include "../headers/Functions.h"
+#include "../headers/Globals.h"
+#include "../headers/Perft.h"
 
 int get_time_ms() {
 #ifdef _MSC_VER

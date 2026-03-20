@@ -1,7 +1,8 @@
-#include "Attacks.h"
-#include "Functions.h"
-#include "Globals.h"
-#include "MagicNumbers.h"
+#include "../headers/Attacks.h"
+#include "../headers/Defines.h"
+#include "../headers/Functions.h"
+#include "../headers/Globals.h"
+#include "../headers/MagicNumbers.h"
 
 // generate pawn attacks
 U64 mask_pawn_attacks(int side_, int square) {

@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "Attacks.h"
-#include "Functions.h"
-#include "Globals.h"
+#include "../headers/Attacks.h"
+#include "../headers/Functions.h"
+#include "../headers/Globals.h"
 
 // count bits within a bitboard (Brian Kernighan's way)
 int count_bits(U64 bitboard) {

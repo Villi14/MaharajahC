@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-#include "Attacks.h"
-#include "Functions.h"
-#include "Globals.h"
-#include "Prints.h"
+#include "../headers/Attacks.h"
+#include "../headers/Functions.h"
+#include "../headers/Globals.h"
+#include "../headers/Prints.h"
 
 void print_bitboard(U64 bitboard) {
   printf("\n");

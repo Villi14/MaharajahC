@@ -1,10 +1,12 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "Gui.h"
-#include "Functions.h"
-#include "Globals.h"
-#include "Fen.h"
+#include "../headers/Attacks.h"
+#include "../headers/Defines.h"
+#include "../headers/Functions.h"
+#include "../headers/Globals.h"
+#include "../headers/MagicNumbers.h"
+#include "../headers/Fen.h"
 
 // parse user/GUI move string input (e.g. "e7e8q")
 int parse_move(char* move_string) {

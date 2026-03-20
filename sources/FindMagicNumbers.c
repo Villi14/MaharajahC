@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "Attacks.h"
-#include "FindMagicNumbers.h"
-#include "Functions.h"
-#include "Globals.h"
-#include "MagicNumbers.h"
+#include "../headers/Attacks.h"
+#include "../headers/Defines.h"
+#include "../headers/Functions.h"
+#include "../headers/Globals.h"
+#include "../headers/MagicNumbers.h"
 
 // generate 32-bit pseudo legal numbers
 unsigned int get_random_U32_number() {
