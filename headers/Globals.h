@@ -140,4 +140,22 @@ extern const int castling_rights[0x40];
 */
 extern int material_score[0xC];
 
+// pawn positional score
+extern const int pawn_score[0x40];
+
+// knight positional score
+extern const int knight_score[0x40];
+
+// bishop positional score
+extern const int bishop_score[0x40];
+
+// rook positional score
+extern const int rook_score[0x40];
+
+// king positional score
+extern const int king_score[0x40];
+
+// mirror positional score tables for opposite side
+extern const int mirror_score[0x80];
+
 #endif // !GLOBALS_H_

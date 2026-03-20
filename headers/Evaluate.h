@@ -1,5 +1,5 @@
 #ifndef EVALUATE_H_
-#define EVALUATE_H
+#define EVALUATE_H_
 
 int evaluate();
 

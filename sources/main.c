@@ -17,7 +17,7 @@ int main() {
 
   if(debug) {
     // parse fen
-    parse_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ");
+    parse_fen("rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 1 ");
     print_board();
     printf("score: %d\n", evaluate());
   }
