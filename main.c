@@ -9,13 +9,13 @@
 int main(void) {
   init_all();
 
-  parse_fen(start_position);
+  parse_fen(tricky_position);
   print_board();
 
   int start = get_time_ms();
 
-  perft_driver(6);
+  perft_test(5);
+  getchar();
 
-  printf("time taken to execute: %d ms\n", get_time_ms() - start);
-  printf("nodes: %ld\n", nodes);
+  return 0;
 }
