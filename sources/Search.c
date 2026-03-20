@@ -17,7 +17,7 @@ void search_position(int depth) {
     printf("info score cp %d depth %d nodes %ld\n", score, depth, nodes);
 
     // best move placeholder
-    printf("bestmove ");
+    printf("best move ");
     print_move(best_move);
     printf("\n");
   }
@@ -25,7 +25,7 @@ void search_position(int depth) {
 
 // negamax alpha beta search
 int negamax(int alpha, int beta, int depth) {
-  // recurrsion escapre condition
+  // recursion escape condition
   if(depth == 0)
     // run quiescence search
     return quiescence(alpha, beta);
@@ -51,7 +51,7 @@ int negamax(int alpha, int beta, int depth) {
   // generate moves
   generate_moves(move_list);
 
-  // loop over moves within a movelist
+  // loop over moves within a novelist
   for(int count = 0; count < move_list->count; ++count) {
     // preserve board state
     copy_board();

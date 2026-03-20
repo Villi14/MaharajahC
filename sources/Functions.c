@@ -155,10 +155,7 @@ int make_move(int move, int move_flag) {
       return 0;
     } else
       return 1;
-
   }
-
-  // capture moves
   else {
     if(get_move_capture(move))
       make_move(move, all_moves);
@@ -173,10 +170,10 @@ void generate_moves(moves* move_list) {
   move_list->count = 0;
 
   int source_square, target_square;
-  U64 bitboard, attacks;
+  U64 attacks = 0ULL;
 
   for(int piece = P; piece <= k; ++piece) {
-    bitboard = bitboards[piece];
+    U64 bitboard = bitboards[piece];
 
     // generate white pawns & white king castling moves
     if(side == white) {
@@ -193,9 +190,7 @@ void generate_moves(moves* move_list) {
               add_move(move_list, encode_move(source_square, target_square, piece, R, 0, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, B, 0, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, N, 0, 0, 0, 0));
-            }
-
-            else {
+            } else {
               // one square ahead pawn move
               add_move(move_list, encode_move(source_square, target_square, piece, 0, 0, 0, 0, 0));
 
@@ -218,7 +213,6 @@ void generate_moves(moves* move_list) {
               add_move(move_list, encode_move(source_square, target_square, piece, B, 1, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, N, 1, 0, 0, 0));
             }
-
             else
               // one square ahead pawn move
               add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
@@ -235,7 +229,6 @@ void generate_moves(moves* move_list) {
               add_move(move_list, encode_move(source_square, target_enpassant, piece, 0, 1, 0, 1, 0));
             }
           }
-
           pop_bit(bitboard, source_square);
         }
       }
@@ -279,9 +272,7 @@ void generate_moves(moves* move_list) {
               add_move(move_list, encode_move(source_square, target_square, piece, r, 0, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, b, 0, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, n, 0, 0, 0, 0));
-            }
-
-            else {
+            } else {
               // one square ahead pawn move
               add_move(move_list, encode_move(source_square, target_square, piece, 0, 0, 0, 0, 0));
               // two squares ahead pawn move
@@ -303,7 +294,6 @@ void generate_moves(moves* move_list) {
               add_move(move_list, encode_move(source_square, target_square, piece, b, 1, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, n, 1, 0, 0, 0));
             }
-
             else
               // one square ahead pawn move
               add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
@@ -320,7 +310,6 @@ void generate_moves(moves* move_list) {
               add_move(move_list, encode_move(source_square, target_enpassant, piece, 0, 1, 0, 1, 0));
             }
           }
-
           pop_bit(bitboard, source_square);
         }
       }
@@ -361,13 +350,11 @@ void generate_moves(moves* move_list) {
 
           if(!get_bit(((side == white) ? occupancies[black] : occupancies[white]), target_square))
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 0, 0, 0, 0));
-
           else
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
 
           pop_bit(attacks, target_square);
         }
-
         pop_bit(bitboard, source_square);
       }
     }
@@ -384,13 +371,11 @@ void generate_moves(moves* move_list) {
 
           if(!get_bit(((side == white) ? occupancies[black] : occupancies[white]), target_square))
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 0, 0, 0, 0));
-
           else
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
 
           pop_bit(attacks, target_square);
         }
-
         pop_bit(bitboard, source_square);
       }
     }
@@ -407,13 +392,11 @@ void generate_moves(moves* move_list) {
 
           if(!get_bit(((side == white) ? occupancies[black] : occupancies[white]), target_square))
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 0, 0, 0, 0));
-
           else
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
 
           pop_bit(attacks, target_square);
         }
-
         pop_bit(bitboard, source_square);
       }
     }
@@ -430,13 +413,11 @@ void generate_moves(moves* move_list) {
 
           if(!get_bit(((side == white) ? occupancies[black] : occupancies[white]), target_square))
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 0, 0, 0, 0));
-
           else
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
 
           pop_bit(attacks, target_square);
         }
-
         pop_bit(bitboard, source_square);
       }
     }
@@ -453,13 +434,11 @@ void generate_moves(moves* move_list) {
 
           if(!get_bit(((side == white) ? occupancies[black] : occupancies[white]), target_square))
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 0, 0, 0, 0));
-
           else
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
 
           pop_bit(attacks, target_square);
         }
-
         pop_bit(bitboard, source_square);
       }
     }

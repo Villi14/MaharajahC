@@ -6,16 +6,13 @@ int evaluate() {
   // static evaluation score
   int score = 0;
 
-  // current pieces bitboard copy
-  U64 bitboard;
-
   // init piece & square
-  int piece, square;
+  int piece = 0, square = 0;
 
   // loop over piece bitboards
   for(int bb_piece = P; bb_piece <= k; ++bb_piece) {
     // init piece bitboard copy
-    bitboard = bitboards[bb_piece];
+    U64 bitboard = bitboards[bb_piece];
 
     // loop over pieces within a bitboard
     while(bitboard) {

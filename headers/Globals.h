@@ -43,16 +43,16 @@ enum {
 enum { all_moves, only_captures };
 
 // not A file constant
-static const U64 not_a_file = 0xFEFEFEFEFEFEFEFEULL;
+static constexpr U64 not_a_file = 0xFEFEFEFEFEFEFEFEULL;
 
 // not H file constant
-static const U64 not_h_file = 0x7F7F7F7F7F7F7F7FULL;
+static constexpr U64 not_h_file = 0x7F7F7F7F7F7F7F7FULL;
 
 // not HG file constant
-static const U64 not_hg_file = 0x3F3F3F3F3F3F3F3FULL;
+static constexpr U64 not_hg_file = 0x3F3F3F3F3F3F3F3FULL;
 
 // not AB file constant
-static const U64 not_ab_file = 0xFCFCFCFCFCFCFCFCULL;
+static constexpr U64 not_ab_file = 0xFCFCFCFCFCFCFCFCULL;
 
 // piece bitboards
 extern U64 bitboards[0xC];
