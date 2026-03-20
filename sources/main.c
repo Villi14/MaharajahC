@@ -6,13 +6,23 @@
 #include "../headers/Gui.h"
 #include "../headers/Inits.h"
 #include "../headers/Prints.h"
+#include "../headers/Search.h"
+#include "../headers/Gui.h"
+#include "../headers/Evaluate.h"
 
 int main() {
   init_all();
 
-  // parse "position" command
-  parse_position("position startpos moves e2e4 e7e5 g1f3");
-  print_board();
+  int debug = 1;
+
+  if(debug) {
+    // parse fen
+    parse_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ");
+    print_board();
+    printf("score: %d\n", evaluate());
+  }
+  else
+    uci_loop();
 
   return 0;
 }

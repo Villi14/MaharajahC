@@ -1,12 +1,13 @@
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include "../headers/Attacks.h"
 #include "../headers/Defines.h"
+#include "../headers/Fen.h"
 #include "../headers/Functions.h"
 #include "../headers/Globals.h"
 #include "../headers/MagicNumbers.h"
-#include "../headers/Fen.h"
 
 // parse user/GUI move string input (e.g. "e7e8q")
 int parse_move(char* move_string) {
@@ -143,5 +144,101 @@ void parse_position(char* command) {
     }
 
     printf("%s\n", current_char);
+  }
+}
+
+// parse UCI "go" command
+void parse_go(char* command) {
+  // init depth
+  int depth = -1;
+
+  // init character pointer to the current depth argument
+  char* current_depth = NULL;
+
+  // handle fixed depth search
+  if(current_depth = strstr(command, "depth"))
+    //convert string to integer and assign the result value to depth
+    depth = atoi(current_depth + 6);
+
+  // different time controls placeholder
+  else
+    depth = 6;
+
+  // search position
+  // search_position(depth);
+  printf("depth: %d\n", depth);
+}
+
+/*
+    GUI -> isready
+    Engine -> readyok
+    GUI -> ucinewgame
+*/
+
+// main UCI loop
+void uci_loop() {
+  // reset STDIN & STDOUT buffers
+  setbuf(stdin, NULL);
+  setbuf(stdout, NULL);
+
+  // define user / GUI input buffer
+  char input[2000];
+
+  // print engine info
+  printf("id name BBC\n");
+  printf("id name Code Monkey King\n");
+  printf("uciok\n");
+
+  // main loop
+  while(1) {
+    // reset user /GUI input
+    memset(input, 0, sizeof(input));
+
+    // make sure output reaches the GUI
+    fflush(stdout);
+
+    // get user / GUI input
+    if(!fgets(input, 2000, stdin))
+      // continue the loop
+      continue;
+
+    // make sure input is available
+    if(input[0] == '\n')
+      // continue the loop
+      continue;
+
+    // parse UCI "isready" command
+    if(strncmp(input, "isready", 7) == 0) {
+      printf("readyok\n");
+      continue;
+    }
+
+    // parse UCI "position" command
+    else if(strncmp(input, "position", 8) == 0)
+      // call parse position function
+      parse_position(input);
+
+    // parse UCI "ucinewgame" command
+    else if(strncmp(input, "ucinewgame", 10) == 0)
+      // call parse position function
+      parse_position("position startpos");
+
+    // parse UCI "go" command
+    else if(strncmp(input, "go", 2) == 0)
+      // call parse go function
+      parse_go(input);
+
+    // parse UCI "quit" command
+    else if(strncmp(input, "quit", 4) == 0)
+      // quit from the chess engine program execution
+      break;
+
+    // parse UCI "uci" command
+    else if(strncmp(input, "uci", 3) == 0) {
+      // print engine info
+      printf("id name BBC\n");
+      printf("id name Code Monkey King\n");
+      printf("uciok\n");
+    }
   }
 }

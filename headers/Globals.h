@@ -131,4 +131,13 @@ extern const int rook_relevant_bits[0x40];
 // castling rights update constants
 extern const int castling_rights[0x40];
 
+/*  ♙ =   100   = ♙
+    ♘ =   300   = ♙ * 3
+    ♗ =   350   = ♙ * 3 + ♙ * 0.5
+    ♖ =   500   = ♙ * 5
+    ♕ =   1000  = ♙ * 10
+    ♔ =   10000 = ♙ * 100
+*/
+extern int material_score[0xC];
+
 #endif // !GLOBALS_H_

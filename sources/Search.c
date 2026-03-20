@@ -1,4 +1,9 @@
-#ifndef SEARCH_H_
-#define SEARCH_H_
+#include <stdio.h>
 
-#endif // !SEARCH_H_
+#include "../headers/Defines.h"
+
+// search position for the best move
+void search_position(int depth) {
+  // best move placeholder
+  printf("bestmove d2d4\n");
+}
