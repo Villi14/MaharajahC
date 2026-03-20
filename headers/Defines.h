@@ -4,6 +4,11 @@
 // define bitboard data type
 #define U64 unsigned long long
 
+#ifdef _MSC_VER
+#define constexpr const
+#define nullptr NULL
+#endif
+
 // FEN debug positions
 #define empty_board "8/8/8/8/8/8/8/8 b - - "
 #define start_position "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 "
