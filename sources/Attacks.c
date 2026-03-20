@@ -1,6 +1,5 @@
 #include "../headers/Attacks.h"
 #include "../headers/Defines.h"
-#include "../headers/Functions.h"
 #include "../headers/Globals.h"
 #include "../headers/MagicNumbers.h"
 

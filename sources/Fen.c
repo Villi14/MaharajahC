@@ -1,11 +1,7 @@
 #include <string.h>
 
-#include "../headers/Attacks.h"
 #include "../headers/Defines.h"
-#include "../headers/Functions.h"
 #include "../headers/Globals.h"
-#include "../headers/MagicNumbers.h"
-#include "../headers/Prints.h"
 
 // parse FEN string
 void parse_fen(const char* fen) {

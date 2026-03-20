@@ -50,7 +50,7 @@ void perft_test(int depth) {
   generate_moves(move_list);
   long start_time = get_time_ms();
 
-  for(int move_count = 0; move_count < move_list->count; move_count++) {
+  for(int move_count = 0; move_count < move_list->count; ++move_count) {
     copy_board();
 
     if(!make_move(move_list->moves[move_count], all_moves))

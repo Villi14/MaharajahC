@@ -12,13 +12,13 @@
 int main() {
   init_all();
 
-  int debug = 0;
+  int debug = 1;
 
   if(debug) {
     // parse fen
     parse_fen(start_position);
     print_board();
-    search_position(2);
+    search_position(6);
   } else
     uci_loop();
 

@@ -2,12 +2,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "../headers/Attacks.h"
 #include "../headers/Defines.h"
 #include "../headers/Fen.h"
 #include "../headers/Functions.h"
 #include "../headers/Globals.h"
-#include "../headers/MagicNumbers.h"
 
 // parse user/GUI move string input (e.g. "e7e8q")
 int parse_move(char* move_string) {
@@ -24,7 +22,7 @@ int parse_move(char* move_string) {
   int target_square = (move_string[2] - 'a') + (8 - (move_string[3] - '0')) * 8;
 
   // loop over the moves within a move list
-  for(int move_count = 0; move_count < move_list->count; move_count++) {
+  for(int move_count = 0; move_count < move_list->count; ++move_count) {
     // init move
     int move = move_list->moves[move_count];
 

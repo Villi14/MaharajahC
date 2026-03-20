@@ -13,7 +13,7 @@ int evaluate() {
   int piece, square;
 
   // loop over piece bitboards
-  for(int bb_piece = P; bb_piece <= k; bb_piece++) {
+  for(int bb_piece = P; bb_piece <= k; ++bb_piece) {
     // init piece bitboard copy
     bitboard = bitboards[bb_piece];
 

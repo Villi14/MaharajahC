@@ -31,7 +31,7 @@ int negamax(int alpha, int beta, int depth) {
     return quiescence(alpha, beta);
 
   // increment nodes count
-  nodes++;
+  ++nodes;
 
   // is king in check
   int in_check = is_square_attacked((side == white) ? get_ls1b_index(bitboards[K]) : get_ls1b_index(bitboards[k]), side ^ 1);
@@ -52,17 +52,17 @@ int negamax(int alpha, int beta, int depth) {
   generate_moves(move_list);
 
   // loop over moves within a movelist
-  for(int count = 0; count < move_list->count; count++) {
+  for(int count = 0; count < move_list->count; ++count) {
     // preserve board state
     copy_board();
 
     // increment ply
-    ply++;
+    ++ply;
 
     // make sure to make only legal moves
     if(make_move(move_list->moves[count], all_moves) == 0) {
       // decrement ply
-      ply--;
+      --ply;
 
       // skip to next move
       continue;
@@ -74,7 +74,7 @@ int negamax(int alpha, int beta, int depth) {
     int score = -negamax(-beta, -alpha, depth - 1);
 
     // decrement ply
-    ply--;
+    --ply;
 
     // take move back
     take_back();
@@ -143,17 +143,17 @@ int quiescence(int alpha, int beta) {
   generate_moves(move_list);
 
   // loop over moves within a movelist
-  for(int count = 0; count < move_list->count; count++) {
+  for(int count = 0; count < move_list->count; ++count) {
     // preserve board state
     copy_board();
 
     // increment ply
-    ply++;
+    ++ply;
 
     // make sure to make only legal moves
     if(make_move(move_list->moves[count], only_captures) == 0) {
       // decrement ply
-      ply--;
+      --ply;
 
       // skip to next move
       continue;
@@ -163,7 +163,7 @@ int quiescence(int alpha, int beta) {
     int score = -quiescence(-beta, -alpha);
 
     // decrement ply
-    ply--;
+    --ply;
 
     // take move back
     take_back();
