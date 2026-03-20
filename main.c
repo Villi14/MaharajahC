@@ -10,17 +10,9 @@
 int main() {
   init_all();
 
-  parse_fen("r3k2r/p11pqpb1/bn2pnp1/2pPN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq c6 0 1 ");
+  // parse "position" command
+  parse_position("position startpos moves e2e4 e7e5 g1f3");
   print_board();
-
-  int move = parse_move("d5c6");
-  
-  if(move) {
-    make_move(move, all_moves);
-    print_board();
-  }
-  else
-    printf("illegal move!\n");
 
   return 0;
 }
