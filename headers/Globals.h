@@ -164,4 +164,6 @@ extern const int king_score[0x40];
 // mirror positional score tables for opposite side
 extern const int mirror_score[0x80];
 
+extern const int mvv_lva[0xC][0xC];
+
 #endif // !GLOBALS_H_

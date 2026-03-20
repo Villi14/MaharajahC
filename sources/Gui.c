@@ -151,10 +151,10 @@ void parse_go(char* command) {
   int depth = -1;
 
   // init character pointer to the current depth argument
-  char* current_depth = NULL;
+  char* current_depth = strstr(command, "depth");
 
   // handle fixed depth search
-  if(current_depth = strstr(command, "depth"))
+  if(current_depth != nullptr)
     //convert string to integer and assign the result value to depth
     depth = atoi(current_depth + 6);
 
@@ -167,17 +167,15 @@ void parse_go(char* command) {
   printf("depth: %d\n", depth);
 }
 
-/*
-    GUI -> isready
+/*  GUI -> isready
     Engine -> readyok
     GUI -> ucinewgame
 */
-
 // main UCI loop
 void uci_loop() {
   // reset STDIN & STDOUT buffers
-  setbuf(stdin, NULL);
-  setbuf(stdout, NULL);
+  setbuf(stdin, nullptr);
+  setbuf(stdout, nullptr);
 
   // define user / GUI input buffer
   char input[2000];

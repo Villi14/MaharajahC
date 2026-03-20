@@ -121,6 +121,9 @@ int negamax(int alpha, int beta, int depth) {
 
 // quiescence search
 int quiescence(int alpha, int beta) {
+  // increment nodes count
+  ++nodes;
+
   // evaluate position
   int evaluation = evaluate();
 
