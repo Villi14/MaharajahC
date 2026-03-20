@@ -5,7 +5,6 @@
 #define U64 unsigned long long
 
 #ifdef _MSC_VER
-#define constexpr const
 #define nullptr NULL
 #endif
 
