@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(Maharajah C)
+project(Maharajah VERSION 0.1.0 LANGUAGES C)
 
 set(BINARY ${PROJECT_NAME})
 
