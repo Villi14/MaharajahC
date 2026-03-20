@@ -6,6 +6,8 @@ int enpassant = no_sq;
 int castle;
 unsigned int random_state = 0x6B8B4567;
 long nodes;
+int ply;
+int best_move;
 
 U64 bitboards[0xC];
 U64 occupancies[3];

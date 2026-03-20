@@ -2,7 +2,6 @@
 #define SEARCH_H_
 
 void search_position(int depth);
-void parse_position(char* command);
-void uci_loop();
+int negamax(int alpha, int beta, int depth);
 
 #endif // !SEARCH_H_

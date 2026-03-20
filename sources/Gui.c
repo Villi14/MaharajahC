@@ -185,8 +185,8 @@ void uci_loop() {
   char input[2000];
 
   // print engine info
-  printf("id name BBC\n");
-  printf("id name Code Monkey King\n");
+  printf("id name Maharajah\n");
+  printf("id name Villi\n");
   printf("uciok\n");
 
   // main loop
@@ -236,8 +236,8 @@ void uci_loop() {
     // parse UCI "uci" command
     else if(strncmp(input, "uci", 3) == 0) {
       // print engine info
-      printf("id name BBC\n");
-      printf("id name Code Monkey King\n");
+      printf("id name Maharajah\n");
+      printf("id name Villi\n");
       printf("uciok\n");
     }
   }

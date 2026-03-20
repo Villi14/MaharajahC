@@ -72,6 +72,12 @@ extern int castle;
 // pseudo random number state
 extern unsigned int random_state;
 
+// half move counter
+extern int ply;
+
+// best move
+extern int best_move;
+
 // pawn attacks table [side][square]
 extern U64 pawn_attacks[2][0x40];
 
