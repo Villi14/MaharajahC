@@ -15,5 +15,4 @@ U64 get_bishop_attacks(int square, U64 occupancy);
 U64 get_rook_attacks(int square, U64 occupancy);
 U64 get_queen_attacks(int square, U64 occupancy);
 
-
 #endif // !ATTACKS_H_

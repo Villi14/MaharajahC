@@ -97,10 +97,10 @@ extern U64 rook_attacks[0x40][0x1000];
 extern long nodes;
 
 // convert squares to coordinates
-extern const char *square_to_coordinates[0x40];
+extern const char* square_to_coordinates[0x40];
 
 // default pieces
-extern const char *default_pieces[0xC];
+extern const char* default_pieces[0xC];
 
 // convert ASCII character pieces to encoded constants
 extern const char char_pieces[0x80];

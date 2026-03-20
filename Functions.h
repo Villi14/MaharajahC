@@ -3,8 +3,8 @@
 
 #include "Defines.h"
 
-void add_move(moves *move_list, int move);
-void generate_moves(moves *move_list);
+void add_move(moves* move_list, int move);
+void generate_moves(moves* move_list);
 int make_move(int move, int move_flag);
 int count_bits(U64 bitboard);
 int get_ls1b_index(U64 bitboard);

@@ -7,7 +7,7 @@
 // init slider piece's attack tables
 void init_sliders_attacks(int bishop) {
   // loop over 64 board squares
-  for (int square = 0; square < 64; ++square) {
+  for(int square = 0; square < 64; ++square) {
     // init bishop & rook masks
     bishop_masks[square] = mask_bishop_attacks(square);
     rook_masks[square] = mask_rook_attacks(square);
@@ -22,19 +22,17 @@ void init_sliders_attacks(int bishop) {
     int occupancy_indices = (1 << relevant_bits_count);
 
     // loop over occupancy indices
-    for (int index = 0; index < occupancy_indices; ++index) {
+    for(int index = 0; index < occupancy_indices; ++index) {
       // bishop
-      if (bishop) {
+      if(bishop) {
         // init current occupancy variation
         U64 occupancy = set_occupancy(index, relevant_bits_count, attack_mask);
 
         // init magic index
-        int magic_index = (occupancy * bishop_magic_numbers[square]) >>
-                          (64 - bishop_relevant_bits[square]);
+        int magic_index = (occupancy * bishop_magic_numbers[square]) >> (64 - bishop_relevant_bits[square]);
 
         // init bishop attacks
-        bishop_attacks[square][magic_index] =
-            bishop_attacks_on_the_fly(square, occupancy);
+        bishop_attacks[square][magic_index] = bishop_attacks_on_the_fly(square, occupancy);
       }
 
       // rook
@@ -43,12 +41,10 @@ void init_sliders_attacks(int bishop) {
         U64 occupancy = set_occupancy(index, relevant_bits_count, attack_mask);
 
         // init magic index
-        int magic_index = (occupancy * rook_magic_numbers[square]) >>
-                          (64 - rook_relevant_bits[square]);
+        int magic_index = (occupancy * rook_magic_numbers[square]) >> (64 - rook_relevant_bits[square]);
 
         // init rook attacks
-        rook_attacks[square][magic_index] =
-            rook_attacks_on_the_fly(square, occupancy);
+        rook_attacks[square][magic_index] = rook_attacks_on_the_fly(square, occupancy);
       }
     }
   }
@@ -57,7 +53,7 @@ void init_sliders_attacks(int bishop) {
 // init leaper pieces attacks
 void init_leapers_attacks() {
   // loop over 64 board squares
-  for (int square = 0; square < 64; ++square) {
+  for(int square = 0; square < 64; ++square) {
     // init pawn attacks
     pawn_attacks[white][square] = mask_pawn_attacks(white, square);
     pawn_attacks[black][square] = mask_pawn_attacks(black, square);
