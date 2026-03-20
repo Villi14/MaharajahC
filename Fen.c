@@ -17,7 +17,7 @@ void parse_fen(const char* fen) {
       int square = rank * 8 + file;
 
       if((*fen >= 'a' && *fen <= 'z') || (*fen >= 'A' && *fen <= 'Z')) {
-        int piece = char_pieces[*fen];
+        const int piece = char_pieces[*fen];
         set_bit(bitboards[piece], square);
         ++fen;
       }
@@ -70,6 +70,9 @@ void parse_fen(const char* fen) {
 
     ++fen;
   }
+
+  ++fen;
+
   if(*fen != '-') {
     int file = fen[0] - 'a';
     int rank = 8 - (fen[1] - '0');

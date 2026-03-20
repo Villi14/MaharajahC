@@ -173,10 +173,10 @@ void generate_moves(moves* move_list) {
   move_list->count = 0;
 
   int source_square, target_square;
-  U64 attacks;
+  U64 bitboard, attacks;
 
   for(int piece = P; piece <= k; ++piece) {
-    U64 bitboard = bitboards[piece];
+    bitboard = bitboards[piece];
 
     // generate white pawns & white king castling moves
     if(side == white) {

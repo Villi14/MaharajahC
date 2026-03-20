@@ -103,7 +103,7 @@ extern const char* square_to_coordinates[0x40];
 extern const char* default_pieces[0xC];
 
 // convert ASCII character pieces to encoded constants
-extern const char char_pieces[0x80];
+extern const int char_pieces[0x80];
 
 // promoted pieces
 extern const char promoted_pieces[0x80];

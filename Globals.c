@@ -36,7 +36,7 @@ const char *default_pieces[0xC] = {"♙", "♘", "♗", "♖", "♕", "♔", "�
 #endif
 
 // convert ASCII character pieces to encoded constants
-const char char_pieces[0x80] = {
+const int char_pieces[0x80] = {
   ['P'] = P,
   ['N'] = N,
   ['B'] = B,
