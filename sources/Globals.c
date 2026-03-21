@@ -116,7 +116,7 @@ int material_score[0xC] = {
 };
 
 // pawn positional score
-const int pawn_score[64] = {
+const int pawn_score[0x40] = {
   90,  90,  90,  90,  90,  90,  90,  90,
   30,  30,  30,  40,  40,  30,  30,  30,
   20,  20,  20,  30,  30,  30,  20,  20,
@@ -128,7 +128,7 @@ const int pawn_score[64] = {
 };
 
 // knight positional score
-const int knight_score[64] = {
+const int knight_score[0x40] = {
   -5,   0,   0,   0,   0,   0,   0,  -5,
   -5,   0,   0,  10,  10,   0,   0,  -5,
   -5,   5,  20,  20,  20,  20,   5,  -5,
@@ -140,7 +140,7 @@ const int knight_score[64] = {
 };
 
 // bishop positional score
-const int bishop_score[64] = {
+const int bishop_score[0x40] = {
   0,   0,   0,   0,   0,   0,   0,   0,
   0,   0,   0,   0,   0,   0,   0,   0,
   0,   0,   0,  10,  10,   0,   0,   0,
@@ -152,7 +152,7 @@ const int bishop_score[64] = {
 };
 
 // rook positional score
-const int rook_score[64] = {
+const int rook_score[0x40] = {
   50,  50,  50,  50,  50,  50,  50,  50,
   50,  50,  50,  50,  50,  50,  50,  50,
   0,   0,  10,  20,  20,  10,   0,   0,
@@ -164,7 +164,7 @@ const int rook_score[64] = {
 };
 
 // king positional score
-const int king_score[64] = {
+const int king_score[0x40] = {
   0,   0,   0,   0,   0,   0,   0,   0,
   0,   0,   5,   5,   5,   5,   0,   0,
   0,   5,   5,  10,  10,   5,   5,   0,
@@ -176,7 +176,7 @@ const int king_score[64] = {
 };
 
 // mirror positional score tables for opposite side
-const int mirror_score[128] = {
+const int mirror_score[0x80] = {
   a1, b1, c1, d1, e1, f1, g1, h1,
   a2, b2, c2, d2, e2, f2, g2, h2,
   a3, b3, c3, d3, e3, f3, g3, h3,

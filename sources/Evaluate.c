@@ -10,12 +10,12 @@ int evaluate() {
   int piece = 0, square = 0;
 
   // loop over piece bitboards
-  for(int bb_piece = P; bb_piece <= k; ++bb_piece) {
+  for (int bb_piece = P; bb_piece <= k; ++bb_piece) {
     // init piece bitboard copy
     U64 bitboard = bitboards[bb_piece];
 
     // loop over pieces within a bitboard
-    while(bitboard) {
+    while (bitboard) {
       // init piece
       piece = bb_piece;
 
@@ -26,7 +26,7 @@ int evaluate() {
       score += material_score[piece];
 
       // score positional piece scores
-      switch(piece) {
+      switch (piece) {
       // evaluate white pieces
       case P:
         score += pawn_score[square];

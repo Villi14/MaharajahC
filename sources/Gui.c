@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../headers/Defines.h"
 #include "../headers/Fen.h"
@@ -22,34 +22,34 @@ int parse_move(char* move_string) {
   int target_square = (move_string[2] - 'a') + (8 - (move_string[3] - '0')) * 8;
 
   // loop over the moves within a move list
-  for(int move_count = 0; move_count < move_list->count; ++move_count) {
+  for (int move_count = 0; move_count < move_list->count; ++move_count) {
     // init move
     int move = move_list->moves[move_count];
 
     // make sure source & target squares are available within the generated move
-    if(source_square == get_move_source(move) && target_square == get_move_target(move)) {
+    if (source_square == get_move_source(move) && target_square == get_move_target(move)) {
       // init promoted piece
       int promoted_piece = get_move_promoted(move);
 
       // promoted piece is available
-      if(promoted_piece) {
+      if (promoted_piece) {
         // promoted to queen
-        if((promoted_piece == Q || promoted_piece == q) && move_string[4] == 'q')
+        if ((promoted_piece == Q || promoted_piece == q) && move_string[4] == 'q')
           // return legal move
           return move;
 
         // promoted to rook
-        else if((promoted_piece == R || promoted_piece == r) && move_string[4] == 'r')
+        else if ((promoted_piece == R || promoted_piece == r) && move_string[4] == 'r')
           // return legal move
           return move;
 
         // promoted to bishop
-        else if((promoted_piece == B || promoted_piece == b) && move_string[4] == 'b')
+        else if ((promoted_piece == B || promoted_piece == b) && move_string[4] == 'b')
           // return legal move
           return move;
 
         // promoted to knight
-        else if((promoted_piece == N || promoted_piece == n) && move_string[4] == 'n')
+        else if ((promoted_piece == N || promoted_piece == n) && move_string[4] == 'n')
           // return legal move
           return move;
 
@@ -88,7 +88,7 @@ void parse_position(char* command) {
   char* current_char = command;
 
   // parse UCI "startpos" command
-  if(strncmp(command, "startpos", 8) == 0)
+  if (strncmp(command, "startpos", 8) == 0)
     // init chess board with start position
     parse_fen(start_position);
 
@@ -98,7 +98,7 @@ void parse_position(char* command) {
     current_char = strstr(command, "fen");
 
     // if no "fen" command is available within command string
-    if(current_char == nullptr)
+    if (current_char == nullptr)
       // init chess board with start position
       parse_fen(start_position);
 
@@ -116,17 +116,17 @@ void parse_position(char* command) {
   current_char = strstr(command, "moves");
 
   // moves available
-  if(current_char != nullptr) {
+  if (current_char != nullptr) {
     // shift pointer to the right where next token begins
     current_char += 6;
 
     // loop over moves within a move string
-    while(*current_char) {
+    while (*current_char) {
       // parse next move
       int move = parse_move(current_char);
 
       // if no more moves
-      if(move == 0)
+      if (move == 0)
         // break out of the loop
         break;
 
@@ -134,7 +134,7 @@ void parse_position(char* command) {
       make_move(move, all_moves);
 
       // move current character mointer to the end of current move
-      while(*current_char && *current_char != ' ')
+      while (*current_char && *current_char != ' ')
         current_char++;
 
       // go to the next move
@@ -154,7 +154,7 @@ void parse_go(char* command) {
   char* current_depth = strstr(command, "depth");
 
   // handle fixed depth search
-  if(current_depth != nullptr)
+  if (current_depth != nullptr)
     //convert string to integer and assign the result value to depth
     depth = atoi(current_depth + 6);
 
@@ -174,12 +174,12 @@ void parse_go(char* command) {
 // main UCI loop
 void uci_loop() {
   // reset STDIN & STDOUT buffers
- #ifdef _MSC_VER
-   setvbuf(stdin, NULL, _IONBF, 0);
-   setvbuf(stdout, NULL, _IONBF, 0); 
- #else
-   setbuf(stdin, nullptr);
-   setbuf(stdout, nullptr);
+#ifdef _MSC_VER
+  setvbuf(stdin, NULL, _IONBF, 0);
+  setvbuf(stdout, NULL, _IONBF, 0);
+#else
+  setbuf(stdin, nullptr);
+  setbuf(stdout, nullptr);
 #endif
 
   // define user / GUI input buffer
@@ -191,7 +191,7 @@ void uci_loop() {
   printf("uciok\n");
 
   // main loop
-  while(1) {
+  while (true) {
     // reset user /GUI input
     memset(input, 0, sizeof(input));
 
@@ -199,43 +199,43 @@ void uci_loop() {
     fflush(stdout);
 
     // get user / GUI input
-    if(!fgets(input, 2000, stdin))
+    if (!fgets(input, 2000, stdin))
       // continue the loop
       continue;
 
     // make sure input is available
-    if(input[0] == '\n')
+    if (input[0] == '\n')
       // continue the loop
       continue;
 
     // parse UCI "isready" command
-    if(strncmp(input, "isready", 7) == 0) {
+    if (strncmp(input, "isready", 7) == 0) {
       printf("readyok\n");
       continue;
     }
 
     // parse UCI "position" command
-    else if(strncmp(input, "position", 8) == 0)
+    else if (strncmp(input, "position", 8) == 0)
       // call parse position function
       parse_position(input);
 
     // parse UCI "ucinewgame" command
-    else if(strncmp(input, "ucinewgame", 10) == 0)
+    else if (strncmp(input, "ucinewgame", 10) == 0)
       // call parse position function
       parse_position("position startpos");
 
     // parse UCI "go" command
-    else if(strncmp(input, "go", 2) == 0)
+    else if (strncmp(input, "go", 2) == 0)
       // call parse go function
       parse_go(input);
 
     // parse UCI "quit" command
-    else if(strncmp(input, "quit", 4) == 0)
+    else if (strncmp(input, "quit", 4) == 0)
       // quit from the chess engine program execution
       break;
 
     // parse UCI "uci" command
-    else if(strncmp(input, "uci", 3) == 0) {
+    else if (strncmp(input, "uci", 3) == 0) {
       // print engine info
       printf("id name Maharajah\n");
       printf("id name Villi\n");
