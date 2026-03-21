@@ -104,7 +104,7 @@ void print_move_scores(moves* move_list) {
   printf("     Move scores:\n\n");
 
   // loop over moves within a move list
-  for (int count = 0; count <= move_list->count; ++count) {
+  for (int count = 0; count < move_list->count; ++count) {
     printf("     move: ");
     print_move(move_list->moves[count]);
     printf(" score: %d\n", score_move(move_list->moves[count]));

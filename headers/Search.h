@@ -6,8 +6,8 @@
 #include "Attacks.h"
 #include "Defines.h"
 #include "Evaluate.h"
-#include "Moves.h"
 #include "Globals.h"
+#include "Moves.h"
 #include "Prints.h"
 #include "Search.h"
 
@@ -231,6 +231,37 @@ static inline int score_move(int move) {
   else {
   }
 
+  return 0;
+}
+
+// sort moves in descending order
+static inline int sort_moves(moves* move_list) {
+  // move scores
+  int move_scores[move_list->count];
+  printf("\n\n");
+  // score all the moves within a move list
+  for (int count = 0; count < move_list->count; count++)
+    // score move
+    move_scores[count] = score_move(move_list->moves[count]);
+
+  // loop over current move within a move list
+  for (int current_move = 0; current_move < move_list->count; current_move++) {
+    // loop over next move within a move list
+    for (int next_move = current_move + 1; next_move < move_list->count; next_move++) {
+      // compare current and next move scores
+      if (move_scores[current_move] < move_scores[next_move]) {
+        // swap scores
+        int temp_score = move_scores[current_move];
+        move_scores[current_move] = move_scores[next_move];
+        move_scores[next_move] = temp_score;
+
+        // swap moves
+        int temp_move = move_list->moves[current_move];
+        move_list->moves[current_move] = move_list->moves[next_move];
+        move_list->moves[next_move] = temp_move;
+      }
+    }
+  }
   return 0;
 }
 

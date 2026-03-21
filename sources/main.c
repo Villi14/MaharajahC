@@ -1,9 +1,10 @@
 #include "../headers/Fen.h"
-#include "../headers/Moves.h"
 #include "../headers/Globals.h"
-#include "../headers/UCI.h"
 #include "../headers/Inits.h"
+#include "../headers/Moves.h"
 #include "../headers/Prints.h"
+#include "../headers/Search.h"
+#include "../headers/UCI.h"
 
 int main() {
   init_all();
@@ -13,7 +14,7 @@ int main() {
   if (debug) {
     // parse fen
     parse_fen(tricky_position);
-    enpassant = c6;
+
     print_board();
 
     // create move list instance
@@ -21,6 +22,9 @@ int main() {
 
     // generate moves
     generate_moves(move_list);
+
+    // sort move
+    sort_moves(move_list);
 
     // print move scores
     print_move_scores(move_list);
