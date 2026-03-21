@@ -186,7 +186,7 @@ U64 rook_attacks_on_the_fly(int square, U64 block) {
 }
 
 // get bishop attacks
-U64 get_bishop_attacks(int square, U64 occupancy) {
+inline U64 get_bishop_attacks(int square, U64 occupancy) {
   occupancy &= bishop_masks[square];
   occupancy *= bishop_magic_numbers[square];
   occupancy >>= 64 - bishop_relevant_bits[square];
@@ -195,7 +195,7 @@ U64 get_bishop_attacks(int square, U64 occupancy) {
 }
 
 // get rook attacks
-U64 get_rook_attacks(int square, U64 occupancy) {
+inline U64 get_rook_attacks(int square, U64 occupancy) {
   occupancy &= rook_masks[square];
   occupancy *= rook_magic_numbers[square];
   occupancy >>= 64 - rook_relevant_bits[square];
@@ -204,7 +204,7 @@ U64 get_rook_attacks(int square, U64 occupancy) {
 }
 
 // get queen attacks
-U64 get_queen_attacks(int square, U64 occupancy) {
+inline U64 get_queen_attacks(int square, U64 occupancy) {
   U64 queen_attacks = 0ULL;
   U64 bishop_occupancy = occupancy;
   U64 rook_occupancy = occupancy;
