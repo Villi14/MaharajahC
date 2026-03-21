@@ -29,7 +29,7 @@ void init_sliders_attacks(int bishop) {
         U64 occupancy = set_occupancy(index, relevant_bits_count, attack_mask);
 
         // init magic index
-        int magic_index = (occupancy * bishop_magic_numbers[square]) >> (64 - bishop_relevant_bits[square]);
+        U64 magic_index = (occupancy * bishop_magic_numbers[square]) >> (64 - bishop_relevant_bits[square]);
 
         // init bishop attacks
         bishop_attacks[square][magic_index] = bishop_attacks_on_the_fly(square, occupancy);
@@ -41,7 +41,7 @@ void init_sliders_attacks(int bishop) {
         U64 occupancy = set_occupancy(index, relevant_bits_count, attack_mask);
 
         // init magic index
-        int magic_index = (occupancy * rook_magic_numbers[square]) >> (64 - rook_relevant_bits[square]);
+        U64 magic_index = (occupancy * rook_magic_numbers[square]) >> (64 - rook_relevant_bits[square]);
 
         // init rook attacks
         rook_attacks[square][magic_index] = rook_attacks_on_the_fly(square, occupancy);

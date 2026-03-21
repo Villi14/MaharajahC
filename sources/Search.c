@@ -40,7 +40,7 @@ int negamax(int alpha, int beta, int depth) {
   int legal_moves = 0;
 
   // best move so far
-  int best_sofar;
+  int best_sofar = 0;
 
   // old value of alpha
   int old_alpha = alpha;

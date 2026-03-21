@@ -2,9 +2,11 @@
 #define FUNCTIONS_H_
 
 #include <assert.h>
+
 #ifdef _MSC_VER
 #  include <intrin.h>
 #endif
+
 #include "Defines.h"
 
 void generate_moves(moves* move_list);
@@ -13,7 +15,7 @@ U64 set_occupancy(int index, int bits_in_mask, U64 attack_mask);
 
 static inline int count_bits(U64 bitboard) {
 #if defined(_MSC_VER)
-  return __popcnt64(bitboard);
+  return (int)__popcnt64(bitboard);
 #elif defined(__GNUC__) || defined(__clang__)
   return __builtin_popcountll(bitboard);
 #else

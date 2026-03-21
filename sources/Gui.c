@@ -174,8 +174,14 @@ void parse_go(char* command) {
 // main UCI loop
 void uci_loop() {
   // reset STDIN & STDOUT buffers
-  setbuf(stdin, nullptr);
-  setbuf(stdout, nullptr);
+ #ifdef _MSC_VER
+   setvbuf(stdin, NULL, _IONBF, 0);
+   setvbuf(stdout, NULL, _IONBF, 0); 
+ #else
+   setbuf(stdin, nullptr);
+   setbuf(stdout, nullptr);
+#endif _MSC_VER
+
 
   // define user / GUI input buffer
   char input[2000];
