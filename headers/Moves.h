@@ -1,27 +1,62 @@
-#include <stdio.h>
+#ifndef MOVES_H_
+#define MOVES_H_
+
+#include <assert.h>
 #include <string.h>
 
-#include "../headers/Attacks.h"
-#include "../headers/Functions.h"
-#include "../headers/Globals.h"
+#ifdef _MSC_VER
+#  include <intrin.h>
+#endif
 
-// set occupancies
-U64 set_occupancy(int index, int bits_in_mask, U64 attack_mask) {
-  U64 occupancy = 0ULL;
+#include "Defines.h"
+#include "Attacks.h"
+#include "Moves.h"
+#include "Globals.h"
 
-  for (int count = 0; count < bits_in_mask; ++count) {
-    int square = get_ls1b_index(attack_mask);
-    pop_bit(attack_mask, square);
-
-    if (index & (1 << count))
-      occupancy |= (1ULL << square);
+static inline int count_bits(U64 bitboard) {
+#if defined(_MSC_VER)
+  return (int)__popcnt64(bitboard);
+#elif defined(__GNUC__) || defined(__clang__)
+  return __builtin_popcountll(bitboard);
+#else
+  // fallback
+  // count bits within a bitboard (Brian Kernighan's way)
+  int count = 0;
+  while (bitboard) {
+    bitboard &= bitboard - 1;
+    ++count;
   }
+  return count;
+#endif
+}
 
-  return occupancy;
+// get least significant 1st bit index
+static inline int get_ls1b_index(U64 bitboard) {
+  assert(bitboard);
+
+#if defined(_MSC_VER)
+  unsigned long index;
+  _BitScanForward64(&index, bitboard);
+  return index;
+#elif defined(__GNUC__) || defined(__clang__)
+  return __builtin_ctzll(bitboard);
+#else
+  // fallback
+  // get least significant 1st bit index
+  if(bitboard) {
+    return count_bits((bitboard & -bitboard) - 1);
+  } else
+    return -1;
+#endif
+}
+
+static inline void add_move(moves* move_list, int move) {
+  move_list->moves[move_list->count] = move;
+  ++move_list->count;
 }
 
 // make move on chess board
-int make_move(int move, int move_flag) {
+static inline int make_move(int move, int move_flag) {
   if (move_flag == all_moves) {
     copy_board();
 
@@ -139,7 +174,7 @@ int make_move(int move, int move_flag) {
 }
 
 // generate all moves
-void generate_moves(moves* move_list) {
+static inline void generate_moves(moves* move_list) {
   move_list->count = 0;
 
   int source_square, target_square;
@@ -415,3 +450,5 @@ void generate_moves(moves* move_list) {
     }
   }
 }
+
+#endif // !MOVES_H_

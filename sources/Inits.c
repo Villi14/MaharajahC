@@ -1,8 +1,9 @@
 #include "../headers/Inits.h"
 #include "../headers/Attacks.h"
-#include "../headers/Functions.h"
+#include "../headers/Moves.h"
 #include "../headers/Globals.h"
 #include "../headers/MagicNumbers.h"
+#include "../headers/FindMagics.h"
 
 // init slider piece's attack tables
 void init_sliders_attacks(int bishop) {

@@ -1,13 +1,9 @@
-#include <stdio.h>
-
-#include "../headers/Evaluate.h"
 #include "../headers/Fen.h"
-#include "../headers/Functions.h"
+#include "../headers/Moves.h"
 #include "../headers/Globals.h"
-#include "../headers/Gui.h"
+#include "../headers/UCI.h"
 #include "../headers/Inits.h"
 #include "../headers/Prints.h"
-#include "../headers/Search.h"
 
 int main() {
   init_all();

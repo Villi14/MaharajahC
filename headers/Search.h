@@ -2,15 +2,14 @@
 #define SEARCH_H_
 
 #include <stdio.h>
-#include <string.h>
 
-#include "../headers/Attacks.h"
-#include "../headers/Defines.h"
-#include "../headers/Evaluate.h"
-#include "../headers/Functions.h"
-#include "../headers/Globals.h"
-#include "../headers/Prints.h"
-#include "../headers/Search.h"
+#include "Attacks.h"
+#include "Defines.h"
+#include "Evaluate.h"
+#include "Moves.h"
+#include "Globals.h"
+#include "Prints.h"
+#include "Search.h"
 
 static inline int negamax(int alpha, int beta, int depth);
 static inline int quiescence(int alpha, int beta);

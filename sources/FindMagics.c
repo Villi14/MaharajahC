@@ -3,7 +3,7 @@
 
 #include "../headers/Attacks.h"
 #include "../headers/Defines.h"
-#include "../headers/Functions.h"
+#include "../headers/Moves.h"
 #include "../headers/Globals.h"
 #include "../headers/MagicNumbers.h"
 
@@ -13,9 +13,9 @@ unsigned int get_random_U32_number() {
   unsigned int number = random_state;
 
   // XOR shift algorithm
-  number ^= number << 13;
-  number ^= number >> 17;
-  number ^= number << 5;
+  number ^= number << 0xD;
+  number ^= number >> 0x11;
+  number ^= number << 0x5;
 
   // update random number state
   random_state = number;
@@ -35,12 +35,27 @@ U64 get_random_U64_number() {
   U64 n4 = (U64)(get_random_U32_number()) & 0xFFFF;
 
   // return random number
-  return n1 | (n2 << 16) | (n3 << 32) | (n4 << 48);
+  return n1 | (n2 << 0x10) | (n3 << 0x20) | (n4 << 0x30);
 }
 
 // generate magic number candidate
 U64 generate_magic_number() {
   return get_random_U64_number() & get_random_U64_number() & get_random_U64_number();
+}
+
+// set occupancies
+U64 set_occupancy(int index, int bits_in_mask, U64 attack_mask) {
+  U64 occupancy = 0ULL;
+
+  for (int count = 0; count < bits_in_mask; ++count) {
+    int square = get_ls1b_index(attack_mask);
+    pop_bit(attack_mask, square);
+
+    if (index & (1 << count))
+      occupancy |= (1ULL << square);
+  }
+
+  return occupancy;
 }
 
 // find appropriate magic number
@@ -123,3 +138,4 @@ void init_magic_numbers() {
     // init bishop magic numbers
     bishop_magic_numbers[square] = find_magic_number(square, bishop_relevant_bits[square], bishop);
 }
+

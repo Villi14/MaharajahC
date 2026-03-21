@@ -4,11 +4,11 @@
 
 #include "../headers/Defines.h"
 #include "../headers/Fen.h"
-#include "../headers/Functions.h"
+#include "../headers/Moves.h"
 #include "../headers/Globals.h"
 
 // parse user/GUI move string input (e.g. "e7e8q")
-int parse_move(char* move_string) {
+int parse_move(const char* move_string) {
   // create move list instance
   moves move_list[1];
 

@@ -7,7 +7,7 @@
 #include <sys/time.h>
 #endif
 
-#include "../headers/Functions.h"
+#include "../headers/Moves.h"
 #include "../headers/Globals.h"
 #include "../headers/Perft.h"
 
