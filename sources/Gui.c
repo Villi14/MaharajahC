@@ -180,8 +180,7 @@ void uci_loop() {
  #else
    setbuf(stdin, nullptr);
    setbuf(stdout, nullptr);
-#endif _MSC_VER
-
+#endif
 
   // define user / GUI input buffer
   char input[2000];
