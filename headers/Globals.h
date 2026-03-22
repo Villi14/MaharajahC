@@ -27,6 +27,8 @@ enum { rook, bishop };
 */
 enum { wk = 0x1, wq = 0x2, bk = 0x4, bq = 0x8 };
 
+// clang-format off
+
 // board squares
 enum {
   a8, b8, c8, d8, e8, f8, g8, h8,
@@ -38,6 +40,8 @@ enum {
   a2, b2, c2, d2, e2, f2, g2, h2,
   a1, b1, c1, d1, e1, f1, g1, h1, no_sq
 };
+
+// clang-format on
 
 // move types
 enum { all_moves, only_captures };
@@ -78,6 +82,9 @@ extern int ply;
 // best move
 extern int best_move;
 
+// leaf nodes (number of positions reached during the test of the move generator at a given depth)
+extern long nodes;
+
 // pawn attacks table [side][square]
 extern U64 pawn_attacks[2][0x40];
 
@@ -100,13 +107,10 @@ extern U64 bishop_attacks[0x40][0x200];
 extern U64 rook_attacks[0x40][0x1000];
 
 // killer moves [id][ply]
-extern int killer_moves[2][0x40];
+extern int killer_moves[2][max_ply];
 
 // history moves [piece][square]
 extern int history_moves[12][0x40];
-
-// leaf nodes (number of positions reached during the test of the move generator at a given depth)
-extern long nodes;
 
 // convert squares to coordinates
 extern const char* square_to_coordinates[0x40];
@@ -209,9 +213,9 @@ extern const int mvv_lva[0xC][0xC];
 */
 
 // PV length
-extern int pv_length[0x40];
+extern int pv_length[max_ply];
 
 // PV table
-extern int pv_table[0x40][0x40];
+extern int pv_table[0x40][max_ply];
 
 #endif // !GLOBALS_H_

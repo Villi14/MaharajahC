@@ -20,6 +20,10 @@ U64 bishop_attacks[0x40][0x200];
 U64 rook_attacks[0x40][0x1000];
 int killer_moves[2][0x40];
 int history_moves[12][0x40];
+int pv_length[0x40];
+int pv_table[0x40][0x40];
+
+// clang-format off
 
 // convert squares to coordinates
 const char *square_to_coordinates[0x40] = {
@@ -205,8 +209,4 @@ const int mvv_lva[0xC][0xC] = {
   {100, 200, 300, 400, 500, 600, 100, 200, 300, 400, 500, 600}
 };
 
-// PV length
-int pv_length[0x40];
-
-// PV table
-int pv_table[0x40][0x40];
+// clang-format on

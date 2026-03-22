@@ -17,7 +17,7 @@ int main() {
     // parse fen
     parse_fen(tricky_position);
     print_board();
-    search_position(5);
+    search_position(6);
   } else
     uci_loop();
 

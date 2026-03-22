@@ -20,6 +20,9 @@
 #define get_bit(bitboard, square) ((bitboard) & (1ULL << (square)))
 #define pop_bit(bitboard, square) ((bitboard) &= ~(1ULL << (square)))
 
+// max ply that we can reach within a search
+#define max_ply 0x40
+
 /*       binary move bits                               hexidecimal constants
 
    0000 0000 0000 0000 0011 1111    source square       0x3f
@@ -32,6 +35,7 @@
    1000 0000 0000 0000 0000 0000    castling flag       0x800000
 */
 
+// clang-format off
 // encode move
 #define encode_move(source, target, piece, promoted, capture, double_push, enpassant, castling) \
   ((source) |               \
@@ -41,7 +45,9 @@
   ((capture) << 0x14) |     \
   ((double_push) << 0x15) | \
   ((enpassant) << 0x16) |   \
-  ((castling) << 0x17))     \
+  ((castling) << 0x17))
+
+// clang-format on
 
 // extract source square
 #define get_move_source(move) (move & 0x3f)
@@ -73,6 +79,7 @@ typedef struct {
   int count;
 } moves;
 
+// clang-format off
 // preserve board state
 #define copy_board()                                                    \
   U64 bitboards_copy[12], occupancies_copy[3];                          \
@@ -86,5 +93,7 @@ typedef struct {
   memcpy(bitboards, bitboards_copy, 0x60);                              \
   memcpy(occupancies, occupancies_copy, 0x18);                          \
   side = side_copy, enpassant = enpassant_copy, castle = castle_copy;   \
+
+// clang-format on  
 
 #endif // DEFINES_H_
