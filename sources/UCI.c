@@ -174,7 +174,7 @@ void parse_go(char* command) {
 */
 // main UCI loop
 void uci_loop() {
-  // reset STDIN & STDOUT buffers
+// reset STDIN & STDOUT buffers
 #ifdef _MSC_VER
   setvbuf(stdin, NULL, _IONBF, 0);
   setvbuf(stdout, NULL, _IONBF, 0);

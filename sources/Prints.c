@@ -1,7 +1,7 @@
-#include "../headers/Attacks.h"
-#include "../headers/Moves.h"
-#include "../headers/Globals.h"
 #include "../headers/Prints.h"
+#include "../headers/Attacks.h"
+#include "../headers/Globals.h"
+#include "../headers/Moves.h"
 #include "../headers/Search.h"
 
 void print_bitboard(U64 bitboard) {

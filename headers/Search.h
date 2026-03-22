@@ -14,6 +14,7 @@
 static inline int negamax(int alpha, int beta, int depth);
 static inline int quiescence(int alpha, int beta);
 static inline void search_position(int depth);
+static inline void sort_moves(moves* move_list);
 static inline int score_move(int move);
 
 // search position for the best move
@@ -43,6 +44,9 @@ static inline int negamax(int alpha, int beta, int depth) {
   // is king in check
   int in_check = is_square_attacked((side == white) ? get_ls1b_index(bitboards[K]) : get_ls1b_index(bitboards[k]), side ^ 1);
 
+  // increase search depth if the king has been exposed into a check
+  if (in_check) depth++;
+
   // legal moves counter
   int legal_moves = 0;
 
@@ -57,6 +61,9 @@ static inline int negamax(int alpha, int beta, int depth) {
 
   // generate moves
   generate_moves(move_list);
+
+  // sort moves
+  sort_moves(move_list);
 
   // loop over moves within a novelist
   for (int count = 0; count < move_list->count; ++count) {
@@ -149,6 +156,9 @@ static inline int quiescence(int alpha, int beta) {
   // create move list instance
   moves move_list[1];
 
+  // sort moves
+  sort_moves(move_list);
+
   // generate moves
   generate_moves(move_list);
 
@@ -214,7 +224,7 @@ static inline int score_move(int move) {
     }
 
     // loop over bitboards opposite to the current side to move
-    for (int bb_piece = start_piece; bb_piece <= end_piece; bb_piece++) {
+    for (int bb_piece = start_piece; bb_piece <= end_piece; ++bb_piece) {
       // if there's a piece on the target square
       if (get_bit(bitboards[bb_piece], get_move_target(move))) {
         // remove it from corresponding bitboard
@@ -235,19 +245,19 @@ static inline int score_move(int move) {
 }
 
 // sort moves in descending order
-static inline int sort_moves(moves* move_list) {
+static inline void sort_moves(moves* move_list) {
   // move scores
   int move_scores[move_list->count];
-  printf("\n\n");
+
   // score all the moves within a move list
-  for (int count = 0; count < move_list->count; count++)
+  for (int count = 0; count < move_list->count; ++count)
     // score move
     move_scores[count] = score_move(move_list->moves[count]);
 
   // loop over current move within a move list
-  for (int current_move = 0; current_move < move_list->count; current_move++) {
+  for (int current_move = 0; current_move < move_list->count; ++current_move) {
     // loop over next move within a move list
-    for (int next_move = current_move + 1; next_move < move_list->count; next_move++) {
+    for (int next_move = current_move + 1; next_move < move_list->count; ++next_move) {
       // compare current and next move scores
       if (move_scores[current_move] < move_scores[next_move]) {
         // swap scores
@@ -262,7 +272,6 @@ static inline int sort_moves(moves* move_list) {
       }
     }
   }
-  return 0;
 }
 
 #endif // !SEARCH_H_
