@@ -21,18 +21,30 @@ static inline int score_move(int move);
 static inline void search_position(int depth) {
   // find best move within a given position
   int score = negamax(-50000, 50000, depth);
-  if (best_move) {
-    printf("info score cp %d depth %d nodes %ld\n", score, depth, nodes);
 
-    // best move placeholder
-    printf("best move ");
-    print_move(best_move);
-    printf("\n");
+  printf("info score cp %d depth %d nodes %ld pv ", score, depth, nodes);
+
+  // loop over the moves within a PV line
+  for (int count = 0; count < pv_length[0]; ++count) {
+    // print PV move
+    print_move(pv_table[0][count]);
+    printf(" ");
   }
+
+  // print new line
+  printf("\n");
+
+  // best move placeholder
+  printf("bestmove ");
+  print_move(pv_table[0][0]);
+  printf("\n");
 }
 
 // negamax alpha beta search
 static inline int negamax(int alpha, int beta, int depth) {
+  // init PV length
+  pv_length[ply] = ply;
+
   // recursion escape condition
   if (depth == 0)
     // run quiescence search
@@ -50,12 +62,6 @@ static inline int negamax(int alpha, int beta, int depth) {
 
   // legal moves counter
   int legal_moves = 0;
-
-  // best move so far
-  int best_sofar = 0;
-
-  // old value of alpha
-  int old_alpha = alpha;
 
   // create move list instance
   moves move_list[1];
@@ -96,25 +102,35 @@ static inline int negamax(int alpha, int beta, int depth) {
 
     // fail-hard beta cutoff
     if (score >= beta) {
-      // store killer moves
-      killer_moves[1][ply] = killer_moves[0][ply];
-      killer_moves[0][ply] = move_list->moves[count];
-      // node (move) fails high
+      // on quiet moves
+      if (get_move_capture(move_list->moves[count]) == 0) {
+        // store killer moves
+        killer_moves[1][ply] = killer_moves[0][ply];
+        killer_moves[0][ply] = move_list->moves[count];
+      }
       return beta;
     }
 
     // found a better move
     if (score > alpha) {
-      // store history moves
-      history_moves[get_move_piece(move_list->moves[count])][get_move_target(move_list->moves[count])] += depth;
+      // on quiet moves
+      if (get_move_capture(move_list->moves[count]) == 0)
+        // store history moves
+        history_moves[get_move_piece(move_list->moves[count])][get_move_target(move_list->moves[count])] += depth;
 
       // PV node (move)
       alpha = score;
 
-      // if root move
-      if (ply == 0)
-        // associate best move with the best score
-        best_sofar = move_list->moves[count];
+      // write PV move
+      pv_table[ply][ply] = move_list->moves[count];
+
+      // loop over the next ply
+      for (int next_ply = ply + 1; next_ply < pv_length[ply + 1]; next_ply++)
+        // copy move from deeper ply into a current ply's line
+        pv_table[ply][next_ply] = pv_table[ply + 1][next_ply];
+
+      // adjust PV length
+      pv_length[ply] = pv_length[ply + 1];
     }
   }
 
@@ -130,11 +146,6 @@ static inline int negamax(int alpha, int beta, int depth) {
       // return stalemate score
       return 0;
   }
-
-  // found better move
-  if (old_alpha != alpha)
-    // init best move
-    best_move = best_sofar;
 
   // node (move) fails low
   return alpha;
@@ -163,11 +174,11 @@ static inline int quiescence(int alpha, int beta) {
   // create move list instance
   moves move_list[1];
 
-  // sort moves
-  sort_moves(move_list);
-
   // generate moves
   generate_moves(move_list);
+
+  // sort moves
+  sort_moves(move_list);
 
   // loop over moves within a movelist
   for (int count = 0; count < move_list->count; ++count) {

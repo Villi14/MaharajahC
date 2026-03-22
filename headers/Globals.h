@@ -170,6 +170,48 @@ extern const int king_score[0x40];
 // mirror positional score tables for opposite side
 extern const int mirror_score[0x80];
 
+// most valuable victim & less valuable attacker
+
+/*  (Victims) Pawn Knight Bishop   Rook  Queen   King
+  (Attackers)
+        Pawn   105    205    305    405    505    605
+      Knight   104    204    304    404    504    604
+      Bishop   103    203    303    403    503    603
+        Rook   102    202    302    402    502    602
+       Queen   101    201    301    401    501    601
+        King   100    200    300    400    500    600
+*/
+
+// MVV LVA [attacker][victim]
+
 extern const int mvv_lva[0xC][0xC];
+
+/*
+      ================================
+            Triangular PV table
+      --------------------------------
+        PV line: e2e4 e7e5 g1f3 b8c6
+      ================================
+
+           0    1    2    3    4    5
+
+      0    m1   m2   m3   m4   m5   m6
+
+      1    0    m2   m3   m4   m5   m6
+
+      2    0    0    m3   m4   m5   m6
+
+      3    0    0    0    m4   m5   m6
+
+      4    0    0    0    0    m5   m6
+
+      5    0    0    0    0    0    m6
+*/
+
+// PV length
+extern int pv_length[0x40];
+
+// PV table
+extern int pv_table[0x40][0x40];
 
 #endif // !GLOBALS_H_

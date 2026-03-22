@@ -5,6 +5,7 @@
 #include "../headers/Prints.h"
 #include "../headers/Search.h"
 #include "../headers/UCI.h"
+#include "../headers/Perft.h"
 
 int main() {
   init_all();
@@ -20,5 +21,7 @@ int main() {
   } else
     uci_loop();
 
+  //perft_test(5);
+  
   return 0;
 }

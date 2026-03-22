@@ -68,7 +68,7 @@ void perft_test(int depth) {
            old_nodes);
   }
 
-  printf("\n    Depth: %d\n", depth);
+  printf("\n      Depth: %d\n", depth);
   printf("      Nodes: %ld\n", nodes);
   printf("       Time: %ld\n\n", get_time_ms() - start_time);
 }

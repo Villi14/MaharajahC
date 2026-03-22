@@ -189,22 +189,6 @@ const int mirror_score[0x80] = {
   a8, b8, c8, d8, e8, f8, g8, h8
 };
 
-// most valuable victim & less valuable attacker
-
-/*
-
-    (Victims) Pawn Knight Bishop   Rook  Queen   King
-  (Attackers)
-        Pawn   105    205    305    405    505    605
-      Knight   104    204    304    404    504    604
-      Bishop   103    203    303    403    503    603
-        Rook   102    202    302    402    502    602
-       Queen   101    201    301    401    501    601
-        King   100    200    300    400    500    600
-
-*/
-
-// MVV LVA [attacker][victim]
 const int mvv_lva[0xC][0xC] = {
   {105, 205, 305, 405, 505, 605, 105, 205, 305, 405, 505, 605},
   {104, 204, 304, 404, 504, 604, 104, 204, 304, 404, 504, 604},
@@ -220,3 +204,9 @@ const int mvv_lva[0xC][0xC] = {
   {101, 201, 301, 401, 501, 601, 101, 201, 301, 401, 501, 601},
   {100, 200, 300, 400, 500, 600, 100, 200, 300, 400, 500, 600}
 };
+
+// PV length
+int pv_length[0x40];
+
+// PV table
+int pv_table[0x40][0x40];
