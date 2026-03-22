@@ -45,7 +45,8 @@ static inline int negamax(int alpha, int beta, int depth) {
   int in_check = is_square_attacked((side == white) ? get_ls1b_index(bitboards[K]) : get_ls1b_index(bitboards[k]), side ^ 1);
 
   // increase search depth if the king has been exposed into a check
-  if (in_check) depth++;
+  if (in_check)
+    depth++;
 
   // legal moves counter
   int legal_moves = 0;
@@ -95,12 +96,18 @@ static inline int negamax(int alpha, int beta, int depth) {
 
     // fail-hard beta cutoff
     if (score >= beta) {
+      // store killer moves
+      killer_moves[1][ply] = killer_moves[0][ply];
+      killer_moves[0][ply] = move_list->moves[count];
       // node (move) fails high
       return beta;
     }
 
     // found a better move
     if (score > alpha) {
+      // store history moves
+      history_moves[get_move_piece(move_list->moves[count])][get_move_target(move_list->moves[count])] += depth;
+
       // PV node (move)
       alpha = score;
 
@@ -234,11 +241,22 @@ static inline int score_move(int move) {
     }
 
     // score move by MVV LVA lookup [source piece][target piece]
-    return mvv_lva[get_move_piece(move)][target_piece];
+    return mvv_lva[get_move_piece(move)][target_piece] + 100000;
   }
 
   // score quiet move
   else {
+    // score 1st killer move
+    if (killer_moves[0][ply] == move)
+      return 9000;
+
+    // score 2nd killer move
+    else if (killer_moves[1][ply] == move)
+      return 8000;
+
+    // score history move
+    else
+      return history_moves[get_move_piece(move)][get_move_target(move)];
   }
 
   return 0;

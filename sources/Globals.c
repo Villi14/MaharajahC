@@ -18,6 +18,8 @@ U64 bishop_masks[0x40];
 U64 rook_masks[0x40];
 U64 bishop_attacks[0x40][0x200];
 U64 rook_attacks[0x40][0x1000];
+int killer_moves[2][0x40];
+int history_moves[12][0x40];
 
 // convert squares to coordinates
 const char *square_to_coordinates[0x40] = {

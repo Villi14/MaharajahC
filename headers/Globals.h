@@ -99,6 +99,12 @@ extern U64 bishop_attacks[0x40][0x200];
 // rook attacks table [square][occupancies]
 extern U64 rook_attacks[0x40][0x1000];
 
+// killer moves [id][ply]
+extern int killer_moves[2][0x40];
+
+// history moves [piece][square]
+extern int history_moves[12][0x40];
+
 // leaf nodes (number of positions reached during the test of the move generator at a given depth)
 extern long nodes;
 
