@@ -7,8 +7,8 @@
 #include <sys/time.h>
 #endif
 
-#include "../headers/Moves.h"
 #include "../headers/Globals.h"
+#include "../headers/Moves.h"
 #include "../headers/Perft.h"
 
 int get_time_ms() {
@@ -69,6 +69,6 @@ void perft_test(int depth) {
   }
 
   printf("\n      Depth: %d\n", depth);
-  printf("      Nodes: %ld\n", nodes);
+  printf("      Nodes: %lld\n", nodes);
   printf("       Time: %ld\n\n", get_time_ms() - start_time);
 }

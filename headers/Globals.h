@@ -27,6 +27,12 @@ enum { rook, bishop };
 */
 enum { wk = 0x1, wq = 0x2, bk = 0x4, bq = 0x8 };
 
+// game phases
+enum { opening, endgame, middlegame };
+
+// piece types
+enum { PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING };
+
 // clang-format off
 
 // board squares
@@ -84,11 +90,89 @@ extern int follow_pv;
 
 extern int score_pv;
 
+// "almost" unique position identifier aka hash key or position key
+extern U64 hash_key;
+
+// repetition index
+extern int repetition_index;
+
 // best move
 extern int best_move;
 
 // leaf nodes (number of positions reached during the test of the move generator at a given depth)
-extern long nodes;
+extern U64 nodes;
+
+//time controls variables
+
+// exit from engine flag
+extern int quit;
+
+// UCI "movestogo" command moves counter
+extern int movestogo;
+
+// UCI "movetime" command time counter
+extern int movetime;
+
+// UCI "time" command holder (ms)
+extern int uci_time;
+
+// UCI "inc" command's time increment holder
+extern int inc;
+
+// UCI "starttime" command time holder
+extern int starttime;
+
+// UCI "stoptime" command time holder
+extern int stoptime;
+
+// variable to flag time control availability
+extern int timeset;
+
+// variable to flag when the time is up
+extern int stopped;
+
+// full depth moves counter
+extern const int full_depth_moves;
+
+// double pawns penalty
+extern const int double_pawn_penalty_opening;
+extern const int double_pawn_penalty_endgame;
+
+// isolated pawn penalty
+extern const int isolated_pawn_penalty_opening;
+extern const int isolated_pawn_penalty_endgame;
+
+// passed pawn bonus
+extern const int passed_pawn_bonus[8] ;
+
+// semi open file score
+extern const int semi_open_file_score;
+
+// open file score
+extern const int open_file_score;
+
+// mobility units (values from engine Fruit reloaded)
+extern const int bishop_unit;
+extern  const int queen_unit;
+
+// mobility bonuses (values from engine Fruit reloaded)
+extern  const int bishop_mobility_opening;
+extern  const int bishop_mobility_endgame;
+extern  const int queen_mobility_opening;
+extern  const int queen_mobility_endgame;
+
+// depth limit to consider reduction
+extern  const int reduction_limit;
+
+// number hash table entries
+extern int hash_entries;
+
+// king's shield bonus
+extern const int king_shield_bonus;
+
+// game phase scores
+extern const int opening_phase_score;
+extern const int endgame_phase_score;
 
 // pawn attacks table [side][square]
 extern U64 pawn_attacks[2][0x40];
@@ -159,7 +243,7 @@ extern const int castling_rights[0x40];
     ♕ =   1000  = ♙ * 10
     ♔ =   10000 = ♙ * 100
 */
-extern int material_score[0xC];
+extern int material_score[2][0xC];
 
 // pawn positional score
 extern const int pawn_score[0x40];
@@ -222,5 +306,10 @@ extern int pv_length[max_ply];
 
 // PV table
 extern int pv_table[max_ply][max_ply];
+
+// positions repetition table
+extern U64 repetition_table[10000];  // 1000 is a number of plies (500 moves) in the entire game
+
+extern const int positional_score[2][6][64];
 
 #endif // !GLOBALS_H_

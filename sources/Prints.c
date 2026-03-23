@@ -1,7 +1,6 @@
 #include "../headers/Prints.h"
 #include "../headers/Attacks.h"
 #include "../headers/Globals.h"
-#include "../headers/Moves.h"
 #include "../headers/Search.h"
 
 void print_bitboard(U64 bitboard) {
@@ -49,6 +48,9 @@ void print_board() {
   printf("     Side:     %s\n", !side ? "white" : "black");
   printf("     Enpassant:   %s\n", (enpassant != no_sq) ? square_to_coordinates[enpassant] : "no");
   printf("     Castling:  %c%c%c%c\n\n", (castle & wk) ? 'K' : '-', (castle & wq) ? 'Q' : '-', (castle & bk) ? 'k' : '-', (castle & bq) ? 'q' : '-');
+
+  // print hash key
+  printf("     Hash key:  %llx\n\n", hash_key);
 }
 
 void print_attacked_squares(int side_) {

@@ -12,40 +12,8 @@
 #include "Defines.h"
 #include "Globals.h"
 #include "Moves.h"
-
-static inline int count_bits(U64 bitboard) {
-#if defined(_MSC_VER)
-  return (int)__popcnt64(bitboard);
-#elif defined(__GNUC__) || defined(__clang__)
-  return __builtin_popcountll(bitboard);
-#else
-  // fallback
-  // count bits within a bitboard (Brian Kernighan's way)
-  int count = 0;
-  while (bitboard) {
-    bitboard &= bitboard - 1;
-    ++count;
-  }
-  return count;
-#endif
-}
-
-// get least significant 1st bit index
-static inline int get_ls1b_index(U64 bitboard) {
-  assert(bitboard);
-
-#if defined(_MSC_VER)
-  unsigned long index;
-  _BitScanForward64(&index, bitboard);
-  return index;
-#elif defined(__GNUC__) || defined(__clang__)
-  return __builtin_ctzll(bitboard);
-#else
-  // fallback
-  // get least significant 1st bit index
-  return count_bits((bitboard & -bitboard) - 1);
-#endif
-}
+#include "Zobrist.h"
+#include "Utils.h"
 
 static inline void add_move(moves* move_list, int move) {
   move_list->moves[move_list->count] = move;
@@ -69,6 +37,10 @@ static inline int make_move(int move, const int move_flag) {
     pop_bit(bitboards[piece], source_square);
     set_bit(bitboards[piece], target_square);
 
+    // hash piece
+    hash_key ^= piece_keys[piece][source_square]; // remove piece from source square in hash key
+    hash_key ^= piece_keys[piece][target_square]; // set piece to the target square in hash key
+
     // handling capture moves
     if (capture) {
       // const int opponent_king = (side == white) ? k : K;
@@ -91,6 +63,9 @@ static inline int make_move(int move, const int move_flag) {
       for (int bb_piece = start_piece; bb_piece <= end_piece; ++bb_piece) {
         if (get_bit(bitboards[bb_piece], target_square)) {
           pop_bit(bitboards[bb_piece], target_square);
+
+          // remove the piece from hash key
+          hash_key ^= piece_keys[bb_piece][target_square];
           break;
         }
       }
@@ -98,56 +73,141 @@ static inline int make_move(int move, const int move_flag) {
 
     // handle pawn promotions
     if (promoted_piece) {
-      pop_bit(bitboards[(side == white) ? P : p], target_square);
+      // white to move
+      if (side == white) {
+        // erase the pawn from the target square
+        pop_bit(bitboards[P], target_square);
+
+        // remove pawn from hash key
+        hash_key ^= piece_keys[P][target_square];
+      }
+
+      // black to move
+      else {
+        // erase the pawn from the target square
+        pop_bit(bitboards[p], target_square);
+
+        // remove pawn from hash key
+        hash_key ^= piece_keys[p][target_square];
+      }
+
+      // set up promoted piece on chess board
       set_bit(bitboards[promoted_piece], target_square);
+
+      // add promoted piece into the hash key
+      hash_key ^= piece_keys[promoted_piece][target_square];
     }
 
     // handle enpassant captures
     if (enpass) {
+      // erase the pawn depending on side to move
       (side == white) ? pop_bit(bitboards[p], target_square + 8) : pop_bit(bitboards[P], target_square - 8);
+
+      // white to move
+      if (side == white) {
+        // remove captured pawn
+        pop_bit(bitboards[p], target_square + 8);
+
+        // remove pawn from hash key
+        hash_key ^= piece_keys[p][target_square + 8];
+      }
+
+      // black to move
+      else {
+        // remove captured pawn
+        pop_bit(bitboards[P], target_square - 8);
+
+        // remove pawn from hash key
+        hash_key ^= piece_keys[P][target_square - 8];
+      }
     }
+
+    // hash enpassant if available (remove enpassant square from hash key )
+    if (enpassant != no_sq)
+      hash_key ^= enpassant_keys[enpassant];
 
     enpassant = no_sq;
 
     // handle double pawn push
     if (double_push) {
-      (side == white) ? (enpassant = target_square + 8) : (enpassant = target_square - 8);
+      // white to move
+      if (side == white) {
+        // set enpassant square
+        enpassant = target_square + 8;
+
+        // hash enpassant
+        hash_key ^= enpassant_keys[target_square + 8];
+      }
+
+      // black to move
+      else {
+        // set enpassant square
+        enpassant = target_square - 8;
+
+        // hash enpassant
+        hash_key ^= enpassant_keys[target_square - 8];
+      }
     }
 
     // handle castling moves
     if (castling) {
+      // switch target square
       switch (target_square) {
       // white castles king side
       case (g1):
+        // move H rook
         pop_bit(bitboards[R], h1);
         set_bit(bitboards[R], f1);
+
+        // hash rook
+        hash_key ^= piece_keys[R][h1]; // remove rook from h1 from hash key
+        hash_key ^= piece_keys[R][f1]; // put rook on f1 into a hash key
         break;
 
       // white castles queen side
       case (c1):
+        // move A rook
         pop_bit(bitboards[R], a1);
         set_bit(bitboards[R], d1);
+
+        // hash rook
+        hash_key ^= piece_keys[R][a1]; // remove rook from a1 from hash key
+        hash_key ^= piece_keys[R][d1]; // put rook on d1 into a hash key
         break;
 
       // black castles king side
       case (g8):
+        // move H rook
         pop_bit(bitboards[r], h8);
         set_bit(bitboards[r], f8);
+
+        // hash rook
+        hash_key ^= piece_keys[r][h8]; // remove rook from h8 from hash key
+        hash_key ^= piece_keys[r][f8]; // put rook on f8 into a hash key
         break;
 
       // black castles queen side
       case (c8):
+        // move A rook
         pop_bit(bitboards[r], a8);
         set_bit(bitboards[r], d8);
-        break;
-      default:
+
+        // hash rook
+        hash_key ^= piece_keys[r][a8]; // remove rook from a8 from hash key
+        hash_key ^= piece_keys[r][d8]; // put rook on d8 into a hash key
         break;
       }
     }
 
+    // hash castling
+    hash_key ^= castle_keys[castle];
+
     // update castling rights
     castle &= castling_rights[source_square];
     castle &= castling_rights[target_square];
+
+    // hash castling
+    hash_key ^= castle_keys[castle];
 
     // TODO: why 24?
     memset(occupancies, 0ULL, 24);
@@ -162,6 +222,9 @@ static inline int make_move(int move, const int move_flag) {
     occupancies[both] |= occupancies[black];
 
     side ^= 1;
+
+    // hash side
+    hash_key ^= side_key;
 
     // make sure that king has not been exposed into a check (illegal move)
     if (is_square_attacked((side == white) ? get_ls1b_index(bitboards[k]) : get_ls1b_index(bitboards[K]), side)) {

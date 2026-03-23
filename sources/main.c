@@ -1,27 +1,18 @@
-#include "../headers/Fen.h"
-#include "../headers/Globals.h"
+#include <stdlib.h>
+
 #include "../headers/Inits.h"
-#include "../headers/Moves.h"
-#include "../headers/Prints.h"
-#include "../headers/Search.h"
 #include "../headers/UCI.h"
-#include "../headers/Perft.h"
+#include "../headers/Transposition.h"
 
 int main() {
   init_all();
 
-  int debug = 1;
-
-  // if debugging
-  if (debug) {
-    // parse fen
-    parse_fen(cmk_position);
-    print_board();
-    search_position(6);
-  } else
+    // connect to GUI
     uci_loop();
 
-  //perft_test(5);
+    // free hash table memory on exit
+    free(hash_table);
+
   
   return 0;
 }

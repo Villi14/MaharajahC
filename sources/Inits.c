@@ -1,9 +1,13 @@
 #include "../headers/Inits.h"
 #include "../headers/Attacks.h"
-#include "../headers/Moves.h"
+#include "../headers/FindMagics.h"
 #include "../headers/Globals.h"
 #include "../headers/MagicNumbers.h"
-#include "../headers/FindMagics.h"
+#include "../headers/Masks.h"
+#include "../headers/Zobrist.h"
+#include "../headers/Utils.h"
+#include "../headers/Transposition.h"
+
 
 // init slider piece's attack tables
 void init_sliders_attacks(int bishop) {
@@ -75,6 +79,15 @@ void init_all() {
   // init slider pieces attacks
   init_sliders_attacks(bishop);
   init_sliders_attacks(rook);
+
+  // init random keys for hashing purposes
+  init_random_keys();
+
+  // init evaluation masks
+  init_evaluation_masks();
+
+  // init hash table with default 64 MB
+  init_hash_table(64);
 
   // init magic numbers
   // init_magic_numbers();

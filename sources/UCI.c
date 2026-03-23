@@ -1,12 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
+#include <unistd.h>
 
 #include "../headers/Defines.h"
 #include "../headers/Fen.h"
-#include "../headers/Moves.h"
 #include "../headers/Globals.h"
+#include "../headers/Moves.h"
+#include "../headers/Perft.h"
+#include "../headers/Search.h"
+#include "../headers/UCI.h"
+#include "../headers/Utils.h"
 
 // parse user/GUI move string input (e.g. "e7e8q")
 int parse_move(const char* move_string) {
@@ -131,6 +135,12 @@ void parse_position(char* command) {
         // break out of the loop
         break;
 
+      // increment repetition index
+      repetition_index++;
+
+      // wtire hash key into a repetition table
+      repetition_table[repetition_index] = hash_key;
+
       // make move on the chess board
       make_move(move, all_moves);
 
@@ -148,24 +158,99 @@ void parse_position(char* command) {
 
 // parse UCI "go" command
 void parse_go(char* command) {
-  // init depth
+  // reset time control
+  reset_time_control();
+
+  // init parameters
   int depth = -1;
 
-  // init character pointer to the current depth argument
-  char* current_depth = strstr(command, "depth");
+  // init argument
+  char* argument = NULL;
 
-  // handle fixed depth search
-  if (current_depth != nullptr)
-    //convert string to integer and assign the result value to depth
-    depth = atoi(current_depth + 6);
+  // infinite search
+  if ((argument = strstr(command, "infinite"))) {
+  }
 
-  // different time controls placeholder
-  else
-    depth = 6;
+  // match UCI "binc" command
+  if ((argument = strstr(command, "binc")) && side == black)
+    // parse black time increment
+    inc = atoi(argument + 5);
+
+  // match UCI "winc" command
+  if ((argument = strstr(command, "winc")) && side == white)
+    // parse white time increment
+    inc = atoi(argument + 5);
+
+  // match UCI "wtime" command
+  if ((argument = strstr(command, "wtime")) && side == white)
+    // parse white time limit
+    uci_time = atoi(argument + 6);
+
+  // match UCI "btime" command
+  if ((argument = strstr(command, "btime")) && side == black)
+    // parse black time limit
+    uci_time = atoi(argument + 6);
+
+  // match UCI "movestogo" command
+  if ((argument = strstr(command, "movestogo")))
+    // parse number of moves to go
+    movestogo = atoi(argument + 10);
+
+  // match UCI "movetime" command
+  if ((argument = strstr(command, "movetime")))
+    // parse amount of time allowed to spend to make a move
+    movetime = atoi(argument + 9);
+
+  // match UCI "depth" command
+  if ((argument = strstr(command, "depth")))
+    // parse search depth
+    depth = atoi(argument + 6);
+
+  // if move time is not available
+  if (movetime != -1) {
+    // set time equal to move time
+    uci_time = movetime;
+
+    // set moves to go to 1
+    movestogo = 1;
+  }
+
+  // init start time
+  starttime = get_time_ms();
+
+  // init search depth
+  depth = depth;
+
+  // if time control is available
+  if (uci_time != -1) {
+    // flag we're playing with time control
+    timeset = 1;
+
+    // set up timing
+    uci_time /= movestogo;
+
+    // disable time buffer when time is almost up
+    if (uci_time > 1500)
+      uci_time -= 50;
+
+    // init stoptime
+    stoptime = starttime + uci_time + inc;
+
+    // treat increment as seconds per move when time is almost up
+    if (uci_time < 1500 && inc && depth == 64)
+      stoptime = starttime + inc - 50;
+  }
+
+  // if depth is not available
+  if (depth == -1)
+    // set depth to 64 plies (takes ages to complete...)
+    depth = 64;
+
+  // print debug info
+  printf("time: %d  start: %u  stop: %u  depth: %d  timeset:%d\n", uci_time, starttime, stoptime, depth, timeset);
 
   // search position
-  // search_position(depth);
-  printf("depth: %d\n", depth);
+  search_position(depth);
 }
 
 /*  GUI -> isready
@@ -174,6 +259,12 @@ void parse_go(char* command) {
 */
 // main UCI loop
 void uci_loop() {
+  // max hash MB
+  int max_hash = 128;
+
+  // default MB value
+  int mb = 64;
+
 // reset STDIN & STDOUT buffers
 #ifdef _MSC_VER
   setvbuf(stdin, NULL, _IONBF, 0);
@@ -187,8 +278,9 @@ void uci_loop() {
   char input[2000];
 
   // print engine info
-  printf("id name Maharajah\n");
-  printf("id name Villi\n");
+  printf("id name BBC %s\n", version);
+  printf("id author Code Monkey King\n");
+  printf("option name Hash type spin default 64 min 4 max %d\n", max_hash);
   printf("uciok\n");
 
   // main loop
@@ -216,15 +308,21 @@ void uci_loop() {
     }
 
     // parse UCI "position" command
-    else if (strncmp(input, "position", 8) == 0)
+    else if (strncmp(input, "position", 8) == 0) {
       // call parse position function
       parse_position(input);
 
+      // clear hash table
+      clear_hash_table();
+    }
     // parse UCI "ucinewgame" command
-    else if (strncmp(input, "ucinewgame", 10) == 0)
+    else if (strncmp(input, "ucinewgame", 10) == 0) {
       // call parse position function
       parse_position("position startpos");
 
+      // clear hash table
+      clear_hash_table();
+    }
     // parse UCI "go" command
     else if (strncmp(input, "go", 2) == 0)
       // call parse go function
@@ -232,15 +330,125 @@ void uci_loop() {
 
     // parse UCI "quit" command
     else if (strncmp(input, "quit", 4) == 0)
-      // quit from the chess engine program execution
+      // quit from the UCI loop (terminate program)
       break;
 
     // parse UCI "uci" command
     else if (strncmp(input, "uci", 3) == 0) {
       // print engine info
-      printf("id name Maharajah\n");
-      printf("id name Villi\n");
+      printf("id name BBC %s\n", version);
+      printf("id author Code Monkey King\n");
       printf("uciok\n");
     }
+
+    else if (!strncmp(input, "setoption name Hash value ", 26)) {
+      // init MB
+      sscanf(input, "%*s %*s %*s %*s %d", &mb);
+
+      // adjust MB if going beyond the aloowed bounds
+      if (mb < 4)
+        mb = 4;
+      if (mb > max_hash)
+        mb = max_hash;
+
+      // set hash table size in MB
+      printf("    Set hash table size to %dMB\n", mb);
+      init_hash_table(mb);
+    }
   }
+}
+
+int input_waiting() {
+#ifdef _MSC_VER
+  static int init = 0, pipe;
+  static HANDLE inh;
+  DWORD dw;
+
+  if (!init) {
+    init = 1;
+    inh = GetStdHandle(STD_INPUT_HANDLE);
+    pipe = !GetConsoleMode(inh, &dw);
+    if (!pipe) {
+      SetConsoleMode(inh, dw & ~(ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT));
+      FlushConsoleInputBuffer(inh);
+    }
+  }
+
+  if (pipe) {
+    if (!PeekNamedPipe(inh, NULL, 0, NULL, &dw, NULL))
+      return 1;
+    return dw;
+  }
+
+  else {
+    GetNumberOfConsoleInputEvents(inh, &dw);
+    return dw <= 1 ? 0 : dw;
+  }
+#elif defined(__GNUC__) || defined(__clang__)
+  fd_set readfds;
+  struct timeval tv;
+  FD_ZERO(&readfds);
+  FD_SET(fileno(stdin), &readfds);
+  tv.tv_sec = 0;
+  tv.tv_usec = 0;
+  select(16, &readfds, 0, 0, &tv);
+
+  return (FD_ISSET(fileno(stdin), &readfds));
+#endif
+}
+
+// read GUI/user input
+void read_input() {
+  // bytes to read holder
+  int bytes;
+
+  // GUI/user input
+  char input[256] = "", *endc;
+
+  // "listen" to STDIN
+  if (input_waiting()) {
+    // tell engine to stop calculating
+    stopped = 1;
+
+    // loop to read bytes from STDIN
+    do {
+      // read bytes from STDIN
+      bytes = read(fileno(stdin), input, 256);
+    }
+
+    // until bytes available
+    while (bytes < 0);
+
+    // searches for the first occurrence of '\n'
+    endc = strchr(input, '\n');
+
+    // if found new line set value at pointer to 0
+    if (endc)
+      *endc = 0;
+
+    // if input is available
+    if (strlen(input) > 0) {
+      // match UCI "quit" command
+      if (!strncmp(input, "quit", 4))
+        // tell engine to terminate exacution
+        quit = 1;
+
+      // // match UCI "stop" command
+      else if (!strncmp(input, "stop", 4))
+        // tell engine to terminate exacution
+        quit = 1;
+    }
+  }
+}
+
+// a bridge function to interact between search and GUI input
+void communicate() {
+  // if time is up break here
+  if (timeset == 1 && get_time_ms() > stoptime) {
+    // tell engine to stop calculating
+    stopped = 1;
+  }
+
+  // read GUI input
+  read_input();
 }

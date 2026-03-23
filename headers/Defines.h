@@ -1,8 +1,19 @@
 #ifndef DEFINES_H_
 #define DEFINES_H_
 
+#define version "1.0.0"
+
 // define bitboard data type
 #define U64 unsigned long long
+
+/*
+     These are the score bounds for the range of the mating scores
+   [-infinity, -mate_value ... -mate_score, ... score ... mate_score ... mate_value, infinity]
+*/
+
+#define infinity 50000
+#define mate_value 49000
+#define mate_score 48000
 
 #ifdef _MSC_VER
 #define nullptr NULL
@@ -14,6 +25,7 @@
 #define tricky_position "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1 "
 #define killer_position "rnbqkb1r/pp1p1pPp/8/2p1pP2/1P1P4/3P3P/P1P1P3/RNBQKBNR w KQkq e6 0 1"
 #define cmk_position "r2q1rk1/ppp2ppp/2n1bn2/2b1p3/3pP3/3P1NPP/PPP1NPB1/R1BQ1RK1 b - - 0 9 "
+#define repetitions "2r3k1/R7/8/1R6/8/8/P4KPP/8 w - - 0 40 "
 
 // set/get/pop bit macros
 #define set_bit(bitboard, square) ((bitboard) |= (1ULL << (square)))
@@ -87,12 +99,14 @@ typedef struct {
   memcpy(bitboards_copy, bitboards, 0x60);                              \
   memcpy(occupancies_copy, occupancies, 0x18);                          \
   side_copy = side, enpassant_copy = enpassant, castle_copy = castle;   \
+  U64 hash_key_copy = hash_key;                                         \
 
 // restore board state
 #define take_back()                                                     \
   memcpy(bitboards, bitboards_copy, 0x60);                              \
   memcpy(occupancies, occupancies_copy, 0x18);                          \
   side = side_copy, enpassant = enpassant_copy, castle = castle_copy;   \
+  hash_key = hash_key_copy;                                             \
 
 // clang-format on  
 

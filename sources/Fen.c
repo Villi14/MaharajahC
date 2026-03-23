@@ -1,15 +1,14 @@
 #include <string.h>
 
+#include "../headers/Fen.h"
 #include "../headers/Defines.h"
 #include "../headers/Globals.h"
+#include "../headers/Zobrist.h"
 
 // parse FEN string
 void parse_fen(const char* fen) {
-  memset(bitboards, 0ULL, sizeof(bitboards));
-  memset(occupancies, 0ULL, sizeof(occupancies));
-  side = 0;
-  enpassant = no_sq;
-  castle = 0;
+  // prepare for new game
+  reset_board();
 
   for (int rank = 0; rank < 8; ++rank) {
     for (int file = 0; file < 8; ++file) {
@@ -87,4 +86,27 @@ void parse_fen(const char* fen) {
 
   occupancies[both] |= occupancies[white];
   occupancies[both] |= occupancies[black];
+
+  // init hash key
+  hash_key = generate_hash_key();
+}
+
+// reset board variables
+void reset_board() {
+  // reset board position (bitboards)
+  memset(bitboards, 0ULL, sizeof(bitboards));
+
+  // reset occupancies (bitboards)
+  memset(occupancies, 0ULL, sizeof(occupancies));
+
+  // reset game state variables
+  side = 0;
+  enpassant = no_sq;
+  castle = 0;
+
+  // reset repetition index
+  repetition_index = 0;
+
+  // reset repetition table
+  memset(repetition_table, 0ULL, sizeof(repetition_table));
 }
