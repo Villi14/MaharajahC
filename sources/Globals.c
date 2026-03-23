@@ -8,6 +8,8 @@ unsigned int random_state = 0x6B8B4567;
 long nodes;
 int ply;
 int best_move;
+int follow_pv;
+int score_pv;
 
 U64 bitboards[0xC];
 U64 occupancies[3];
@@ -20,8 +22,8 @@ U64 bishop_attacks[0x40][0x200];
 U64 rook_attacks[0x40][0x1000];
 int killer_moves[2][0x40];
 int history_moves[12][0x40];
-int pv_length[0x40];
-int pv_table[0x40][0x40];
+int pv_length[max_ply];
+int pv_table[max_ply][max_ply];
 
 // clang-format off
 

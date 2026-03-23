@@ -79,6 +79,11 @@ extern unsigned int random_state;
 // half move counter
 extern int ply;
 
+// follow PV & score PV move
+extern int follow_pv;
+
+extern int score_pv;
+
 // best move
 extern int best_move;
 
@@ -216,6 +221,6 @@ extern const int mvv_lva[0xC][0xC];
 extern int pv_length[max_ply];
 
 // PV table
-extern int pv_table[0x40][max_ply];
+extern int pv_table[max_ply][max_ply];
 
 #endif // !GLOBALS_H_

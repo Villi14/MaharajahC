@@ -16,6 +16,7 @@ static inline int quiescence(int alpha, int beta);
 static inline void search_position(int depth);
 static inline void sort_moves(moves* move_list);
 static inline int score_move(int move);
+static inline void enable_pv_scoring(moves* move_list);
 
 // search position for the best move
 static inline void search_position(int depth) {
@@ -25,6 +26,10 @@ static inline void search_position(int depth) {
   // reset nodes counter
   nodes = 0;
 
+  // reset follow PV flags
+  follow_pv = 0;
+  score_pv = 0;
+
   // clear helper data structures for search
   memset(killer_moves, 0, sizeof(killer_moves));
   memset(history_moves, 0, sizeof(history_moves));
@@ -32,8 +37,10 @@ static inline void search_position(int depth) {
   memset(pv_length, 0, sizeof(pv_length));
 
   // iterative deepening
-  for (int current_depth = 1; current_depth <= depth; current_depth++) {
+  for (int current_depth = 1; current_depth <= depth; ++current_depth) {
     nodes = 0;
+    // enable follow PV flag
+    follow_pv = 1;
 
     // find best move within a given position
     score = negamax(-50000, 50000, current_depth);
@@ -41,7 +48,7 @@ static inline void search_position(int depth) {
     printf("info score cp %d depth %d nodes %ld pv ", score, current_depth, nodes);
 
     // loop over the moves within a PV line
-    for (int count = 0; count < pv_length[0]; count++) {
+    for (int count = 0; count < pv_length[0]; ++count) {
       // print PV move
       print_move(pv_table[0][count]);
       printf(" ");
@@ -58,6 +65,10 @@ static inline void search_position(int depth) {
 
   // reset nodes counter
   nodes = 0;
+
+  // reset follow PV flags
+  follow_pv = 0;
+  score_pv = 0;
 
   // clear helper data structures for search
   memset(killer_moves, 0, sizeof(killer_moves));
@@ -109,7 +120,7 @@ static inline int negamax(int alpha, int beta, int depth) {
 
   // increase search depth if the king has been exposed into a check
   if (in_check)
-    depth++;
+    ++depth;
 
   // legal moves counter
   int legal_moves = 0;
@@ -119,6 +130,11 @@ static inline int negamax(int alpha, int beta, int depth) {
 
   // generate moves
   generate_moves(move_list);
+
+  // if we are now following PV line
+  if (follow_pv)
+    // enable PV move scoring
+    enable_pv_scoring(move_list);
 
   // sort moves
   sort_moves(move_list);
@@ -140,7 +156,7 @@ static inline int negamax(int alpha, int beta, int depth) {
       continue;
     }
     // increment legal moves
-    legal_moves++;
+    ++legal_moves;
 
     // score current move
     int score = -negamax(-beta, -alpha, depth - 1);
@@ -275,6 +291,22 @@ static inline int quiescence(int alpha, int beta) {
 }
 
 static inline int score_move(int move) {
+  // if PV move scoring is allowed
+  if (score_pv) {
+    // make sure we are dealing with PV move
+    if (pv_table[0][ply] == move) {
+      // disable score PV flag
+      score_pv = 0;
+
+      printf("current PV move: ");
+      print_move(move);
+      printf(" ply: %d\n", ply);
+
+      // give PV move the highest score to search it first
+      return 20000;
+    }
+  }
+
   // score capture move
   if (get_move_capture(move)) {
     // init target piece
@@ -350,6 +382,24 @@ static inline void sort_moves(moves* move_list) {
         move_list->moves[current_move] = move_list->moves[next_move];
         move_list->moves[next_move] = temp_move;
       }
+    }
+  }
+}
+
+// enable PV move scoring
+static inline void enable_pv_scoring(moves* move_list) {
+  // disable following PV
+  follow_pv = 0;
+
+  // loop over the moves within a move list
+  for (int count = 0; count < move_list->count; ++count) {
+    // make sure we hit PV move
+    if (pv_table[0][ply] == move_list->moves[count]) {
+      // enable move scoring
+      score_pv = 1;
+
+      // enable following PV
+      follow_pv = 1;
     }
   }
 }

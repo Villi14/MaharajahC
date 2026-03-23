@@ -71,12 +71,12 @@ static inline int make_move(int move, const int move_flag) {
 
     // handling capture moves
     if (capture) {
-      const int opponent_king = (side == white) ? k : K;
+      // const int opponent_king = (side == white) ? k : K;
 
-      if (get_bit(bitboards[opponent_king], target_square)) {
-        take_back();
-        return 0;
-      }
+      // if (get_bit(bitboards[opponent_king], target_square)) {
+      //   take_back();
+      //   return 0;
+      // }
 
       int start_piece, end_piece;
 
@@ -175,7 +175,6 @@ static inline int make_move(int move, const int move_flag) {
     else
       return 0;
   }
-  return 0;
 }
 
 // generate all moves
