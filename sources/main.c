@@ -15,7 +15,7 @@ int main() {
   // if debugging
   if (debug) {
     // parse fen
-    parse_fen(tricky_position);
+    parse_fen(cmk_position);
     print_board();
     search_position(6);
   } else

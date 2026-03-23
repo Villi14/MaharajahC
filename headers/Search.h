@@ -38,7 +38,6 @@ static inline void search_position(int depth) {
 
   // iterative deepening
   for (int current_depth = 1; current_depth <= depth; ++current_depth) {
-    nodes = 0;
     // enable follow PV flag
     follow_pv = 1;
 
@@ -62,43 +61,13 @@ static inline void search_position(int depth) {
   printf("bestmove ");
   print_move(pv_table[0][0]);
   printf("\n");
-
-  // reset nodes counter
-  nodes = 0;
-
-  // reset follow PV flags
-  follow_pv = 0;
-  score_pv = 0;
-
-  // clear helper data structures for search
-  memset(killer_moves, 0, sizeof(killer_moves));
-  memset(history_moves, 0, sizeof(history_moves));
-  memset(pv_table, 0, sizeof(pv_table));
-  memset(pv_length, 0, sizeof(pv_length));
-
-  // find best move within a given position
-  score = negamax(-50000, 50000, depth);
-
-  printf("info score cp %d depth %d nodes %ld pv ", score, depth, nodes);
-
-  // loop over the moves within a PV line
-  for (int count = 0; count < pv_length[0]; ++count) {
-    // print PV move
-    print_move(pv_table[0][count]);
-    printf(" ");
-  }
-
-  // print new line
-  printf("\n");
-
-  // best move placeholder
-  printf("bestmove ");
-  print_move(pv_table[0][0]);
-  printf("\n");
 }
 
 // negamax alpha beta search
 static inline int negamax(int alpha, int beta, int depth) {
+  // define find PV node variable
+  int found_pv = 0;
+
   // init PV length
   pv_length[ply] = ply;
 
@@ -158,8 +127,46 @@ static inline int negamax(int alpha, int beta, int depth) {
     // increment legal moves
     ++legal_moves;
 
-    // score current move
-    int score = -negamax(-beta, -alpha, depth - 1);
+    /*
+        if (fFoundPv) {
+            val = -AlphaBeta(depth - 1, -alpha - 1, -alpha);
+
+            if ((val > alpha) && (val < beta)) // Check for failure.
+
+                val = -AlphaBeta(depth - 1, -beta, -alpha);
+
+        } else
+
+            val = -AlphaBeta(depth - 1, -beta, -alpha);
+        */
+
+    // variable to store current move's score (from the static evaluation perspective)
+    int score;
+
+    // on PV node hit
+    if (found_pv) {
+      /* Once you've found a move with a score that is between alpha and beta,
+               the rest of the moves are searched with the goal of proving that they are all bad.
+               It's possible to do this a bit faster than a search that worries that one
+               of the remaining moves might be good. */
+      score = -negamax(-alpha - 1, -alpha, depth - 1);
+
+      /* If the algorithm finds out that it was wrong, and that one of the
+               subsequent moves was better than the first PV move, it has to search again,
+               in the normal alpha-beta manner.  This happens sometimes, and it's a waste of time,
+               but generally not often enough to counteract the savings gained from doing the
+               "bad move proof" search referred to earlier. */
+      if ((score > alpha) && (score < beta)) // Check for failure.
+        /* re-search the move that has failed to be proved to be bad
+                   with normal alpha beta score bounds*/
+        score = -negamax(-beta, -alpha, depth - 1);
+    }
+
+    // for all other types of nodes (moves)  1056080 824253
+    else {
+      // do normal alpha beta search
+      score = -negamax(-beta, -alpha, depth - 1);
+    }
 
     // decrement ply
     --ply;
@@ -187,6 +194,9 @@ static inline int negamax(int alpha, int beta, int depth) {
 
       // PV node (move)
       alpha = score;
+
+      // enable found PV flag
+      found_pv = 1;
 
       // write PV move
       pv_table[ply][ply] = move_list->moves[count];
@@ -297,10 +307,6 @@ static inline int score_move(int move) {
     if (pv_table[0][ply] == move) {
       // disable score PV flag
       score_pv = 0;
-
-      printf("current PV move: ");
-      print_move(move);
-      printf(" ply: %d\n", ply);
 
       // give PV move the highest score to search it first
       return 20000;
