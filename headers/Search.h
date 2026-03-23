@@ -335,7 +335,7 @@ static inline int score_move(int move) {
     }
 
     // score move by MVV LVA lookup [source piece][target piece]
-    return mvv_lva[get_move_piece(move)][target_piece] + 100000;
+    return mvv_lva[get_move_piece(move)][target_piece] + 10000;
   }
 
   // score quiet move
