@@ -8,6 +8,8 @@
   #include <io.h>
 #elif defined(__GNUC__) || defined(__clang__)
   #include <unistd.h> 
+  #include <sys/time.h>
+  #include <sys/select.h>
 #endif
 
 #include "../headers/Defines.h"
@@ -395,12 +397,12 @@ int input_waiting() {
   fd_set readfds;
   struct timeval tv;
   FD_ZERO(&readfds);
-  FD_SET(fileno(stdin), &readfds);
+  FD_SET(STDIN_FILENO, &readfds);
   tv.tv_sec = 0;
   tv.tv_usec = 0;
   select(16, &readfds, 0, 0, &tv);
 
-  return (FD_ISSET(fileno(stdin), &readfds));
+  return (FD_ISSET(STDIN_FILENO, &readfds));
 #endif
 }
 
@@ -420,7 +422,7 @@ void read_input() {
     // loop to read bytes from STDIN
     do {
       // read bytes from STDIN
-      bytes = read(fileno(stdin), input, 256);
+      bytes = read(STDIN_FILENO, input, 256);
     }
 
     // until bytes available
