@@ -535,14 +535,12 @@ static inline int score_move(int move) {
     else
       return history_moves[get_move_piece(move)][get_move_target(move)];
   }
-
-  return 0;
 }
 
 // sort moves in descending order
 static inline void sort_moves(moves* move_list) {
   // move scores
-  int move_scores[move_list->count];
+  int move_scores[256];
 
   // score all the moves within a move list
   for (int count = 0; count < move_list->count; ++count)

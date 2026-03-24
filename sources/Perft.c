@@ -56,12 +56,12 @@ void perft_test(int depth) {
     if (!make_move(move_list->moves[move_count], all_moves))
       continue;
 
-    long cumulative_nodes = nodes;
+    U64 cumulative_nodes = nodes;
     perft_driver(depth - 1);
-    long old_nodes = nodes - cumulative_nodes;
+    U64 old_nodes = nodes - cumulative_nodes;
     take_back();
 
-    printf("     move: %s%s%c  nodes: %ld\n",
+    printf("     move: %s%s%c  nodes: %lld\n",
            square_to_coordinates[get_move_source(move_list->moves[move_count])],
            square_to_coordinates[get_move_target(move_list->moves[move_count])],
            get_move_promoted(move_list->moves[move_count]) ? promoted_pieces[get_move_promoted(move_list->moves[move_count])] : ' ',

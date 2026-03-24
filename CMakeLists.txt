@@ -9,6 +9,8 @@ set(CMAKE_C_EXTENSIONS OFF)
 
 if (MSVC)
   add_compile_options(/W4)
+  add_compile_options(/D_CRT_NONSTDC_NO_WARNINGS)
+  add_compile_options(/D_CRT_SECURE_NO_WARNINGS)
 else()
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()

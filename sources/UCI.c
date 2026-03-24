@@ -1,7 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
+
+#if defined(_MSC_VER)
+  #include <windows.h>
+  #include <stdbool.h>
+  #include <io.h>
+#elif defined(__GNUC__) || defined(__clang__)
+  #include <unistd.h> 
+#endif
 
 #include "../headers/Defines.h"
 #include "../headers/Fen.h"
