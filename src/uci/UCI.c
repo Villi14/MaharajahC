@@ -6,6 +6,7 @@
   #include <windows.h>
   #include <stdbool.h>
   #include <io.h>
+  #define STDIN_FILENO 0
 #elif defined(__GNUC__) || defined(__clang__)
   #include <unistd.h> 
   #include <sys/time.h>

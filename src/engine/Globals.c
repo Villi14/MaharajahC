@@ -7,39 +7,26 @@ unsigned int random_state = 0x6B8B4567;
 SearchContext search_context = { 0 };
 
 const int full_depth_moves = 4;
-// double pawns penalty
-static const int double_pawn_penalty_opening = -5;
-static const int double_pawn_penalty_endgame = -10;
 
-// isolated pawn penalty
-static const int isolated_pawn_penalty_opening = -5;
-static const int isolated_pawn_penalty_endgame = -10;
+enum {
+  double_pawn_penalty_opening = -5,
+  double_pawn_penalty_endgame = -10,
+  isolated_pawn_penalty_opening = -5,
+  isolated_pawn_penalty_endgame = -10,
+  semi_open_file_score = 10,
+  open_file_score = 15,
+  bishop_unit = 4,
+  queen_unit = 9,
+  bishop_mobility_opening = 5,
+  bishop_mobility_endgame = 5,
+  queen_mobility_opening = 1,
+  queen_mobility_endgame = 2,
+  king_shield_bonus = 5,
+  opening_phase_score = 6192,
+  endgame_phase_score = 518
+};
 
-// passed pawn bonus
 static const int passed_pawn_bonus[8] = { 0, 10, 30, 50, 75, 100, 150, 200 };
-
-// semi open file score
-static const int semi_open_file_score = 10;
-
-// open file score
-static const int open_file_score = 15;
-
-// mobility units (values from engine Fruit reloaded)
-static const int bishop_unit = 4;
-static const int queen_unit = 9;
-
-// mobility bonuses (values from engine Fruit reloaded)
-static const int bishop_mobility_opening = 5;
-static const int bishop_mobility_endgame = 5;
-static const int queen_mobility_opening = 1;
-static const int queen_mobility_endgame = 2;
-
-// king's shield bonus
-static const int king_shield_bonus = 5;
-
-// game phase scores
-static const int opening_phase_score = 6192;
-static const int endgame_phase_score = 518;
 
 TimeControls time_controls = {
   .quit = 0,
