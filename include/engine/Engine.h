@@ -13,7 +13,7 @@ typedef struct {
   AttackTables* attack_tables;
   const EvalTables* eval_tables;
   ZobristKeys* zobrist_keys;
-  unsigned int* random_state;
+  uint* random_state;
 } Engine;
 
 extern Engine engine;

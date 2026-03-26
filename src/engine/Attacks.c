@@ -3,9 +3,9 @@
 #include "Globals.h"
 
 // generate pawn attacks
-U64 mask_pawn_attacks(int side_, int square) {
-  U64 attacks = 0ULL;
-  U64 bitboard = 0ULL;
+u64 mask_pawn_attacks(int side_, int square) {
+  u64 attacks = 0ULL;
+  u64 bitboard = 0ULL;
 
   set_bit(bitboard, square);
 
@@ -25,9 +25,9 @@ U64 mask_pawn_attacks(int side_, int square) {
 }
 
 // generate knight attacks
-U64 mask_knight_attacks(int square) {
-  U64 attacks = 0ULL;
-  U64 bitboard = 0ULL;
+u64 mask_knight_attacks(int square) {
+  u64 attacks = 0ULL;
+  u64 bitboard = 0ULL;
 
   set_bit(bitboard, square);
 
@@ -52,9 +52,9 @@ U64 mask_knight_attacks(int square) {
 }
 
 // generate king attacks
-U64 mask_king_attacks(int square) {
-  U64 attacks = 0ULL;
-  U64 bitboard = 0ULL;
+u64 mask_king_attacks(int square) {
+  u64 attacks = 0ULL;
+  u64 bitboard = 0ULL;
 
   set_bit(bitboard, square);
 
@@ -79,8 +79,8 @@ U64 mask_king_attacks(int square) {
 }
 
 // mask bishop attacks
-U64 mask_bishop_attacks(int square) {
-  U64 attacks = 0ULL;
+u64 mask_bishop_attacks(int square) {
+  u64 attacks = 0ULL;
   int r, f;
   int tr = square / 8;
   int tf = square % 8;
@@ -98,8 +98,8 @@ U64 mask_bishop_attacks(int square) {
 }
 
 // mask rook attacks
-U64 mask_rook_attacks(int square) {
-  U64 attacks = 0ULL;
+u64 mask_rook_attacks(int square) {
+  u64 attacks = 0ULL;
   int r, f;
   int tr = square / 8;
   int tf = square % 8;
@@ -117,8 +117,8 @@ U64 mask_rook_attacks(int square) {
 }
 
 // generate bishop attacks on the fly
-U64 bishop_attacks_on_the_fly(int square, U64 block) {
-  U64 attacks = 0ULL;
+u64 bishop_attacks_on_the_fly(int square, u64 block) {
+  u64 attacks = 0ULL;
   int r, f;
   int tr = square / 8;
   int tf = square % 8;
@@ -151,8 +151,8 @@ U64 bishop_attacks_on_the_fly(int square, U64 block) {
 }
 
 // generate rook attacks on the fly
-U64 rook_attacks_on_the_fly(int square, U64 block) {
-  U64 attacks = 0ULL;
+u64 rook_attacks_on_the_fly(int square, u64 block) {
+  u64 attacks = 0ULL;
   int r, f;
   int tr = square / 8;
   int tf = square % 8;

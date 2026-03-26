@@ -56,9 +56,9 @@ void perft_test(int depth) {
     if (!make_move(move_list->moves[move_count], all_moves))
       continue;
 
-    U64 cumulative_nodes = search_context.nodes;
+    u64 cumulative_nodes = search_context.nodes;
     perft_driver(depth - 1);
-    U64 old_nodes = search_context.nodes - cumulative_nodes;
+    u64 old_nodes = search_context.nodes - cumulative_nodes;
     take_back();
 
     printf("     move: %s%s%c  search_context.nodes: %lld\n",

@@ -3,7 +3,7 @@
 #include "Globals.h"
 #include "Search.h"
 
-void print_bitboard(U64 bitboard) {
+void print_bitboard(u64 bitboard) {
   printf("\n");
 
   for (int rank = 0; rank < 8; ++rank) {

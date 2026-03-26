@@ -1,57 +1,12 @@
-#include "Defines.h"
 #include "Globals.h"
+#include "Defines.h"
 #include "Engine.h"
 
-Board board = { .enpassant = no_sq };
-unsigned int random_state = 0x6B8B4567;
-SearchContext search_context = { 0 };
+uint random_state = 0x6B8B4567;
 
 const int full_depth_moves = 4;
 
-enum {
-  double_pawn_penalty_opening = -5,
-  double_pawn_penalty_endgame = -10,
-  isolated_pawn_penalty_opening = -5,
-  isolated_pawn_penalty_endgame = -10,
-  semi_open_file_score = 10,
-  open_file_score = 15,
-  bishop_unit = 4,
-  queen_unit = 9,
-  bishop_mobility_opening = 5,
-  bishop_mobility_endgame = 5,
-  queen_mobility_opening = 1,
-  queen_mobility_endgame = 2,
-  king_shield_bonus = 5,
-  opening_phase_score = 6192,
-  endgame_phase_score = 518
-};
-
 static const int passed_pawn_bonus[8] = { 0, 10, 30, 50, 75, 100, 150, 200 };
-
-TimeControls time_controls = {
-  .quit = 0,
-  .movestogo = 30,
-  .movetime = -1,
-  .uci_time = -1,
-  .inc = 0,
-  .starttime = 0,
-  .stoptime = 0,
-  .timeset = 0,
-  .stopped = 0
-};
-
-AttackTables attack_tables;
-
-Engine engine = {
-  .board = &board,
-  .search_context = &search_context,
-  .time_controls = &time_controls,
-  .transposition_table = &transposition_table,
-  .attack_tables = &attack_tables,
-  .eval_tables = &eval_tables,
-  .zobrist_keys = &zobrist_keys,
-  .random_state = &random_state
-};
 
 // clang-format off
 
@@ -367,6 +322,53 @@ static const int positional_score[2][6][64] = {{ // White positional scores
       -27, -11, 4, 13, 14, 4, -5, -17,
       -53, -34, -21, -11, -28, -14, -24, -43
   }}
+};
+
+Board board = { .enpassant = no_sq };
+
+SearchContext search_context = { 0 };
+
+TimeControls time_controls = {
+  .quit = 0,
+  .movestogo = 30,
+  .movetime = -1,
+  .uci_time = -1,
+  .inc = 0,
+  .starttime = 0,
+  .stoptime = 0,
+  .timeset = 0,
+  .stopped = 0
+};
+
+AttackTables attack_tables;
+
+Engine engine = {
+  .board = &board,
+  .search_context = &search_context,
+  .time_controls = &time_controls,
+  .transposition_table = &transposition_table,
+  .attack_tables = &attack_tables,
+  .eval_tables = &eval_tables,
+  .zobrist_keys = &zobrist_keys,
+  .random_state = &random_state
+};
+
+enum {
+  double_pawn_penalty_opening = -5,
+  double_pawn_penalty_endgame = -10,
+  isolated_pawn_penalty_opening = -5,
+  isolated_pawn_penalty_endgame = -10,
+  semi_open_file_score = 10,
+  open_file_score = 15,
+  bishop_unit = 4,
+  queen_unit = 9,
+  bishop_mobility_opening = 5,
+  bishop_mobility_endgame = 5,
+  queen_mobility_opening = 1,
+  queen_mobility_endgame = 2,
+  king_shield_bonus = 5,
+  opening_phase_score = 6192,
+  endgame_phase_score = 518
 };
 
 const EvalTables eval_tables = {

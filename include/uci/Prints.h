@@ -1,10 +1,10 @@
 #ifndef PRINTS_H_
 #define PRINTS_H_
 
-#include "Defines.h"
+#include "Globals.h"
 
 void print_board();
-void print_bitboard(U64 bitboard);
+void print_bitboard(u64 bitboard);
 void print_attacked_squares(int side_);
 void print_move(int move);
 void print_move_scores(MoveList* move_list);

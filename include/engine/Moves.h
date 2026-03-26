@@ -42,13 +42,6 @@ static inline int make_move(int move, const int move_flag) {
 
     // handling capture moves
     if (capture) {
-      // const int opponent_king = (board.side == white) ? k : K;
-
-      // if (get_bit(board.bitboards[opponent_king], target_square)) {
-      //   take_back();
-      //   return 0;
-      // }
-
       int start_piece, end_piece;
 
       if (board.side == white) {
@@ -241,11 +234,10 @@ static inline void generate_moves(MoveList* move_list) {
   move_list->count = 0;
 
   int source_square, target_square;
-  U64 attacks = 0ULL;
+  u64 attacks = 0ULL;
 
-  //  int opponent_king_square = get_ls1b_index(board.bitboards[(board.side == white) ? k : K]);
   for (int piece = P; piece <= k; ++piece) {
-    U64 bitboard = board.bitboards[piece];
+    u64 bitboard = board.bitboards[piece];
 
     // generate white pawns & white king castling moves
     if (board.side == white) {
@@ -280,15 +272,12 @@ static inline void generate_moves(MoveList* move_list) {
 
             // pawn promotion
             if (source_square >= a7 && source_square <= h7) {
-              // if (target_square != opponent_king_square) {
               add_move(move_list, encode_move(source_square, target_square, piece, Q, 1, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, R, 1, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, B, 1, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, N, 1, 0, 0, 0));
-              // }
             } else
               // one square ahead pawn move
-              // if (target_square != opponent_king_square)
               add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
 
             pop_bit(attacks, target_square);
@@ -296,7 +285,7 @@ static inline void generate_moves(MoveList* move_list) {
 
           // generate board.enpassant captures
           if (board.enpassant != no_sq) {
-            U64 enpassant_attacks = attack_tables.pawn_attacks[board.side][source_square] & (1ULL << board.enpassant);
+            u64 enpassant_attacks = attack_tables.pawn_attacks[board.side][source_square] & (1ULL << board.enpassant);
 
             if (enpassant_attacks) {
               int target_enpassant = get_ls1b_index(enpassant_attacks);
@@ -363,15 +352,12 @@ static inline void generate_moves(MoveList* move_list) {
 
             // pawn promotion
             if (source_square >= a2 && source_square <= h2) {
-              // if (target_square != opponent_king_square) {
               add_move(move_list, encode_move(source_square, target_square, piece, q, 1, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, r, 1, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, b, 1, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, n, 1, 0, 0, 0));
-              // }
             } else
               // one square ahead pawn move
-              // if (target_square != opponent_king_square)
               add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
 
             pop_bit(attacks, target_square);
@@ -379,7 +365,7 @@ static inline void generate_moves(MoveList* move_list) {
 
           // generate board.enpassant captures
           if (board.enpassant != no_sq) {
-            U64 enpassant_attacks = attack_tables.pawn_attacks[board.side][source_square] & (1ULL << board.enpassant);
+            u64 enpassant_attacks = attack_tables.pawn_attacks[board.side][source_square] & (1ULL << board.enpassant);
 
             if (enpassant_attacks) {
               int target_enpassant = get_ls1b_index(enpassant_attacks);
@@ -427,7 +413,6 @@ static inline void generate_moves(MoveList* move_list) {
           if (!get_bit(((board.side == white) ? board.occupancies[black] : board.occupancies[white]), target_square))
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 0, 0, 0, 0));
           else
-            // if (target_square != opponent_king_square)
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
 
           pop_bit(attacks, target_square);
@@ -449,7 +434,6 @@ static inline void generate_moves(MoveList* move_list) {
           if (!get_bit(((board.side == white) ? board.occupancies[black] : board.occupancies[white]), target_square))
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 0, 0, 0, 0));
           else
-            // if (target_square != opponent_king_square)
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
 
           pop_bit(attacks, target_square);
@@ -471,7 +455,6 @@ static inline void generate_moves(MoveList* move_list) {
           if (!get_bit(((board.side == white) ? board.occupancies[black] : board.occupancies[white]), target_square))
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 0, 0, 0, 0));
           else
-            // if (target_square != opponent_king_square)
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
 
           pop_bit(attacks, target_square);
@@ -493,7 +476,6 @@ static inline void generate_moves(MoveList* move_list) {
           if (!get_bit(((board.side == white) ? board.occupancies[black] : board.occupancies[white]), target_square))
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 0, 0, 0, 0));
           else
-            //if (target_square != opponent_king_square)
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
 
           pop_bit(attacks, target_square);
@@ -515,7 +497,6 @@ static inline void generate_moves(MoveList* move_list) {
           if (!get_bit(((board.side == white) ? board.occupancies[black] : board.occupancies[white]), target_square))
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 0, 0, 0, 0));
           else
-            // if (target_square != opponent_king_square)
             add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
 
           pop_bit(attacks, target_square);

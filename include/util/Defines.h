@@ -4,7 +4,8 @@
 #define version "1.0.0"
 
 // define bitboard data type
-#define U64 unsigned long long
+#define u64 unsigned long long
+#define uint unsigned int
 
 /*
      These are the score bounds for the range of the mating scores
@@ -85,27 +86,25 @@
 // extract castling flag
 #define get_move_castling(move) (move & 0x800000)
 
-// move list structure
-typedef struct {
-  int moves[0x100];
-  int count;
-} MoveList;
-
 // clang-format off
 // preserve board state
-#define copy_board()                                                            \
-  U64 bitboards_copy[12], occupancies_copy[3];                                  \
-  int side_copy, enpassant_copy, castle_copy;                                   \
-  U64 hash_key_copy = board.hash_key;                                           \
-  memcpy(bitboards_copy, board.bitboards, sizeof(board.bitboards));             \
-  memcpy(occupancies_copy, board.occupancies, sizeof(board.occupancies));       \
-  side_copy = board.side, enpassant_copy = board.enpassant, castle_copy = board.castle;
+#define copy_board()                                                       \
+  u64 bitboards_copy[12], occupancies_copy[3];                             \
+  int side_copy, enpassant_copy, castle_copy;                              \
+  u64 hash_key_copy = board.hash_key;                                      \
+  memcpy(bitboards_copy, board.bitboards, sizeof(board.bitboards));        \
+  memcpy(occupancies_copy, board.occupancies, sizeof(board.occupancies));  \
+  side_copy = board.side;                                                  \
+  enpassant_copy = board.enpassant;                                        \
+  castle_copy = board.castle;
 
 // restore board state
-#define take_back()                                                                     \
-  memcpy(board.bitboards, bitboards_copy, sizeof(board.bitboards));                     \
-  memcpy(board.occupancies, occupancies_copy, sizeof(board.occupancies));               \
-  board.side = side_copy, board.enpassant = enpassant_copy, board.castle = castle_copy; \
+#define take_back()                                                        \
+  memcpy(board.bitboards, bitboards_copy, sizeof(board.bitboards));        \
+  memcpy(board.occupancies, occupancies_copy, sizeof(board.occupancies));  \
+  board.side = side_copy;                                                  \
+  board.enpassant = enpassant_copy;                                        \
+  board.castle = castle_copy;                                              \
   board.hash_key = hash_key_copy;
 
 // clang-format on  

@@ -12,7 +12,7 @@
 
 // count bits within a bitboard
 
-static inline int count_bits(U64 bitboard) {
+static inline int count_bits(u64 bitboard) {
 #if defined(_MSC_VER)
   return (int)__popcnt64(bitboard);
 #elif defined(__GNUC__) || defined(__clang__)
@@ -30,7 +30,7 @@ static inline int count_bits(U64 bitboard) {
 }
 
 // get least significant 1st bit index
-static inline int get_ls1b_index(U64 bitboard) {
+static inline int get_ls1b_index(u64 bitboard) {
   assert(bitboard);
 
 #if defined(_MSC_VER)

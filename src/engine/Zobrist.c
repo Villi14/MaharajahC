@@ -16,30 +16,30 @@ void init_random_keys() {
     // loop over board squares
     for (int square = 0; square < 64; ++square)
       // init random piece keys
-      zobrist_keys.piece_keys[piece][square] = get_random_U64_number();
+      zobrist_keys.piece_keys[piece][square] = get_random_u64_number();
   }
 
   // loop over board squares
   for (int square = 0; square < 64; ++square)
     // init random board.enpassant keys
-    zobrist_keys.enpassant_keys[square] = get_random_U64_number();
+    zobrist_keys.enpassant_keys[square] = get_random_u64_number();
 
   // loop over castling keys
   for (int index = 0; index < 16; ++index)
     // init castling keys
-    zobrist_keys.castle_keys[index] = get_random_U64_number();
+    zobrist_keys.castle_keys[index] = get_random_u64_number();
 
   // init random board.side key
-  zobrist_keys.side_key = get_random_U64_number();
+  zobrist_keys.side_key = get_random_u64_number();
 }
 
 // generate "almost" unique position ID aka hash key from scratch
-U64 generate_hash_key() {
+u64 generate_hash_key() {
   // final hash key
-  U64 final_key = 0ULL;
+  u64 final_key = 0ULL;
 
   // temp piece bitboard copy
-  U64 bitboard;
+  u64 bitboard;
 
   // loop over piece board.bitboards
   for (int piece = P; piece <= k; ++piece) {

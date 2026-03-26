@@ -8,7 +8,6 @@
 #include "Utils.h"
 #include "Transposition.h"
 
-
 // init slider piece's attack tables
 void init_sliders_attacks(int bishop) {
   // loop over 64 board squares
@@ -18,7 +17,7 @@ void init_sliders_attacks(int bishop) {
     attack_tables.rook_masks[square] = mask_rook_attacks(square);
 
     // init current mask
-    U64 attack_mask = bishop ? attack_tables.bishop_masks[square] : attack_tables.rook_masks[square];
+    u64 attack_mask = bishop ? attack_tables.bishop_masks[square] : attack_tables.rook_masks[square];
 
     // init relevant occupancy bit count
     int relevant_bits_count = count_bits(attack_mask);
@@ -31,10 +30,10 @@ void init_sliders_attacks(int bishop) {
       // bishop
       if (bishop) {
         // init current occupancy variation
-        U64 occupancy = set_occupancy(index, relevant_bits_count, attack_mask);
+        u64 occupancy = set_occupancy(index, relevant_bits_count, attack_mask);
 
         // init magic index
-        U64 magic_index = (occupancy * bishop_magic_numbers[square]) >> (64 - bishop_relevant_bits[square]);
+        u64 magic_index = (occupancy * bishop_magic_numbers[square]) >> (64 - bishop_relevant_bits[square]);
 
         // init bishop attacks
         attack_tables.bishop_attacks[square][magic_index] = bishop_attacks_on_the_fly(square, occupancy);
@@ -43,10 +42,10 @@ void init_sliders_attacks(int bishop) {
       // rook
       else {
         // init current occupancy variation
-        U64 occupancy = set_occupancy(index, relevant_bits_count, attack_mask);
+        u64 occupancy = set_occupancy(index, relevant_bits_count, attack_mask);
 
         // init magic index
-        U64 magic_index = (occupancy * rook_magic_numbers[square]) >> (64 - rook_relevant_bits[square]);
+        u64 magic_index = (occupancy * rook_magic_numbers[square]) >> (64 - rook_relevant_bits[square]);
 
         // init rook attacks
         attack_tables.rook_attacks[square][magic_index] = rook_attacks_on_the_fly(square, occupancy);

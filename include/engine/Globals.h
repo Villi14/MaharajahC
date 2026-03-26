@@ -53,45 +53,51 @@ enum {
 enum { all_moves, only_captures };
 
 // not A file constant
-static const U64 not_a_file = 0xFEFEFEFEFEFEFEFEULL;
+static const u64 not_a_file = 0xFEFEFEFEFEFEFEFEULL;
 
 // not H file constant
-static const U64 not_h_file = 0x7F7F7F7F7F7F7F7FULL;
+static const u64 not_h_file = 0x7F7F7F7F7F7F7F7FULL;
 
 // not HG file constant
-static const U64 not_hg_file = 0x3F3F3F3F3F3F3F3FULL;
+static const u64 not_hg_file = 0x3F3F3F3F3F3F3F3FULL;
 
 // not AB file constant
-static const U64 not_ab_file = 0xFCFCFCFCFCFCFCFCULL;
+static const u64 not_ab_file = 0xFCFCFCFCFCFCFCFCULL;
+
+// pseudo random number state
+extern uint random_state;
+
+// move list structure
+typedef struct {
+  int moves[0x100];
+  int count;
+} MoveList;
 
 typedef struct {
-  U64 bitboards[0xC];
-  U64 occupancies[3];
+  u64 bitboards[0xC];
+  u64 occupancies[3];
   int side;
   int enpassant;
   int castle;
-  U64 hash_key;
+  u64 hash_key;
 } Board;
 
 extern Board board;
 
-// pseudo random number state
-extern unsigned int random_state;
-
 typedef struct {
-  U64 pawn_attacks[2][0x40];
-  U64 knight_attacks[0x40];
-  U64 king_attacks[0x40];
-  U64 bishop_masks[0x40];
-  U64 rook_masks[0x40];
-  U64 bishop_attacks[0x40][0x200];
-  U64 rook_attacks[0x40][0x1000];
+  u64 pawn_attacks[2][0x40];
+  u64 knight_attacks[0x40];
+  u64 king_attacks[0x40];
+  u64 bishop_masks[0x40];
+  u64 rook_masks[0x40];
+  u64 bishop_attacks[0x40][0x200];
+  u64 rook_attacks[0x40][0x1000];
 } AttackTables;
 
 extern AttackTables attack_tables;
 
 typedef struct {
-  U64 nodes;
+  u64 nodes;
   int ply;
   int best_move;
   int follow_pv;
@@ -101,7 +107,7 @@ typedef struct {
   int history_moves[12][0x40];
   int pv_length[max_ply];
   int pv_table[max_ply][max_ply];
-  U64 repetition_table[10000];
+  u64 repetition_table[10000];
 } SearchContext;
 
 extern SearchContext search_context;
@@ -188,34 +194,5 @@ extern const int rook_relevant_bits[0x40];
 
 // castling rights update constants
 extern const int castling_rights[0x40];
-
-/*  ♙ =   100   = ♙
-    ♘ =   300   = ♙ * 3
-    ♗ =   350   = ♙ * 3 + ♙ * 0.5
-    ♖ =   500   = ♙ * 5
-    ♕ =   1000  = ♙ * 10
-    ♔ =   10000 = ♙ * 100
-*/
-/*
-      ================================
-            Triangular PV table
-      --------------------------------
-        PV line: e2e4 e7e5 g1f3 b8c6
-      ================================
-
-           0    1    2    3    4    5
-
-      0    m1   m2   m3   m4   m5   m6
-
-      1    0    m2   m3   m4   m5   m6
-
-      2    0    0    m3   m4   m5   m6
-
-      3    0    0    0    m4   m5   m6
-
-      4    0    0    0    0    m5   m6
-
-      5    0    0    0    0    0    m6
-*/
 
 #endif // !GLOBALS_H_

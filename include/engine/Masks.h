@@ -5,35 +5,20 @@
 #include "Globals.h"
 #include "Utils.h"
 
-/*         Rank mask            File mask           Isolated mask        Passed pawn mask
-        for square a6        for square f2         for square g2          for square c4
-
-    8  0 0 0 0 0 0 0 0    8  0 0 0 0 0 1 0 0    8  0 0 0 0 0 1 0 1     8  0 1 1 1 0 0 0 0
-    7  0 0 0 0 0 0 0 0    7  0 0 0 0 0 1 0 0    7  0 0 0 0 0 1 0 1     7  0 1 1 1 0 0 0 0
-    6  1 1 1 1 1 1 1 1    6  0 0 0 0 0 1 0 0    6  0 0 0 0 0 1 0 1     6  0 1 1 1 0 0 0 0
-    5  0 0 0 0 0 0 0 0    5  0 0 0 0 0 1 0 0    5  0 0 0 0 0 1 0 1     5  0 1 1 1 0 0 0 0
-    4  0 0 0 0 0 0 0 0    4  0 0 0 0 0 1 0 0    4  0 0 0 0 0 1 0 1     4  0 0 0 0 0 0 0 0
-    3  0 0 0 0 0 0 0 0    3  0 0 0 0 0 1 0 0    3  0 0 0 0 0 1 0 1     3  0 0 0 0 0 0 0 0
-    2  0 0 0 0 0 0 0 0    2  0 0 0 0 0 1 0 0    2  0 0 0 0 0 1 0 1     2  0 0 0 0 0 0 0 0
-    1  0 0 0 0 0 0 0 0    1  0 0 0 0 0 1 0 0    1  0 0 0 0 0 1 0 1     1  0 0 0 0 0 0 0 0
-
-       a b c d e f g h       a b c d e f g h       a b c d e f g h        a b c d e f g h
-*/
-
 // file masks [square]
-extern U64 file_masks[0x40];
+extern u64 file_masks[0x40];
 
 // rank masks [square]
-extern U64 rank_masks[0x40];
+extern u64 rank_masks[0x40];
 
 // isolated pawn masks [square]
-extern U64 isolated_masks[0x40];
+extern u64 isolated_masks[0x40];
 
 // white passed pawn masks [square]
-extern U64 white_passed_masks[0x40];
+extern u64 white_passed_masks[0x40];
 
 // black passed pawn masks [square]
-extern U64 black_passed_masks[0x40];
+extern u64 black_passed_masks[0x40];
 
 // extract rank from a square [square]
 extern const int get_rank[0x40];
@@ -42,7 +27,7 @@ extern const int get_rank[0x40];
 void init_evaluation_masks();
 
 // set file or rank mask
-U64 set_file_rank_mask(int file_number, int rank_number);
+u64 set_file_rank_mask(int file_number, int rank_number);
 
 // get game phase score
 static inline int get_game_phase_score() {

@@ -8,9 +8,9 @@
 #include "MagicNumbers.h"
 
 // generate 32-bit pseudo legal numbers
-unsigned int get_random_U32_number() {
+uint get_random_U32_number() {
   // get current state
-  unsigned int number = random_state;
+  uint number = random_state;
 
   // XOR shift algorithm
   number ^= number << 0xD;
@@ -25,27 +25,27 @@ unsigned int get_random_U32_number() {
 }
 
 // generate 64-bit pseudo legal numbers
-U64 get_random_U64_number() {
+u64 get_random_u64_number() {
   // define 4 random numbers
 
   // init random numbers slicing 16 bits from MS1B board.side
-  U64 n1 = (U64)(get_random_U32_number()) & 0xFFFF;
-  U64 n2 = (U64)(get_random_U32_number()) & 0xFFFF;
-  U64 n3 = (U64)(get_random_U32_number()) & 0xFFFF;
-  U64 n4 = (U64)(get_random_U32_number()) & 0xFFFF;
+  u64 n1 = (u64)(get_random_U32_number()) & 0xFFFF;
+  u64 n2 = (u64)(get_random_U32_number()) & 0xFFFF;
+  u64 n3 = (u64)(get_random_U32_number()) & 0xFFFF;
+  u64 n4 = (u64)(get_random_U32_number()) & 0xFFFF;
 
   // return random number
   return n1 | (n2 << 0x10) | (n3 << 0x20) | (n4 << 0x30);
 }
 
 // generate magic number candidate
-U64 generate_magic_number() {
-  return get_random_U64_number() & get_random_U64_number() & get_random_U64_number();
+u64 generate_magic_number() {
+  return get_random_u64_number() & get_random_u64_number() & get_random_u64_number();
 }
 
 // set board.occupancies
-U64 set_occupancy(int index, int bits_in_mask, U64 attack_mask) {
-  U64 occupancy = 0ULL;
+u64 set_occupancy(int index, int bits_in_mask, u64 attack_mask) {
+  u64 occupancy = 0ULL;
 
   for (int count = 0; count < bits_in_mask; ++count) {
     int square = get_ls1b_index(attack_mask);
@@ -59,18 +59,18 @@ U64 set_occupancy(int index, int bits_in_mask, U64 attack_mask) {
 }
 
 // find appropriate magic number
-U64 find_magic_number(int square, int relevant_bits, int bishop) {
+u64 find_magic_number(int square, int relevant_bits, int bishop) {
   // init board.occupancies
-  U64 occupancies_[0x1000];
+  u64 occupancies_[0x1000];
 
   // init attack tables
-  U64 attacks[0x1000];
+  u64 attacks[0x1000];
 
   // init used attacks
-  U64 used_attacks[0x1000];
+  u64 used_attacks[0x1000];
 
   // init attack mask for a current piece
-  U64 attack_mask = bishop ? mask_bishop_attacks(square) : mask_rook_attacks(square);
+  u64 attack_mask = bishop ? mask_bishop_attacks(square) : mask_rook_attacks(square);
 
   // init occupancy indices
   const int occupancy_indices = 1 << relevant_bits;
@@ -87,7 +87,7 @@ U64 find_magic_number(int square, int relevant_bits, int bishop) {
   // test magic numbers loop
   for (int random_count = 0; random_count < 100000000; ++random_count) {
     // generate magic number candidate
-    U64 magic_number = generate_magic_number();
+    u64 magic_number = generate_magic_number();
 
     // skip inappropriate magic numbers
     if (count_bits((attack_mask * magic_number) & 0xFF00000000000000) < 6)

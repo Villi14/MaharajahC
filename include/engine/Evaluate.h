@@ -25,7 +25,7 @@ static inline int evaluate() {
   int score = 0, score_opening = 0, score_endgame = 0;
 
   // current pieces bitboard copy
-  U64 bitboard;
+  u64 bitboard;
 
   // init piece & square
   int piece, square;

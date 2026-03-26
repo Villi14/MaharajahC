@@ -14,7 +14,7 @@
 
 // transposition table data structure
 typedef struct {
-  U64 hash_key; // "almost" unique chess position identifier
+  u64 hash_key; // "almost" unique chess position identifier
   int depth; // current search depth
   int flag; // flag the type of node (fail-low/fail-high/PV)
   int score; // score (alpha/beta/PV)
