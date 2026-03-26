@@ -7,8 +7,8 @@ build/
 cmake-build-debug/
 build-ninja/
 out/
-sources/maharajah.dSYM
-sources/maharajah
+src/maharajah.dSYM
+src/maharajah
 
 # Node artifact files
 node_modules/
@@ -51,4 +51,3 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-

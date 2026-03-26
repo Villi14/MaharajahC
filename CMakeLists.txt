@@ -26,7 +26,33 @@ endif()
 
 set(BINARY ${PROJECT_NAME})
 
-file(GLOB SOURCES ${PROJECT_SOURCE_DIR}/sources/*.c)
-file(GLOB HEADERS ${PROJECT_SOURCE_DIR}/headers/*.h)
+file(GLOB_RECURSE ALL_SOURCES CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/src/*.c)
+file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/include/*.h)
 
-add_executable(${BINARY} ${SOURCES} ${HEADERS})
+set(APP_SOURCES ${ALL_SOURCES})
+set(TEST_SOURCES ${ALL_SOURCES})
+list(REMOVE_ITEM TEST_SOURCES ${PROJECT_SOURCE_DIR}/src/main.c)
+
+add_executable(${BINARY} ${APP_SOURCES} ${HEADERS})
+
+target_include_directories(${BINARY} PRIVATE
+  ${PROJECT_SOURCE_DIR}/include
+  ${PROJECT_SOURCE_DIR}/include/engine
+  ${PROJECT_SOURCE_DIR}/include/board
+  ${PROJECT_SOURCE_DIR}/include/uci
+  ${PROJECT_SOURCE_DIR}/include/perft
+  ${PROJECT_SOURCE_DIR}/include/util
+)
+
+add_executable(perft_smoke tests/perft_smoke.c ${TEST_SOURCES} ${HEADERS})
+target_include_directories(perft_smoke PRIVATE
+  ${PROJECT_SOURCE_DIR}/include
+  ${PROJECT_SOURCE_DIR}/include/engine
+  ${PROJECT_SOURCE_DIR}/include/board
+  ${PROJECT_SOURCE_DIR}/include/uci
+  ${PROJECT_SOURCE_DIR}/include/perft
+  ${PROJECT_SOURCE_DIR}/include/util
+)
+
+enable_testing()
+add_test(NAME perft_smoke COMMAND perft_smoke)
