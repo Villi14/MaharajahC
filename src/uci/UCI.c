@@ -271,14 +271,8 @@ void uci_loop() {
   // default MB value
   int mb = 64;
 
-// reset STDIN & STDOUT buffers
-// #ifdef _MSC_VER
-//   setvbuf(stdin, NULL, _IONBF, 0);
-//   setvbuf(stdout, NULL, _IONBF, 0);
-// #else
   setbuf(stdin, nullptr);
   setbuf(stdout, nullptr);
-// #endif
 
   // define user / GUI input buffer
   char input[2000];
