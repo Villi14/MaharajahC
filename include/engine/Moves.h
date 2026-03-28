@@ -36,6 +36,14 @@ static inline int make_move(int move, const int move_flag) {
     pop_bit(board.bitboards[piece], source_square);
     set_bit(board.bitboards[piece], target_square);
 
+    if (board.side == white) {
+      pop_bit(board.occupancies[white], source_square);
+      set_bit(board.occupancies[white], target_square);
+    } else {
+      pop_bit(board.occupancies[black], source_square);
+      set_bit(board.occupancies[black], target_square);
+    }
+
     // hash piece
     board.hash_key ^= zobrist_keys.piece_keys[piece][source_square]; // remove piece from source square in hash key
     board.hash_key ^= zobrist_keys.piece_keys[piece][target_square]; // set piece to the target square in hash key
@@ -55,6 +63,11 @@ static inline int make_move(int move, const int move_flag) {
       for (int bb_piece = start_piece; bb_piece <= end_piece; ++bb_piece) {
         if (get_bit(board.bitboards[bb_piece], target_square)) {
           pop_bit(board.bitboards[bb_piece], target_square);
+
+          if (board.side == white)
+            pop_bit(board.occupancies[black], target_square);
+          else
+            pop_bit(board.occupancies[white], target_square);
 
           // remove the piece from hash key
           board.hash_key ^= zobrist_keys.piece_keys[bb_piece][target_square];
@@ -96,6 +109,7 @@ static inline int make_move(int move, const int move_flag) {
       if (board.side == white) {
         // remove captured pawn
         pop_bit(board.bitboards[p], target_square + 8);
+        pop_bit(board.occupancies[black], target_square + 8);
 
         // remove pawn from hash key
         board.hash_key ^= zobrist_keys.piece_keys[p][target_square + 8];
@@ -105,6 +119,7 @@ static inline int make_move(int move, const int move_flag) {
       else {
         // remove captured pawn
         pop_bit(board.bitboards[P], target_square - 8);
+        pop_bit(board.occupancies[white], target_square - 8);
 
         // remove pawn from hash key
         board.hash_key ^= zobrist_keys.piece_keys[P][target_square - 8];
@@ -147,6 +162,8 @@ static inline int make_move(int move, const int move_flag) {
         // move H rook
         pop_bit(board.bitboards[R], h1);
         set_bit(board.bitboards[R], f1);
+        pop_bit(board.occupancies[white], h1);
+        set_bit(board.occupancies[white], f1);
 
         // hash rook
         board.hash_key ^= zobrist_keys.piece_keys[R][h1]; // remove rook from h1 from hash key
@@ -158,6 +175,8 @@ static inline int make_move(int move, const int move_flag) {
         // move A rook
         pop_bit(board.bitboards[R], a1);
         set_bit(board.bitboards[R], d1);
+        pop_bit(board.occupancies[white], a1);
+        set_bit(board.occupancies[white], d1);
 
         // hash rook
         board.hash_key ^= zobrist_keys.piece_keys[R][a1]; // remove rook from a1 from hash key
@@ -169,6 +188,8 @@ static inline int make_move(int move, const int move_flag) {
         // move H rook
         pop_bit(board.bitboards[r], h8);
         set_bit(board.bitboards[r], f8);
+        pop_bit(board.occupancies[black], h8);
+        set_bit(board.occupancies[black], f8);
 
         // hash rook
         board.hash_key ^= zobrist_keys.piece_keys[r][h8]; // remove rook from h8 from hash key
@@ -180,6 +201,8 @@ static inline int make_move(int move, const int move_flag) {
         // move A rook
         pop_bit(board.bitboards[r], a8);
         set_bit(board.bitboards[r], d8);
+        pop_bit(board.occupancies[black], a8);
+        set_bit(board.occupancies[black], d8);
 
         // hash rook
         board.hash_key ^= zobrist_keys.piece_keys[r][a8]; // remove rook from a8 from hash key
@@ -198,17 +221,7 @@ static inline int make_move(int move, const int move_flag) {
     // hash castling
     board.hash_key ^= zobrist_keys.castle_keys[board.castle];
 
-    // TODO: why 24?
-    memset(board.occupancies, 0ULL, sizeof(board.occupancies));
-
-    for (int bb_piece = P; bb_piece <= K; ++bb_piece)
-      board.occupancies[white] |= board.bitboards[bb_piece];
-
-    for (int bb_piece = p; bb_piece <= k; ++bb_piece)
-      board.occupancies[black] |= board.bitboards[bb_piece];
-
-    board.occupancies[both] |= board.occupancies[white];
-    board.occupancies[both] |= board.occupancies[black];
+    board.occupancies[both] = board.occupancies[white] | board.occupancies[black];
 
     board.side ^= 1;
 
