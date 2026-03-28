@@ -146,7 +146,7 @@ void parse_position(char* command) {
         break;
 
       // increment repetition index
-      search_context.repetition_index++;
+      ++search_context.repetition_index;
 
       // wtire hash key into a repetition table
       search_context.repetition_table[search_context.repetition_index] = board.hash_key;
@@ -156,10 +156,10 @@ void parse_position(char* command) {
 
       // move current character mointer to the end of current move
       while (*current_char && *current_char != ' ')
-        current_char++;
+        ++current_char;
 
       // go to the next move
-      current_char++;
+      ++current_char;
     }
 
   }

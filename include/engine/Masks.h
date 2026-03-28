@@ -46,11 +46,11 @@ static inline int get_game_phase_score() {
   int white_piece_scores = 0, black_piece_scores = 0;
 
   // loop over white pieces
-  for (int piece = N; piece <= Q; piece++)
+  for (int piece = N; piece <= Q; ++piece)
     white_piece_scores += count_bits(board.bitboards[piece]) * eval_tables.material_score[opening][piece];
 
   // loop over white pieces
-  for (int piece = n; piece <= q; piece++)
+  for (int piece = n; piece <= q; ++piece)
     black_piece_scores += count_bits(board.bitboards[piece]) * -eval_tables.material_score[opening][piece];
 
   // return game phase score

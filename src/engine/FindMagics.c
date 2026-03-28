@@ -59,7 +59,7 @@ u64 set_occupancy(int index, int bits_in_mask, u64 attack_mask) {
 }
 
 // find appropriate magic number
-u64 find_magic_number(int square, int relevant_bits, int bishop) {
+u64 find_magic_number(const int square, const int relevant_bits, const int bishop) {
   // init board.occupancies
   u64 occupancies_[0x1000];
 

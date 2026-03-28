@@ -91,7 +91,7 @@ const int castling_rights[0x40] = {
   13, 15, 15, 15, 12, 15, 15, 14
 };
 
-static const int material_score[2][0xC] = {
+static constexpr int material_score[2][0xC] = {
 // opening material score
     { 82, 337, 365, 477, 1025, 12000, -82, -337, -365, -477, -1025, -12000 },
 
@@ -100,7 +100,7 @@ static const int material_score[2][0xC] = {
 };
 
 // pawn positional score
-static const int pawn_score[0x40] = {
+static constexpr int pawn_score[0x40] = {
   90,  90,  90,  90,  90,  90,  90,  90,
   30,  30,  30,  40,  40,  30,  30,  30,
   20,  20,  20,  30,  30,  30,  20,  20,
@@ -112,7 +112,7 @@ static const int pawn_score[0x40] = {
 };
 
 // knight positional score
-static const int knight_score[0x40] = {
+static constexpr int knight_score[0x40] = {
   -5,   0,   0,   0,   0,   0,   0,  -5,
   -5,   0,   0,  10,  10,   0,   0,  -5,
   -5,   5,  20,  20,  20,  20,   5,  -5,
@@ -124,7 +124,7 @@ static const int knight_score[0x40] = {
 };
 
 // bishop positional score
-static const int bishop_score[0x40] = {
+static constexpr int bishop_score[0x40] = {
   0,   0,   0,   0,   0,   0,   0,   0,
   0,   0,   0,   0,   0,   0,   0,   0,
   0,   0,   0,  10,  10,   0,   0,   0,
@@ -148,7 +148,7 @@ static const int rook_score[0x40] = {
 };
 
 // king positional score
-static const int king_score[0x40] = {
+static constexpr int king_score[0x40] = {
   0,   0,   0,   0,   0,   0,   0,   0,
   0,   0,   5,   5,   5,   5,   0,   0,
   0,   5,   5,  10,  10,   5,   5,   0,
@@ -160,7 +160,7 @@ static const int king_score[0x40] = {
 };
 
 // mirror positional score tables for opposite board.side
-static const int mirror_score[0x80] = {
+static constexpr int mirror_score[0x80] = {
   a1, b1, c1, d1, e1, f1, g1, h1,
   a2, b2, c2, d2, e2, f2, g2, h2,
   a3, b3, c3, d3, e3, f3, g3, h3,

@@ -12,7 +12,7 @@ void parse_fen(const char* fen) {
 
   for (int rank = 0; rank < 8; ++rank) {
     for (int file = 0; file < 8; ++file) {
-      int square = rank * 8 + file;
+      const int square = rank * 8 + file;
 
       if ((*fen >= 'a' && *fen <= 'z') || (*fen >= 'A' && *fen <= 'Z')) {
         const int piece = char_pieces[(int)*fen];
@@ -21,7 +21,7 @@ void parse_fen(const char* fen) {
       }
 
       if (*fen >= '0' && *fen <= '9') {
-        int offset = *fen - '0';
+        const int offset = *fen - '0';
         int piece = -1;
 
         for (int bb_piece = P; bb_piece <= k; ++bb_piece) {
@@ -72,8 +72,8 @@ void parse_fen(const char* fen) {
   ++fen;
 
   if (*fen != '-') {
-    int file = fen[0] - 'a';
-    int rank = 8 - (fen[1] - '0');
+    const int file = fen[0] - 'a';
+    const int rank = 8 - (fen[1] - '0');
     board.enpassant = rank * 8 + file;
   } else
     board.enpassant = no_sq;

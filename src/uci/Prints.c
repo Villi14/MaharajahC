@@ -58,7 +58,7 @@ void print_attacked_squares(int side_) {
 
   for (int rank = 0; rank < 8; ++rank) {
     for (int file = 0; file < 8; ++file) {
-      int square = rank * 8 + file;
+      const int square = rank * 8 + file;
 
       if (!file)
         printf("  %d ", 8 - rank);
@@ -79,7 +79,7 @@ void print_move_list(const MoveList* move_list) {
   printf("\n     move    piece     capture   double    enpass    castling\n\n");
 
   for (int move_count = 0; move_count < move_list->count; ++move_count) {
-    int move = move_list->moves[move_count];
+    const int move = move_list->moves[move_count];
     printf("     %s%s%c   %s         %d         %d         %d         %d\n",
            square_to_coordinates[get_move_source(move)],
            square_to_coordinates[get_move_target(move)],

@@ -29,7 +29,7 @@ static inline u64 get_rook_attacks(int square, u64 occupancy) {
   return attack_tables.rook_attacks[square][occupancy];
 }
 
-static inline u64 get_queen_attacks(int square, u64 occupancy) {
+static inline u64 get_queen_attacks(const int square, u64 occupancy) {
   u64 queen_attacks = 0ULL;
   u64 bishop_occupancy = occupancy;
   u64 rook_occupancy = occupancy;

@@ -46,7 +46,7 @@ static inline int read_hash_entry(int alpha, int beta, int depth) {
       // extract stored score from TT entry
       int score = hash_entry->score;
 
-      // retrieve score independent from the actual path
+      // retrieve score independent of the actual path
       // from root node (position) to current node (position)
       if (score < -mate_score)
         score += search_context.ply;
@@ -80,7 +80,7 @@ static inline void write_hash_entry(int score, int depth, int hash_flag) {
   // the scoring data for the current board position if available
   tt* hash_entry = &transposition_table.table[board.hash_key % transposition_table.entries];
 
-  // store score independent from the actual path
+  // store score independent of the actual path
   // from root node (position) to current node (position)
   if (score < -mate_score)
     score -= search_context.ply;

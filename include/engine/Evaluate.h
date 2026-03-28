@@ -34,7 +34,7 @@ static inline int evaluate() {
   int double_pawns = 0;
 
   // loop over piece board.bitboards
-  for (int bb_piece = P; bb_piece <= k; bb_piece++) {
+  for (int bb_piece = P; bb_piece <= k; ++bb_piece) {
     // init piece bitboard copy
     bitboard = board.bitboards[bb_piece];
 

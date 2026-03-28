@@ -11,7 +11,7 @@ void clear_hash_table() {
   tt* hash_entry;
 
   // loop over TT elements
-  for (hash_entry = transposition_table.table; hash_entry < transposition_table.table + transposition_table.entries; hash_entry++) {
+  for (hash_entry = transposition_table.table; hash_entry < transposition_table.table + transposition_table.entries; ++hash_entry) {
     // reset TT inner fields
     hash_entry->hash_key = 0;
     hash_entry->depth = 0;
@@ -21,7 +21,7 @@ void clear_hash_table() {
 }
 
 // dynamically allocate memory for hash table
-void init_hash_table(int mb) {
+void init_hash_table(const int mb) {
   // init hash size
   int hash_size = 0x100000 * mb;
 
@@ -52,6 +52,6 @@ void init_hash_table(int mb) {
     // clear hash table
     clear_hash_table();
 
-    printf("    Hash table is initialied with %d entries\n", transposition_table.entries);
+    printf("    Hash table is initialed with %d entries\n", transposition_table.entries);
   }
 }

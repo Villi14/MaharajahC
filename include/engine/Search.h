@@ -56,7 +56,7 @@ static inline void search_position(int depth) {
   int beta = infinity;
 
   // iterative deepening
-  for (int current_depth = 1; current_depth <= depth; current_depth++) {
+  for (int current_depth = 1; current_depth <= depth; ++current_depth) {
     // if time is up
     if (time_controls.stopped == 1)
       // stop calculating and return best move so far
@@ -104,7 +104,7 @@ static inline void search_position(int depth) {
                get_time_ms() - start);
 
       // loop over the moves within a PV line
-      for (int count = 0; count < search_context.pv_length[0]; count++) {
+      for (int count = 0; count < search_context.pv_length[0]; ++count) {
         // print PV move
         print_move(search_context.pv_table[0][count]);
         printf(" ");
@@ -163,14 +163,14 @@ static inline int negamax(int alpha, int beta, int depth) {
     return evaluate();
 
   // increment search_context.nodes count
-  search_context.nodes++;
+  ++search_context.nodes;
 
   // is king in check
   int in_check = is_square_attacked((board.side == white) ? get_ls1b_index(board.bitboards[K]) : get_ls1b_index(board.bitboards[k]), board.side ^ 1);
 
   // increase search depth if the king has been exposed into a check
   if (in_check)
-    depth++;
+    ++depth;
 
   // legal moves counter
   int legal_moves = 0;
@@ -181,10 +181,10 @@ static inline int negamax(int alpha, int beta, int depth) {
     copy_board();
 
     // increment search_context.ply
-    search_context.ply++;
+    ++search_context.ply;
 
     // increment repetition index & store hash key
-    search_context.repetition_index++;
+    ++search_context.repetition_index;
     search_context.repetition_table[search_context.repetition_index] = board.hash_key;
 
     // hash board.enpassant if available
@@ -205,10 +205,10 @@ static inline int negamax(int alpha, int beta, int depth) {
     score = -negamax(-beta, -beta + 1, depth - 1 - 2);
 
     // decrement search_context.ply
-    search_context.ply--;
+    --search_context.ply;
 
     // decrement repetition index
-    search_context.repetition_index--;
+    --search_context.repetition_index;
 
     // restore board state
     take_back();
@@ -241,31 +241,31 @@ static inline int negamax(int alpha, int beta, int depth) {
   int moves_searched = 0;
 
   // loop over moves within a movelist
-  for (int count = 0; count < move_list->count; count++) {
+  for (int count = 0; count < move_list->count; ++count) {
     // preserve board state
     copy_board();
 
     // increment search_context.ply
-    search_context.ply++;
+    ++search_context.ply;
 
     // increment repetition index & store hash key
-    search_context.repetition_index++;
+    ++search_context.repetition_index;
     search_context.repetition_table[search_context.repetition_index] = board.hash_key;
 
     // make sure to make only legal moves
     if (make_move(move_list->moves[count], all_moves) == 0) {
       // decrement search_context.ply
-      search_context.ply--;
+      --search_context.ply;
 
       // decrement repetition index
-      search_context.repetition_index--;
+      --search_context.repetition_index;
 
       // skip to next move
       continue;
     }
 
     // increment legal moves
-    legal_moves++;
+    ++legal_moves;
 
     // full depth search
     if (moves_searched == 0)
@@ -305,10 +305,10 @@ static inline int negamax(int alpha, int beta, int depth) {
     }
 
     // decrement search_context.ply
-    search_context.ply--;
+    --search_context.ply;
 
     // decrement repetition index
-    search_context.repetition_index--;
+    --search_context.repetition_index;
 
     // take move back
     take_back();
@@ -318,7 +318,7 @@ static inline int negamax(int alpha, int beta, int depth) {
       return 0;
 
     // increment the counter of moves searched so far
-    moves_searched++;
+    ++moves_searched;
 
     // found a better move
     if (score > alpha) {
@@ -338,7 +338,7 @@ static inline int negamax(int alpha, int beta, int depth) {
       search_context.pv_table[search_context.ply][search_context.ply] = move_list->moves[count];
 
       // loop over the next search_context.ply
-      for (int next_ply = search_context.ply + 1; next_ply < search_context.pv_length[search_context.ply + 1]; next_ply++)
+      for (int next_ply = search_context.ply + 1; next_ply < search_context.pv_length[search_context.ply + 1]; ++next_ply)
         // copy move from deeper search_context.ply into a current search_context.ply's line
         search_context.pv_table[search_context.ply][next_ply] = search_context.pv_table[search_context.ply + 1][next_ply];
 
@@ -391,7 +391,7 @@ static inline int quiescence(int alpha, int beta) {
     communicate();
 
   // increment search_context.nodes count
-  search_context.nodes++;
+  ++search_context.nodes;
 
   // we are too deep, hence there's an overflow of arrays relying on max search_context.ply constant
   if (search_context.ply > max_ply - 1)
@@ -423,24 +423,24 @@ static inline int quiescence(int alpha, int beta) {
   sort_moves(move_list);
 
   // loop over moves within a movelist
-  for (int count = 0; count < move_list->count; count++) {
+  for (int count = 0; count < move_list->count; ++count) {
     // preserve board state
     copy_board();
 
     // increment search_context.ply
-    search_context.ply++;
+    ++search_context.ply;
 
     // increment repetition index & store hash key
-    search_context.repetition_index++;
+    ++search_context.repetition_index;
     search_context.repetition_table[search_context.repetition_index] = board.hash_key;
 
     // make sure to make only legal moves
     if (make_move(move_list->moves[count], only_captures) == 0) {
       // decrement search_context.ply
-      search_context.ply--;
+      --search_context.ply;
 
       // decrement repetition index
-      search_context.repetition_index--;
+      --search_context.repetition_index;
 
       // skip to next move
       continue;
@@ -450,10 +450,10 @@ static inline int quiescence(int alpha, int beta) {
     int score = -quiescence(-beta, -alpha);
 
     // decrement search_context.ply
-    search_context.ply--;
+    --search_context.ply;
 
     // decrement repetition index
-    search_context.repetition_index--;
+    --search_context.repetition_index;
 
     // take move back
     take_back();
@@ -602,7 +602,7 @@ static inline void enable_pv_scoring(MoveList* move_list) {
 // position repetition detection
 static inline int is_repetition() {
   // loop over repetition indicies range
-  for (int index = 0; index < search_context.repetition_index; index++)
+  for (int index = 0; index < search_context.repetition_index; ++index)
     // if we found the hash key same with a current
     if (search_context.repetition_table[index] == board.hash_key)
       // we found a repetition

@@ -101,8 +101,8 @@ u64 mask_bishop_attacks(int square) {
 u64 mask_rook_attacks(int square) {
   u64 attacks = 0ULL;
   int r, f;
-  int tr = square / 8;
-  int tf = square % 8;
+  const int tr = square / 8;
+  const int tf = square % 8;
 
   for (r = tr + 1; r <= 6; ++r)
     attacks |= (1ULL << (r * 8 + tf));
@@ -120,8 +120,8 @@ u64 mask_rook_attacks(int square) {
 u64 bishop_attacks_on_the_fly(int square, u64 block) {
   u64 attacks = 0ULL;
   int r, f;
-  int tr = square / 8;
-  int tf = square % 8;
+  const int tr = square / 8;
+  const int tf = square % 8;
 
   for (r = tr + 1, f = tf + 1; r <= 7 && f <= 7; ++r, ++f) {
     attacks |= (1ULL << (r * 8 + f));
@@ -154,8 +154,8 @@ u64 bishop_attacks_on_the_fly(int square, u64 block) {
 u64 rook_attacks_on_the_fly(int square, u64 block) {
   u64 attacks = 0ULL;
   int r, f;
-  int tr = square / 8;
-  int tf = square % 8;
+  const int tr = square / 8;
+  const int tf = square % 8;
 
   for (r = tr + 1; r <= 7; ++r) {
     attacks |= (1ULL << (r * 8 + tf));
