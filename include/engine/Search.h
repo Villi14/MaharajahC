@@ -86,21 +86,21 @@ static inline void search_position(int depth) {
         printf("info score mate %d depth %d search_context.nodes %llu time %d pv ",
                -(score + mate_value) / 2 - 1,
                current_depth,
-               (unsigned long long)search_context.nodes,
+               (u64)search_context.nodes,
                get_time_ms() - start);
 
       else if (score > mate_score && score < mate_value)
         printf("info score mate %d depth %d search_context.nodes %llu time %d pv ",
                (mate_value - score) / 2 + 1,
                current_depth,
-               (unsigned long long)search_context.nodes,
+               (u64)search_context.nodes,
                get_time_ms() - start);
 
       else
         printf("info score cp %d depth %d search_context.nodes %llu time %d pv ",
                score,
                current_depth,
-               (unsigned long long)search_context.nodes,
+               (u64)search_context.nodes,
                get_time_ms() - start);
 
       // loop over the moves within a PV line

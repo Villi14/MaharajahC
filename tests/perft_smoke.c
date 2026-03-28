@@ -17,7 +17,7 @@ int main() {
 
   if (search_context.nodes != 400) {
     fprintf(stderr, "perft_smoke failed: expected 400 nodes, got %llu\n",
-            (unsigned long long)search_context.nodes);
+            (u64)search_context.nodes);
     free(transposition_table.table);
     return 1;
   }
