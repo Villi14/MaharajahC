@@ -7,6 +7,11 @@ set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
+# if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+#     add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer -O1 -g)
+#     add_link_options(-fsanitize=address,undefined)
+# endif()
+
 if (MSVC)
   add_compile_options(/W4)
   add_compile_options(/D_CRT_NONSTDC_NO_WARNINGS)

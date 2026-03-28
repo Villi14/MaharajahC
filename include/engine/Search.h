@@ -2,6 +2,7 @@
 #define SEARCH_H_
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "Attacks.h"
@@ -9,12 +10,12 @@
 #include "Evaluate.h"
 #include "Globals.h"
 #include "Moves.h"
+#include "Perft.h"
 #include "Prints.h"
 #include "Transposition.h"
+#include "UCI.h"
 #include "Utils.h"
 #include "Zobrist.h"
-#include "UCI.h"
-#include "Perft.h"
 
 // mate score
 
@@ -83,15 +84,24 @@ static inline void search_position(int depth) {
       // print search info
       if (score > -mate_value && score < -mate_score)
         printf("info score mate %d depth %d search_context.nodes %llu time %d pv ",
-               -(score + mate_value) / 2 - 1, current_depth, (unsigned long long)search_context.nodes, get_time_ms() - start);
+               -(score + mate_value) / 2 - 1,
+               current_depth,
+               (unsigned long long)search_context.nodes,
+               get_time_ms() - start);
 
       else if (score > mate_score && score < mate_value)
         printf("info score mate %d depth %d search_context.nodes %llu time %d pv ",
-               (mate_value - score) / 2 + 1, current_depth, (unsigned long long)search_context.nodes, get_time_ms() - start);
+               (mate_value - score) / 2 + 1,
+               current_depth,
+               (unsigned long long)search_context.nodes,
+               get_time_ms() - start);
 
       else
         printf("info score cp %d depth %d search_context.nodes %llu time %d pv ",
-               score, current_depth, (unsigned long long)search_context.nodes, get_time_ms() - start);
+               score,
+               current_depth,
+               (unsigned long long)search_context.nodes,
+               get_time_ms() - start);
 
       // loop over the moves within a PV line
       for (int count = 0; count < search_context.pv_length[0]; count++) {

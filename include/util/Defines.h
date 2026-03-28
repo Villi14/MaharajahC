@@ -7,6 +7,10 @@
 #define u64 unsigned long long
 #define uint unsigned int
 
+#ifdef _MSC_VER
+#define nullptr NULL
+#endif
+
 /*
      These are the score bounds for the range of the mating scores
    [-infinity, -mate_value ... -mate_score, ... score ... mate_score ... mate_value, infinity]
@@ -15,10 +19,6 @@
 #define infinity 50000
 #define mate_value 49000
 #define mate_score 48000
-
-#ifdef _MSC_VER
-#define nullptr NULL
-#endif
 
 // FEN debug positions
 #define empty_board "8/8/8/8/8/8/8/8 b - - "

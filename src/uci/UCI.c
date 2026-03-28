@@ -272,20 +272,20 @@ void uci_loop() {
   int mb = 64;
 
 // reset STDIN & STDOUT buffers
-#ifdef _MSC_VER
-  setvbuf(stdin, NULL, _IONBF, 0);
-  setvbuf(stdout, NULL, _IONBF, 0);
-#else
+// #ifdef _MSC_VER
+//   setvbuf(stdin, NULL, _IONBF, 0);
+//   setvbuf(stdout, NULL, _IONBF, 0);
+// #else
   setbuf(stdin, nullptr);
   setbuf(stdout, nullptr);
-#endif
+// #endif
 
   // define user / GUI input buffer
   char input[2000];
 
   // print engine info
-  printf("id name BBC %s\n", version);
-  printf("id author Code Monkey King\n");
+  printf("id name Maharajah %s\n", version);
+  printf("id author Villi\n");
   printf("option name Hash type spin default 64 min 4 max %d\n", max_hash);
   printf("uciok\n");
 
@@ -342,8 +342,8 @@ void uci_loop() {
     // parse UCI "uci" command
     else if (strncmp(input, "uci", 3) == 0) {
       // print engine info
-      printf("id name BBC %s\n", version);
-      printf("id author Code Monkey King\n");
+      printf("id name Maharajah %s\n", version);
+      printf("id author Villi\n");
       printf("uciok\n");
     }
 
