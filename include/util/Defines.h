@@ -9,6 +9,7 @@
 
 #ifdef _MSC_VER
 #define nullptr NULL
+#define constexpr const
 #endif
 
 /*
