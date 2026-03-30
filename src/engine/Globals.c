@@ -136,7 +136,7 @@ static constexpr int bishop_score[0x40] = {
 };
 
 // rook positional score
-static const int rook_score[0x40] = {
+static constexpr int rook_score[0x40] = {
   50,  50,  50,  50,  50,  50,  50,  50,
   50,  50,  50,  50,  50,  50,  50,  50,
   0,   0,  10,  20,  20,  10,   0,   0,
@@ -171,7 +171,7 @@ static constexpr int mirror_score[0x80] = {
   a8, b8, c8, d8, e8, f8, g8, h8
 };
 
-static const int mvv_lva[0xC][0xC] = {
+static constexpr int mvv_lva[0xC][0xC] = {
   {105, 205, 305, 405, 505, 605, 105, 205, 305, 405, 505, 605},
   {104, 204, 304, 404, 504, 604, 104, 204, 304, 404, 504, 604},
   {103, 203, 303, 403, 503, 603, 103, 203, 303, 403, 503, 603},
@@ -188,7 +188,7 @@ static const int mvv_lva[0xC][0xC] = {
 };
 
 // positional piece scores [game phase][piece][square]
-static const int positional_score[2][6][64] = {{ // White positional scores
+static constexpr int positional_score[2][6][64] = {{ // White positional scores
   // Pawn
   {
       0,   0,   0,   0,   0,   0,   0,   0,

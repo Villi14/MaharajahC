@@ -174,7 +174,7 @@ void parse_go(char* command) {
   int depth = -1;
 
   // init argument
-  char* argument = NULL;
+  char* argument = nullptr;
 
   // infinite search
   if ((argument = strstr(command, "infinite"))) {
@@ -375,7 +375,7 @@ int input_waiting() {
   }
 
   if (pipe) {
-    if (!PeekNamedPipe(inh, NULL, 0, NULL, &dw, NULL))
+    if (!PeekNamedPipe(inh, nullptr, 0, nullptr, &dw, nullptr))
       return 1;
     return dw;
   }
