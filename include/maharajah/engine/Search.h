@@ -11,13 +11,11 @@
 #include "maharajah/engine/Globals.h"
 #include "maharajah/engine/Moves.h"
 #include "maharajah/perft/Perft.h"
-#include "maharajah/uci/Prints.h"
+#include "maharajah/board/Prints.h"
 #include "maharajah/engine/Transposition.h"
 #include "maharajah/uci/UCI.h"
 #include "maharajah/util/Utils.h"
 #include "maharajah/engine/Zobrist.h"
-
-// mate score
 
 static inline int negamax(int alpha, int beta, int depth);
 static inline int quiescence(int alpha, int beta);
@@ -224,24 +222,24 @@ static inline int negamax(int alpha, int beta, int depth) {
   }
 
   // create move list instance
-  MoveList move_list[1];
+  MoveList move_list = { .count = 0 };
 
   // generate moves
-  generate_moves(move_list);
+  generate_moves(&move_list);
 
   // if we are now following PV line
   if (search_context.follow_pv)
     // enable PV move scoring
-    enable_pv_scoring(move_list);
+    enable_pv_scoring(&move_list);
 
   // sort moves
-  sort_moves(move_list);
+  sort_moves(&move_list);
 
   // number of moves searched in a move list
   int moves_searched = 0;
 
   // loop over moves within a movelist
-  for (int count = 0; count < move_list->count; ++count) {
+  for (int count = 0; count < move_list.count; ++count) {
     // preserve board state
     copy_board();
 
@@ -253,12 +251,12 @@ static inline int negamax(int alpha, int beta, int depth) {
     search_context.repetition_table[search_context.repetition_index] = board.hash_key;
 
     // make sure to make only legal moves
-    if (make_move(move_list->moves[count], all_moves) == 0) {
+    if (make_move(move_list.moves[count], all_moves) == 0) {
       // decrement search_context.ply
       --search_context.ply;
 
       // decrement repetition index
-      --search_context.repetition_index;
+      --search_context.repetition_index;  
 
       // skip to next move
       continue;
@@ -275,8 +273,8 @@ static inline int negamax(int alpha, int beta, int depth) {
     // late move reduction (LMR)
     else {
       // condition to consider LMR
-      if (moves_searched >= full_depth_moves && depth >= eval_tables.reduction_limit && in_check == 0 && get_move_capture(move_list->moves[count]) == 0
-          && get_move_promoted(move_list->moves[count]) == 0)
+      if (moves_searched >= full_depth_moves && depth >= eval_tables.reduction_limit && in_check == 0 && get_move_capture(move_list.moves[count]) == 0
+          && get_move_promoted(move_list.moves[count]) == 0)
         // search current move with reduced depth:
         score = -negamax(-alpha - 1, -alpha, depth - 2);
 
@@ -327,15 +325,15 @@ static inline int negamax(int alpha, int beta, int depth) {
       hash_flag = hash_flag_exact;
 
       // on quiet moves
-      if (get_move_capture(move_list->moves[count]) == 0)
+      if (get_move_capture(move_list.moves[count]) == 0)
         // store history moves
-        search_context.history_moves[get_move_piece(move_list->moves[count])][get_move_target(move_list->moves[count])] += depth;
+        search_context.history_moves[get_move_piece(move_list.moves[count])][get_move_target(move_list.moves[count])] += depth;
 
       // PV node (position)
       alpha = score;
 
       // write PV move
-      search_context.pv_table[search_context.ply][search_context.ply] = move_list->moves[count];
+      search_context.pv_table[search_context.ply][search_context.ply] = move_list.moves[count];
 
       // loop over the next search_context.ply
       for (int next_ply = search_context.ply + 1; next_ply < search_context.pv_length[search_context.ply + 1]; ++next_ply)
@@ -351,10 +349,10 @@ static inline int negamax(int alpha, int beta, int depth) {
         write_hash_entry(beta, depth, hash_flag_beta);
 
         // on quiet moves
-        if (get_move_capture(move_list->moves[count]) == 0) {
+        if (get_move_capture(move_list.moves[count]) == 0) {
           // store killer moves
           search_context.killer_moves[1][search_context.ply] = search_context.killer_moves[0][search_context.ply];
-          search_context.killer_moves[0][search_context.ply] = move_list->moves[count];
+          search_context.killer_moves[0][search_context.ply] = move_list.moves[count];
         }
 
         // node (position) fails high
@@ -414,16 +412,16 @@ static inline int quiescence(int alpha, int beta) {
   }
 
   // create move list instance
-  MoveList move_list[1];
+  MoveList move_list = { .count = 0 };
 
   // generate moves
-  generate_moves(move_list);
+  generate_moves(&move_list);
 
   // sort moves
-  sort_moves(move_list);
+  sort_moves(&move_list);
 
   // loop over moves within a movelist
-  for (int count = 0; count < move_list->count; ++count) {
+  for (int count = 0; count < move_list.count; ++count) {
     // preserve board state
     copy_board();
 
@@ -435,7 +433,7 @@ static inline int quiescence(int alpha, int beta) {
     search_context.repetition_table[search_context.repetition_index] = board.hash_key;
 
     // make sure to make only legal moves
-    if (make_move(move_list->moves[count], only_captures) == 0) {
+    if (make_move(move_list.moves[count], only_captures) == 0) {
       // decrement search_context.ply
       --search_context.ply;
 
@@ -554,7 +552,7 @@ static inline int score_move(int move) {
 // sort moves in descending order
 static inline void sort_moves(MoveList* move_list) {
   // move scores
-  int move_scores[256];
+  int move_scores[0x100];
 
   // score all the moves within a move list
   for (int count = 0; count < move_list->count; ++count)

@@ -25,10 +25,10 @@
 // parse user/GUI move string input (e.g. "e7e8q")
 int parse_move(const char* move_string) {
   // create move list instance
-  MoveList move_list[1];
+  MoveList move_list = { .count = 0 };
 
   // generate moves
-  generate_moves(move_list);
+  generate_moves(&move_list);
 
   // parse source square
   int source_square = (move_string[0] - 'a') + (8 - (move_string[1] - '0')) * 8;
@@ -37,9 +37,9 @@ int parse_move(const char* move_string) {
   int target_square = (move_string[2] - 'a') + (8 - (move_string[3] - '0')) * 8;
 
   // loop over the moves within a move list
-  for (int move_count = 0; move_count < move_list->count; ++move_count) {
+  for (int move_count = 0; move_count < move_list.count; ++move_count) {
     // init move
-    int move = move_list->moves[move_count];
+    int move = move_list.moves[move_count];
 
     // make sure source & target squares are available within the generated move
     if (source_square == get_move_source(move) && target_square == get_move_target(move)) {
@@ -250,7 +250,7 @@ void parse_go(char* command) {
   // if depth is not available
   if (depth == -1)
     // set depth to 64 plies (takes ages to complete...)
-    depth = 64;
+    depth = 0x40;
 
   // print debug info
   printf("time: %d  start: %u  stop: %u  depth: %d  timeset:%d\n", time_controls.uci_time, time_controls.starttime, time_controls.stoptime, depth, time_controls.timeset);
@@ -266,10 +266,10 @@ void parse_go(char* command) {
 // main UCI loop
 void uci_loop() {
   // max hash MB
-  int max_hash = 128;
+  int max_hash = 0x80;
 
   // default MB value
-  int mb = 64;
+  int mb = 0x40;
 
   setbuf(stdin, nullptr);
   setbuf(stdout, nullptr);
@@ -403,7 +403,7 @@ void read_input() {
   int bytes;
 
   // GUI/user input
-  char input[256] = "", *endc;
+  char input[0x100] = "", *endc;
 
   // "listen" to STDIN
   if (input_waiting()) {
@@ -413,7 +413,7 @@ void read_input() {
     // loop to read bytes from STDIN
     do {
       // read bytes from STDIN
-      bytes = read(STDIN_FILENO, input, 256);
+      bytes = read(STDIN_FILENO, input, 0x100);
     }
 
     // until bytes available

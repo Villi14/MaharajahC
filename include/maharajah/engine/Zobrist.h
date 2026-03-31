@@ -4,8 +4,8 @@
 #include "maharajah/util/Defines.h"
 
 typedef struct {
-  u64 piece_keys[12][64];
-  u64 enpassant_keys[64];
+  u64 piece_keys[12][0x40];
+  u64 enpassant_keys[0x40];
   u64 castle_keys[16];
   u64 side_key;
 } ZobristKeys;

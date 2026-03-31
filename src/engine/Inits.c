@@ -33,7 +33,7 @@ void init_sliders_attacks(int bishop) {
         u64 occupancy = set_occupancy(index, relevant_bits_count, attack_mask);
 
         // init magic index
-        u64 magic_index = (occupancy * bishop_magic_numbers[square]) >> (64 - bishop_relevant_bits[square]);
+        u64 magic_index = (occupancy * bishop_magic_numbers[square]) >> (0x40 - bishop_relevant_bits[square]);
 
         // init bishop attacks
         attack_tables.bishop_attacks[square][magic_index] = bishop_attacks_on_the_fly(square, occupancy);
@@ -45,7 +45,7 @@ void init_sliders_attacks(int bishop) {
         u64 occupancy = set_occupancy(index, relevant_bits_count, attack_mask);
 
         // init magic index
-        u64 magic_index = (occupancy * rook_magic_numbers[square]) >> (64 - rook_relevant_bits[square]);
+        u64 magic_index = (occupancy * rook_magic_numbers[square]) >> (0x40 - rook_relevant_bits[square]);
 
         // init rook attacks
         attack_tables.rook_attacks[square][magic_index] = rook_attacks_on_the_fly(square, occupancy);
@@ -86,7 +86,7 @@ void init_all() {
   init_evaluation_masks();
 
   // init hash table with default 64 MB
-  init_hash_table(64);
+  init_hash_table(0x40);
 
   // init magic numbers
   // init_magic_numbers();

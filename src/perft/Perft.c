@@ -28,13 +28,13 @@ void perft_driver(int depth) {
     return;
   }
 
-  MoveList move_list[1];
-  generate_moves(move_list);
+  MoveList move_list = { .count = 0 };
+  generate_moves(&move_list);
 
-  for (int move_count = 0; move_count < move_list->count; ++move_count) {
+  for (int move_count = 0; move_count < move_list.count; ++move_count) {
     copy_board();
 
-    if (!make_move(move_list->moves[move_count], all_moves))
+    if (!make_move(move_list.moves[move_count], all_moves))
       continue;
 
     perft_driver(depth - 1);
@@ -46,14 +46,14 @@ void perft_driver(int depth) {
 void perft_test(int depth) {
   printf("\n     Performance test\n\n");
 
-  MoveList move_list[1];
-  generate_moves(move_list);
+  MoveList move_list = { .count = 0 };
+  generate_moves(&move_list);
   long start_time = get_time_ms();
 
-  for (int move_count = 0; move_count < move_list->count; ++move_count) {
+  for (int move_count = 0; move_count < move_list.count; ++move_count) {
     copy_board();
 
-    if (!make_move(move_list->moves[move_count], all_moves))
+    if (!make_move(move_list.moves[move_count], all_moves))
       continue;
 
     u64 cumulative_nodes = search_context.nodes;
@@ -62,9 +62,9 @@ void perft_test(int depth) {
     take_back();
 
     printf("     move: %s%s%c  search_context.nodes: %lld\n",
-           square_to_coordinates[get_move_source(move_list->moves[move_count])],
-           square_to_coordinates[get_move_target(move_list->moves[move_count])],
-           get_move_promoted(move_list->moves[move_count]) ? promoted_pieces[get_move_promoted(move_list->moves[move_count])] : ' ',
+           square_to_coordinates[get_move_source(move_list.moves[move_count])],
+           square_to_coordinates[get_move_target(move_list.moves[move_count])],
+           get_move_promoted(move_list.moves[move_count]) ? promoted_pieces[get_move_promoted(move_list.moves[move_count])] : ' ',
            old_nodes);
   }
 

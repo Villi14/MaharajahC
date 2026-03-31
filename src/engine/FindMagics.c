@@ -102,7 +102,7 @@ u64 find_magic_number(const int square, const int relevant_bits, const int bisho
     // test magic index loop
     for (index = 0, fail = 0; !fail && index < occupancy_indices; ++index) {
       // init magic index
-      int magic_index = (int)((occupancies_[index] * magic_number) >> (64 - relevant_bits));
+      int magic_index = (int)((occupancies_[index] * magic_number) >> (0x40 - relevant_bits));
 
       // if magic index works
       if (used_attacks[magic_index] == 0ULL)

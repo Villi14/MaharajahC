@@ -267,7 +267,7 @@ static const int mvv_lva[0xC][0xC] = {
 };
 
 // positional piece scores [game phase][piece][square]
-static const int positional_score[2][6][64] = {{ // White positional scores
+static const int positional_score[2][6][0x40] = {{ // White positional scores
   // Pawn
   {
       0,   0,   0,   0,   0,   0,   0,   0,
@@ -500,7 +500,7 @@ typedef struct {
   const int* mirror_score;
   const int (*mvv_lva)[0xC];
   const int (*material_score)[0xC];
-  const int (*positional_score)[6][64];
+  const int (*positional_score)[6][0x40];
 } EvalTables;
 
 static const EvalTables eval_tables = {
