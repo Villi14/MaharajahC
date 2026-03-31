@@ -4,6 +4,8 @@
 #include "maharajah/engine/FindMagics.h"
 #include "maharajah/engine/Moves.h"
 
+ZobristKeys zobrist_keys;
+
 // init random hash keys
 void init_random_keys() {
   // update pseudo random number state

@@ -24,7 +24,7 @@ typedef struct {
   int entries;
 } TranspositionTable;
 
-static TranspositionTable transposition_table = { .table = nullptr, .entries = 0 };
+extern TranspositionTable transposition_table;
 
 // clear TT (hash table)
 void clear_hash_table();

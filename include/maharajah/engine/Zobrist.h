@@ -10,7 +10,7 @@ typedef struct {
   u64 side_key;
 } ZobristKeys;
 
-static ZobristKeys zobrist_keys;
+extern ZobristKeys zobrist_keys;
 
 // init random hash keys
 void init_random_keys();

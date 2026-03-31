@@ -1,6 +1,23 @@
 #include "maharajah/util/Defines.h"
 #include "maharajah/engine/Masks.h"
 
+u64 file_masks[0x40];
+u64 rank_masks[0x40];
+u64 isolated_masks[0x40];
+u64 white_passed_masks[0x40];
+u64 black_passed_masks[0x40];
+
+const int get_rank[0x40] = {
+  7, 7, 7, 7, 7, 7, 7, 7,
+  6, 6, 6, 6, 6, 6, 6, 6,
+  5, 5, 5, 5, 5, 5, 5, 5,
+  4, 4, 4, 4, 4, 4, 4, 4,
+  3, 3, 3, 3, 3, 3, 3, 3,
+  2, 2, 2, 2, 2, 2, 2, 2,
+  1, 1, 1, 1, 1, 1, 1, 1,
+  0, 0, 0, 0, 0, 0, 0, 0
+};
+
 // set file or rank mask
 u64 set_file_rank_mask(const int file_number, const int rank_number) {
   // file or rank mask
