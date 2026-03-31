@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "Attacks.h"
-#include "Defines.h"
-#include "Moves.h"
-#include "Globals.h"
-#include "MagicNumbers.h"
+#include "maharajah/engine/Attacks.h"
+#include "maharajah/util/Defines.h"
+#include "maharajah/engine/Moves.h"
+#include "maharajah/engine/Globals.h"
+#include "maharajah/engine/MagicNumbers.h"
 
 // generate 32-bit pseudo legal numbers
 uint get_random_U32_number() {

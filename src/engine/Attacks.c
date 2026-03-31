@@ -1,6 +1,6 @@
-#include "Attacks.h"
-#include "Defines.h"
-#include "Globals.h"
+#include "maharajah/engine/Attacks.h"
+#include "maharajah/util/Defines.h"
+#include "maharajah/engine/Globals.h"
 
 // generate pawn attacks
 u64 mask_pawn_attacks(int side_, int square) {

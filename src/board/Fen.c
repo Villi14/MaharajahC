@@ -1,9 +1,9 @@
 #include <string.h>
 
-#include "Fen.h"
-#include "Defines.h"
-#include "Globals.h"
-#include "Zobrist.h"
+#include "maharajah/board/Fen.h"
+#include "maharajah/util/Defines.h"
+#include "maharajah/engine/Globals.h"
+#include "maharajah/engine/Zobrist.h"
 
 // parse FEN string
 void parse_fen(const char* fen) {

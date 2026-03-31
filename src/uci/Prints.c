@@ -1,7 +1,7 @@
-#include "Prints.h"
-#include "Attacks.h"
-#include "Globals.h"
-#include "Search.h"
+#include "maharajah/uci/Prints.h"
+#include "maharajah/engine/Attacks.h"
+#include "maharajah/engine/Globals.h"
+#include "maharajah/engine/Search.h"
 
 void print_bitboard(u64 bitboard) {
   printf("\n");

@@ -1,12 +1,12 @@
-#include "Inits.h"
-#include "Attacks.h"
-#include "FindMagics.h"
-#include "Globals.h"
-#include "MagicNumbers.h"
-#include "Masks.h"
-#include "Zobrist.h"
-#include "Utils.h"
-#include "Transposition.h"
+#include "maharajah/engine/Inits.h"
+#include "maharajah/engine/Attacks.h"
+#include "maharajah/engine/FindMagics.h"
+#include "maharajah/engine/Globals.h"
+#include "maharajah/engine/MagicNumbers.h"
+#include "maharajah/engine/Masks.h"
+#include "maharajah/engine/Zobrist.h"
+#include "maharajah/util/Utils.h"
+#include "maharajah/engine/Transposition.h"
 
 // init slider piece's attack tables
 void init_sliders_attacks(int bishop) {

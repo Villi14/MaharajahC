@@ -13,14 +13,14 @@
   #include <sys/select.h>
 #endif
 
-#include "Defines.h"
-#include "Fen.h"
-#include "Globals.h"
-#include "Moves.h"
-#include "Perft.h"
-#include "Search.h"
-#include "UCI.h"
-#include "Utils.h"
+#include "maharajah/util/Defines.h"
+#include "maharajah/board/Fen.h"
+#include "maharajah/engine/Globals.h"
+#include "maharajah/engine/Moves.h"
+#include "maharajah/perft/Perft.h"
+#include "maharajah/engine/Search.h"
+#include "maharajah/uci/UCI.h"
+#include "maharajah/util/Utils.h"
 
 // parse user/GUI move string input (e.g. "e7e8q")
 int parse_move(const char* move_string) {
@@ -148,13 +148,13 @@ void parse_position(char* command) {
       // increment repetition index
       ++search_context.repetition_index;
 
-      // wtire hash key into a repetition table
+      // write hash key into the repetition table
       search_context.repetition_table[search_context.repetition_index] = board.hash_key;
 
       // make move on the chess board
       make_move(move, all_moves);
 
-      // move current character mointer to the end of current move
+      // move current character pointer to the end of current move
       while (*current_char && *current_char != ' ')
         ++current_char;
 
@@ -345,7 +345,7 @@ void uci_loop() {
       // init MB
       sscanf(input, "%*s %*s %*s %*s %d", &mb);
 
-      // adjust MB if going beyond the aloowed bounds
+      // adjust MB if going beyond the allowed bounds
       if (mb < 4)
         mb = 4;
       if (mb > max_hash)
@@ -430,7 +430,7 @@ void read_input() {
     if (strlen(input) > 0) {
       // match UCI "quit" command
       if (!strncmp(input, "quit", 4))
-        // tell engine to terminate exacution
+        // tell engine to terminate execution
         time_controls.quit = 1;
 
       // match UCI "stop" command

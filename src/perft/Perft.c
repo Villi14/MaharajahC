@@ -7,9 +7,9 @@
 #include <sys/time.h>
 #endif
 
-#include "Globals.h"
-#include "Moves.h"
-#include "Perft.h"
+#include "maharajah/engine/Globals.h"
+#include "maharajah/engine/Moves.h"
+#include "maharajah/perft/Perft.h"
 
 int get_time_ms() {
 #ifdef _MSC_VER

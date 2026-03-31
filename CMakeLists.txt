@@ -36,27 +36,17 @@ file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/include/*.h)
 
 set(APP_SOURCES ${ALL_SOURCES})
 set(TEST_SOURCES ${ALL_SOURCES})
-list(REMOVE_ITEM TEST_SOURCES ${PROJECT_SOURCE_DIR}/src/main.c)
+list(REMOVE_ITEM TEST_SOURCES ${PROJECT_SOURCE_DIR}/src/cli/main.c)
 
 add_executable(${BINARY} ${APP_SOURCES} ${HEADERS})
 
 target_include_directories(${BINARY} PRIVATE
   ${PROJECT_SOURCE_DIR}/include
-  ${PROJECT_SOURCE_DIR}/include/engine
-  ${PROJECT_SOURCE_DIR}/include/board
-  ${PROJECT_SOURCE_DIR}/include/uci
-  ${PROJECT_SOURCE_DIR}/include/perft
-  ${PROJECT_SOURCE_DIR}/include/util
 )
 
 add_executable(perft_smoke tests/perft_smoke.c ${TEST_SOURCES} ${HEADERS})
 target_include_directories(perft_smoke PRIVATE
   ${PROJECT_SOURCE_DIR}/include
-  ${PROJECT_SOURCE_DIR}/include/engine
-  ${PROJECT_SOURCE_DIR}/include/board
-  ${PROJECT_SOURCE_DIR}/include/uci
-  ${PROJECT_SOURCE_DIR}/include/perft
-  ${PROJECT_SOURCE_DIR}/include/util
 )
 
 enable_testing()

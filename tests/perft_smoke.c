@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "Defines.h"
-#include "Fen.h"
-#include "Globals.h"
-#include "Inits.h"
-#include "Perft.h"
-#include "Transposition.h"
+#include "maharajah/util/Defines.h"
+#include "maharajah/board/Fen.h"
+#include "maharajah/engine/Globals.h"
+#include "maharajah/engine/Inits.h"
+#include "maharajah/perft/Perft.h"
+#include "maharajah/engine/Transposition.h"
 
 int main() {
   init_all();

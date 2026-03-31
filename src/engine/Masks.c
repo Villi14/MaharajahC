@@ -1,5 +1,5 @@
-#include "Defines.h"
-#include "Masks.h"
+#include "maharajah/util/Defines.h"
+#include "maharajah/engine/Masks.h"
 
 // set file or rank mask
 u64 set_file_rank_mask(const int file_number, const int rank_number) {
@@ -92,9 +92,9 @@ void init_evaluation_masks() {
       white_passed_masks[square] |= set_file_rank_mask(file, -1);
       white_passed_masks[square] |= set_file_rank_mask(file + 1, -1);
 
-      // loop over redudant ranks
+      // loop over redundant ranks
       for (int i = 0; i < (8 - rank); ++i)
-        // reset redudant bits
+        // reset redundant bits
         white_passed_masks[square] &= ~rank_masks[(7 - i) * 8 + file];
     }
   }
@@ -113,9 +113,9 @@ void init_evaluation_masks() {
       black_passed_masks[square] |= set_file_rank_mask(file, -1);
       black_passed_masks[square] |= set_file_rank_mask(file + 1, -1);
 
-      // loop over redudant ranks
+      // loop over redundant ranks
       for (int i = 0; i < rank + 1; ++i)
-        // reset redudant bits
+        // reset redundant bits
         black_passed_masks[square] &= ~rank_masks[i * 8 + file];
     }
   }

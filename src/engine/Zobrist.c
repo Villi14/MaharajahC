@@ -1,8 +1,8 @@
-#include "Zobrist.h"
-#include "Globals.h"
-#include "Defines.h"
-#include "FindMagics.h"
-#include "Moves.h"
+#include "maharajah/engine/Zobrist.h"
+#include "maharajah/engine/Globals.h"
+#include "maharajah/util/Defines.h"
+#include "maharajah/engine/FindMagics.h"
+#include "maharajah/engine/Moves.h"
 
 // init random hash keys
 void init_random_keys() {

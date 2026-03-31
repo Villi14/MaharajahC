@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "Transposition.h"
+#include "maharajah/engine/Transposition.h"
 
 // clear TT (hash table)
 void clear_hash_table() {
