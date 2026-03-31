@@ -4,8 +4,6 @@
 #include "FindMagics.h"
 #include "Moves.h"
 
-ZobristKeys zobrist_keys;
-
 // init random hash keys
 void init_random_keys() {
   // update pseudo random number state

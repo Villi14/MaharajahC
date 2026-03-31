@@ -126,6 +126,7 @@ u64 find_magic_number(const int square, const int relevant_bits, const int bisho
   return 0ULL;
 }
 
+#if 0
 // init magic numbers
 void init_magic_numbers() {
   // loop over 64 board squares
@@ -138,3 +139,4 @@ void init_magic_numbers() {
     // init bishop magic numbers
     bishop_magic_numbers[square] = find_magic_number(square, bishop_relevant_bits[square], bishop);
 }
+#endif

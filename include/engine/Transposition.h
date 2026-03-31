@@ -4,13 +4,12 @@
 #include "Defines.h"
 #include "Globals.h"
 
-// no hash entry found constant
-#define no_hash_entry 100000
-
-// transposition table hash flags
-#define hash_flag_exact 0
-#define hash_flag_alpha 1
-#define hash_flag_beta 2
+enum {
+  hash_flag_exact = 0,
+  hash_flag_alpha = 1,
+  hash_flag_beta = 2,
+  no_hash_entry = 100000,
+};
 
 // transposition table data structure
 typedef struct {
@@ -25,7 +24,7 @@ typedef struct {
   int entries;
 } TranspositionTable;
 
-extern TranspositionTable transposition_table;
+static TranspositionTable transposition_table = { .table = nullptr, .entries = 0 };
 
 // clear TT (hash table)
 void clear_hash_table();

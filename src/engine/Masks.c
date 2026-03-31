@@ -1,31 +1,5 @@
 #include "Defines.h"
-
-// file masks [square]
-u64 file_masks[0x40];
-
-// rank masks [square]
-u64 rank_masks[0x40];
-
-// isolated pawn masks [square]
-u64 isolated_masks[0x40];
-
-// white passed pawn masks [square]
-u64 white_passed_masks[0x40];
-
-// black passed pawn masks [square]
-u64 black_passed_masks[0x40];
-
-// extract rank from a square [square]
-const int get_rank[0x40] = {
-    7, 7, 7, 7, 7, 7, 7, 7,
-    6, 6, 6, 6, 6, 6, 6, 6,
-    5, 5, 5, 5, 5, 5, 5, 5,
-    4, 4, 4, 4, 4, 4, 4, 4,
-    3, 3, 3, 3, 3, 3, 3, 3,
-    2, 2, 2, 2, 2, 2, 2, 2,
-    1, 1, 1, 1, 1, 1, 1, 1,
-  0, 0, 0, 0, 0, 0, 0, 0
-};
+#include "Masks.h"
 
 // set file or rank mask
 u64 set_file_rank_mask(const int file_number, const int rank_number) {

@@ -11,7 +11,6 @@
 #include "Globals.h"
 
 // count bits within a bitboard
-
 static inline int count_bits(u64 bitboard) {
 #if defined(_MSC_VER)
   return (int)__popcnt64(bitboard);

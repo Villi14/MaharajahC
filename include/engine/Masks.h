@@ -6,28 +6,31 @@
 #include "Utils.h"
 
 // file masks [square]
-extern u64 file_masks[0x40];
+static u64 file_masks[0x40];
 
 // rank masks [square]
-extern u64 rank_masks[0x40];
+static u64 rank_masks[0x40];
 
 // isolated pawn masks [square]
-extern u64 isolated_masks[0x40];
+static u64 isolated_masks[0x40];
 
 // white passed pawn masks [square]
-extern u64 white_passed_masks[0x40];
+static u64 white_passed_masks[0x40];
 
 // black passed pawn masks [square]
-extern u64 black_passed_masks[0x40];
+static u64 black_passed_masks[0x40];
 
 // extract rank from a square [square]
-extern const int get_rank[0x40];
-
-// init evaluation masks
-void init_evaluation_masks();
-
-// set file or rank mask
-u64 set_file_rank_mask(int file_number, int rank_number);
+static const int get_rank[0x40] = {
+  7, 7, 7, 7, 7, 7, 7, 7,
+  6, 6, 6, 6, 6, 6, 6, 6,
+  5, 5, 5, 5, 5, 5, 5, 5,
+  4, 4, 4, 4, 4, 4, 4, 4,
+  3, 3, 3, 3, 3, 3, 3, 3,
+  2, 2, 2, 2, 2, 2, 2, 2,
+  1, 1, 1, 1, 1, 1, 1, 1,
+  0, 0, 0, 0, 0, 0, 0, 0
+};
 
 // get game phase score
 static inline int get_game_phase_score() {
@@ -56,5 +59,11 @@ static inline int get_game_phase_score() {
   // return game phase score
   return white_piece_scores + black_piece_scores;
 }
+
+// init evaluation masks
+void init_evaluation_masks();
+
+// set file or rank mask
+u64 set_file_rank_mask(int file_number, int rank_number);
 
 #endif // !MASKS_H_

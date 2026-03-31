@@ -3,8 +3,6 @@
 
 #include "Transposition.h"
 
-TranspositionTable transposition_table = { .table = nullptr, .entries = 0 };
-
 // clear TT (hash table)
 void clear_hash_table() {
   // init hash table entry pointer

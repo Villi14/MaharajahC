@@ -1,7 +1,7 @@
 #ifndef DEFINES_H_
 #define DEFINES_H_
 
-#define version "1.0.0"
+#define version "0.1.0"
 
 // define bitboard data type
 #define u64 unsigned long long
@@ -9,17 +9,7 @@
 
 #ifdef _MSC_VER
 #define nullptr NULL
-#define constexpr const
 #endif
-
-/*
-     These are the score bounds for the range of the mating scores
-   [-infinity, -mate_value ... -mate_score, ... score ... mate_score ... mate_value, infinity]
-*/
-
-#define infinity 50000
-#define mate_value 49000
-#define mate_score 48000
 
 // FEN debug positions
 #define empty_board "8/8/8/8/8/8/8/8 b - - "
@@ -34,8 +24,6 @@
 #define get_bit(bitboard, square) ((bitboard) & (1ULL << (square)))
 #define pop_bit(bitboard, square) ((bitboard) &= ~(1ULL << (square)))
 
-// max ply that we can reach within a search
-#define max_ply 0x40
 
 /*       binary move bits                               hexidecimal constants
 
