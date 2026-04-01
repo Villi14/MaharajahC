@@ -3,27 +3,20 @@
 
 #include "maharajah/util/Defines.h"
 
-// encode pieces
 enum { P, N, B, R, Q, K, p, n, b, r, q, k };
 
-// sides to move (colors)
 enum { white, black, both };
 
-// bishop and rook
 enum { rook, bishop };
 
-// castling 
 enum { wk = 0x1, wq = 0x2, bk = 0x4, bq = 0x8 };
 
-// game phases
 enum { opening, endgame, middlegame };
 
-// piece types
 enum { PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING };
 
 // clang-format off
 
-// board squares
 enum {
   a8, b8, c8, d8, e8, f8, g8, h8,
   a7, b7, c7, d7, e7, f7, g7, h7,
@@ -37,7 +30,6 @@ enum {
 
 // clang-format on
 
-// move types
 enum { all_moves, only_captures };
 
 enum {
@@ -66,72 +58,52 @@ enum {
   endgame_phase_score = 518
 };
 
-// not A file constant
 static const u64 not_a_file = 0xFEFEFEFEFEFEFEFEULL;
 
-// not H file constant
 static const u64 not_h_file = 0x7F7F7F7F7F7F7F7FULL;
 
-// not HG file constant
 static const u64 not_hg_file = 0x3F3F3F3F3F3F3F3FULL;
 
-// not AB file constant
 static const u64 not_ab_file = 0xFCFCFCFCFCFCFCFCULL;
 
-// full depth moves counter
 static const int full_depth_moves = 4;
 
-// piece-square tables for positional evaluation
 extern const int passed_pawn_bonus[8];
 
-// convert squares to coordinates
-extern const char *square_to_coordinates[0x40];
+extern const char* square_to_coordinates[0x40];
 
-extern const char *default_pieces[0xC];
+extern const char* default_pieces[0xC];
 
-// convert ASCII character pieces to encoded constants
 extern const int char_pieces[0x80];
 
 extern const char promoted_pieces[0x80];
 
-// bishop relevant occupancy bit count for every square on board
 extern const int bishop_relevant_bits[0x40];
 
-// rook relevant occupancy bit count for every square on board
 extern const int rook_relevant_bits[0x40];
 
-// castling rights update constants
 extern const int castling_rights[0x40];
 
 extern const int material_score[2][0xC];
 
-// pawn positional score
 extern const int pawn_score[0x40];
 
-// knight positional score
 extern const int knight_score[0x40];
 
-// bishop positional score
 extern const int bishop_score[0x40];
 
-// rook positional score
 extern const int rook_score[0x40];
 
-// king positional score
 extern const int king_score[0x40];
 
-// mirror positional score tables for opposite board.side
 extern const int mirror_score[0x80];
 
 extern const int mvv_lva[0xC][0xC];
 
-// positional piece scores [game phase][piece][square]
 extern const int positional_score[2][6][0x40];
 
-// pseudo random number state
 extern uint random_state;
 
-// move list structure
 typedef struct {
   int moves[0x100];
   int count;

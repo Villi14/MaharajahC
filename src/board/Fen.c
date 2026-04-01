@@ -1,15 +1,12 @@
 #include <string.h>
 
 #include "maharajah/board/Fen.h"
-#include "maharajah/util/Defines.h"
 #include "maharajah/engine/Globals.h"
 #include "maharajah/engine/Zobrist.h"
+#include "maharajah/util/Defines.h"
 
-// parse FEN string
 void parse_fen(const char* fen) {
-  // prepare for new game
   reset_board();
-
   for (int rank = 0; rank < 8; ++rank) {
     for (int file = 0; file < 8; ++file) {
       const int square = rank * 8 + file;
@@ -87,26 +84,15 @@ void parse_fen(const char* fen) {
   board.occupancies[both] |= board.occupancies[white];
   board.occupancies[both] |= board.occupancies[black];
 
-  // init hash key
   board.hash_key = generate_hash_key();
 }
 
-// reset board variables
 void reset_board() {
-  // reset board position (board.bitboards)
   memset(board.bitboards, 0ULL, sizeof(board.bitboards));
-
-  // reset board.occupancies (board.bitboards)
   memset(board.occupancies, 0ULL, sizeof(board.occupancies));
-
-  // reset game state variables
   board.side = 0;
   board.enpassant = no_sq;
   board.castle = 0;
-
-  // reset repetition index
   search_context.repetition_index = 0;
-
-  // reset repetition table
   memset(search_context.repetition_table, 0ULL, sizeof(search_context.repetition_table));
 }

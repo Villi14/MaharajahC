@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "maharajah/board/Prints.h"
 #include "maharajah/engine/Attacks.h"
 #include "maharajah/engine/Globals.h"
@@ -47,9 +49,12 @@ void print_board() {
   printf("\n     a b c d e f g h\n\n");
   printf("     Side:     %s\n", !board.side ? "white" : "black");
   printf("     Enpassant:   %s\n", (board.enpassant != no_sq) ? square_to_coordinates[board.enpassant] : "no");
-  printf("     Castling:  %c%c%c%c\n\n", (board.castle & wk) ? 'K' : '-', (board.castle & wq) ? 'Q' : '-', (board.castle & bk) ? 'k' : '-', (board.castle & bq) ? 'q' : '-');
+  printf("     Castling:  %c%c%c%c\n\n",
+         (board.castle & wk) ? 'K' : '-',
+         (board.castle & wq) ? 'Q' : '-',
+         (board.castle & bk) ? 'k' : '-',
+         (board.castle & bq) ? 'q' : '-');
 
-  // print hash key
   printf("     Hash key:  %llx\n\n", board.hash_key);
 }
 
@@ -101,11 +106,9 @@ void print_move(int move) {
     printf("%s%s", square_to_coordinates[get_move_source(move)], square_to_coordinates[get_move_target(move)]);
 }
 
-// print move scores
 void print_move_scores(MoveList* move_list) {
   printf("     Move scores:\n\n");
 
-  // loop over moves within a move list
   for (int count = 0; count < move_list->count; ++count) {
     printf("     move: ");
     print_move(move_list->moves[count]);

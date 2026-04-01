@@ -8,6 +8,8 @@ AttackTables attack_tables;
 
 SearchContext search_context;
 
+// clang-format off
+
 TimeControls time_controls = {
   .quit = 0,
   .movestogo = 30,
@@ -19,8 +21,6 @@ TimeControls time_controls = {
   .timeset = 0,
   .stopped = 0
 };
-
-// clang-format off
 
 const int passed_pawn_bonus[8] = { 0, 10, 30, 50, 75, 100, 150, 200 };
 
@@ -312,31 +312,29 @@ const int positional_score[2][6][0x40] = {{ // White positional scores
 
 // clang-format on
 
-const EvalTables eval_tables = {
-  .double_pawn_penalty_opening = double_pawn_penalty_opening,
-  .double_pawn_penalty_endgame = double_pawn_penalty_endgame,
-  .isolated_pawn_penalty_opening = isolated_pawn_penalty_opening,
-  .isolated_pawn_penalty_endgame = isolated_pawn_penalty_endgame,
-  .semi_open_file_score = semi_open_file_score,
-  .open_file_score = open_file_score,
-  .bishop_unit = bishop_unit,
-  .queen_unit = queen_unit,
-  .bishop_mobility_opening = bishop_mobility_opening,
-  .bishop_mobility_endgame = bishop_mobility_endgame,
-  .queen_mobility_opening = queen_mobility_opening,
-  .queen_mobility_endgame = queen_mobility_endgame,
-  .reduction_limit = reduction_limit,
-  .king_shield_bonus = king_shield_bonus,
-  .opening_phase_score = opening_phase_score,
-  .endgame_phase_score = endgame_phase_score,
-  .passed_pawn_bonus = passed_pawn_bonus,
-  .pawn_score = pawn_score,
-  .knight_score = knight_score,
-  .bishop_score = bishop_score,
-  .rook_score = rook_score,
-  .king_score = king_score,
-  .mirror_score = mirror_score,
-  .mvv_lva = mvv_lva,
-  .material_score = material_score,
-  .positional_score = positional_score
-};
+const EvalTables eval_tables = { .double_pawn_penalty_opening = double_pawn_penalty_opening,
+                                 .double_pawn_penalty_endgame = double_pawn_penalty_endgame,
+                                 .isolated_pawn_penalty_opening = isolated_pawn_penalty_opening,
+                                 .isolated_pawn_penalty_endgame = isolated_pawn_penalty_endgame,
+                                 .semi_open_file_score = semi_open_file_score,
+                                 .open_file_score = open_file_score,
+                                 .bishop_unit = bishop_unit,
+                                 .queen_unit = queen_unit,
+                                 .bishop_mobility_opening = bishop_mobility_opening,
+                                 .bishop_mobility_endgame = bishop_mobility_endgame,
+                                 .queen_mobility_opening = queen_mobility_opening,
+                                 .queen_mobility_endgame = queen_mobility_endgame,
+                                 .reduction_limit = reduction_limit,
+                                 .king_shield_bonus = king_shield_bonus,
+                                 .opening_phase_score = opening_phase_score,
+                                 .endgame_phase_score = endgame_phase_score,
+                                 .passed_pawn_bonus = passed_pawn_bonus,
+                                 .pawn_score = pawn_score,
+                                 .knight_score = knight_score,
+                                 .bishop_score = bishop_score,
+                                 .rook_score = rook_score,
+                                 .king_score = king_score,
+                                 .mirror_score = mirror_score,
+                                 .mvv_lva = mvv_lva,
+                                 .material_score = material_score,
+                                 .positional_score = positional_score };

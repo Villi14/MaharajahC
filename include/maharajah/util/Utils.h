@@ -10,15 +10,12 @@
 #include "maharajah/util/Defines.h"
 #include "maharajah/engine/Globals.h"
 
-// count bits within a bitboard
 static inline int count_bits(u64 bitboard) {
 #if defined(_MSC_VER)
   return (int)__popcnt64(bitboard);
 #elif defined(__GNUC__) || defined(__clang__)
   return __builtin_popcountll(bitboard);
 #else
-  // fallback
-  // count bits within a bitboard (Brian Kernighan's way)
   int count = 0;
   while (bitboard) {
     bitboard &= bitboard - 1;
@@ -28,7 +25,6 @@ static inline int count_bits(u64 bitboard) {
 #endif
 }
 
-// get least significant 1st bit index
 static inline int get_ls1b_index(u64 bitboard) {
   assert(bitboard);
 
@@ -39,14 +35,11 @@ static inline int get_ls1b_index(u64 bitboard) {
 #elif defined(__GNUC__) || defined(__clang__)
   return __builtin_ctzll(bitboard);
 #else
-  // fallback
-  // get least significant 1st bit index
   return count_bits((bitboard & -bitboard) - 1);
 #endif
 }
 
 static inline void reset_time_control() {
-  // reset timing
   time_controls.quit = 0;
   time_controls.movestogo = 30;
   time_controls.movetime = -1;
@@ -58,4 +51,4 @@ static inline void reset_time_control() {
   time_controls.stopped = 0;
 }
 
-#endif // !UTILS_H_
+#endif // UTILS_H_

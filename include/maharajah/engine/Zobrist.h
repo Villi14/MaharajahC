@@ -12,10 +12,7 @@ typedef struct {
 
 extern ZobristKeys zobrist_keys;
 
-// init random hash keys
 void init_random_keys();
-
-// generate "almost" unique position ID aka hash key from scratch
 u64 generate_hash_key();
 
 #endif // !ZOBRIST_H_

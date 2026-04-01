@@ -21,7 +21,6 @@ int get_time_ms() {
 #endif
 }
 
-// perft driver
 void perft_driver(int depth) {
   if (depth == 0) {
     ++search_context.nodes;
