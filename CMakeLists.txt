@@ -51,3 +51,4 @@ target_include_directories(perft_smoke PRIVATE
 
 enable_testing()
 add_test(NAME perft_smoke COMMAND perft_smoke)
+add_test(NAME uci_smoke COMMAND ${PROJECT_SOURCE_DIR}/tests/uci_smoke.sh $<TARGET_FILE:${BINARY}>)
