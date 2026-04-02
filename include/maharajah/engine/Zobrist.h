@@ -7,7 +7,7 @@ typedef struct {
   u64 piece_keys[12][0x40];
   u64 enpassant_keys[0x40];
   u64 castle_keys[16];
-  u64 side_key;
+  u64 sidekey;
 } ZobristKeys;
 
 extern ZobristKeys zobrist_keys;

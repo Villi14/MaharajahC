@@ -51,28 +51,6 @@ int parse_move(const char* move_string) {
     }
   }
 
-  for (int move_count = 0; move_count < move_list.count; ++move_count) {
-    int move = move_list.moves[move_count];
-
-    if (source_square == get_move_source(move) && target_square == get_move_target(move)) {
-      int promoted_piece = get_move_promoted(move);
-
-      if (promoted_piece) {
-        if ((promoted_piece == Q || promoted_piece == q) && move_string[4] == 'q')
-          return move;
-        else if ((promoted_piece == R || promoted_piece == r) && move_string[4] == 'r')
-          return move;
-        else if ((promoted_piece == B || promoted_piece == b) && move_string[4] == 'b')
-          return move;
-        else if ((promoted_piece == N || promoted_piece == n) && move_string[4] == 'n')
-          return move;
-        continue;
-      }
-
-      return move;
-    }
-  }
-
   return 0;
 }
 
@@ -114,8 +92,9 @@ void parse_go(char* command) {
   reset_time_control();
   int depth = -1;
   char* argument = nullptr;
-  if ((argument = strstr(command, "infinite"))) {
-  }
+
+  if ((argument = strstr(command, "infinite"))) {}
+  
   if ((argument = strstr(command, "binc")) && board.side == black)
     time_controls.inc = atoi(argument + 5);
 
@@ -146,10 +125,15 @@ void parse_go(char* command) {
 
   if (time_controls.uci_time != -1) {
     time_controls.timeset = 1;
-    time_controls.uci_time /= time_controls.movestogo;
+
+    if (time_controls.movestogo > 0)
+      time_controls.uci_time /= time_controls.movestogo;
+
     if (time_controls.uci_time > 1500)
       time_controls.uci_time -= 50;
+
     time_controls.stoptime = time_controls.starttime + time_controls.uci_time + time_controls.inc;
+
     if (time_controls.uci_time < 1500 && time_controls.inc && depth == 64)
       time_controls.stoptime = time_controls.starttime + time_controls.inc - 50;
   }
@@ -157,12 +141,10 @@ void parse_go(char* command) {
   if (depth == -1)
     depth = 0x40;
 
-  printf("time: %d  start: %u  stop: %u  depth: %d  timeset:%d\n",
-         time_controls.uci_time,
-         time_controls.starttime,
-         time_controls.stoptime,
-         depth,
-         time_controls.timeset);
+  // Debug: uncomment only for local testing, never in UCI mode
+  // fprintf(stderr, "time: %d  start: %u  stop: %u  depth: %d  timeset:%d\n",
+  //         time_controls.uci_time, time_controls.starttime,
+  //         time_controls.stoptime, depth, time_controls.timeset);
 
   search_position(depth);
 }

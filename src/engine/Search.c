@@ -115,7 +115,7 @@ int negamax(int alpha, int beta, int depth) {
 
     board.enpassant = no_sq;
     board.side ^= 1;
-    board.hash_key ^= zobrist_keys.side_key;
+    board.hash_key ^= zobrist_keys.sidekey;
     score = -negamax(-beta, -beta + 1, depth - 1 - 2);
     --search_context.ply;
     --search_context.repetition_index;

@@ -2,13 +2,13 @@
 #include "maharajah/engine/Globals.h"
 #include "maharajah/util/Defines.h"
 
-u64 mask_pawn_attacks(int side_, int square) {
+u64 mask_pawn_attacks(int side, int square) {
   u64 attacks = 0ULL;
   u64 bitboard = 0ULL;
 
   set_bit(bitboard, square);
 
-  if (!side_) {
+  if (!side) {
     if ((bitboard >> 7) & not_a_file)
       attacks |= (bitboard >> 7);
     if ((bitboard >> 9) & not_h_file)
@@ -177,26 +177,26 @@ u64 rook_attacks_on_the_fly(int square, u64 block) {
   return attacks;
 }
 
-int is_square_attacked(int square, int side_) {
-  if ((side_ == white) && (attack_tables.pawn_attacks[black][square] & board.bitboards[P]))
+int is_square_attacked(int square, int side) {
+  if ((side == white) && (attack_tables.pawn_attacks[black][square] & board.bitboards[P]))
     return 1;
 
-  if ((side_ == black) && (attack_tables.pawn_attacks[white][square] & board.bitboards[p]))
+  if ((side == black) && (attack_tables.pawn_attacks[white][square] & board.bitboards[p]))
     return 1;
 
-  if (attack_tables.knight_attacks[square] & ((side_ == white) ? board.bitboards[N] : board.bitboards[n]))
+  if (attack_tables.knight_attacks[square] & ((side == white) ? board.bitboards[N] : board.bitboards[n]))
     return 1;
 
-  if (get_bishop_attacks(square, board.occupancies[both]) & ((side_ == white) ? board.bitboards[B] : board.bitboards[b]))
+  if (get_bishop_attacks(square, board.occupancies[both]) & ((side == white) ? board.bitboards[B] : board.bitboards[b]))
     return 1;
 
-  if (get_rook_attacks(square, board.occupancies[both]) & ((side_ == white) ? board.bitboards[R] : board.bitboards[r]))
+  if (get_rook_attacks(square, board.occupancies[both]) & ((side == white) ? board.bitboards[R] : board.bitboards[r]))
     return 1;
 
-  if (get_queen_attacks(square, board.occupancies[both]) & ((side_ == white) ? board.bitboards[Q] : board.bitboards[q]))
+  if (get_queen_attacks(square, board.occupancies[both]) & ((side == white) ? board.bitboards[Q] : board.bitboards[q]))
     return 1;
 
-  if (attack_tables.king_attacks[square] & ((side_ == white) ? board.bitboards[K] : board.bitboards[k]))
+  if (attack_tables.king_attacks[square] & ((side == white) ? board.bitboards[K] : board.bitboards[k]))
     return 1;
 
   return 0;

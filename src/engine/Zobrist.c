@@ -19,7 +19,7 @@ void init_random_keys() {
   for (int index = 0; index < 16; ++index)
     zobrist_keys.castle_keys[index] = get_random_u64_number();
 
-  zobrist_keys.side_key = get_random_u64_number();
+  zobrist_keys.sidekey = get_random_u64_number();
 }
 
 u64 generate_hash_key() {
@@ -41,7 +41,7 @@ u64 generate_hash_key() {
   final_key ^= zobrist_keys.castle_keys[board.castle];
 
   if (board.side == black)
-    final_key ^= zobrist_keys.side_key;
+    final_key ^= zobrist_keys.sidekey;
 
   return final_key;
 }

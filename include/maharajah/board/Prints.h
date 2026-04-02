@@ -5,7 +5,7 @@
 
 void print_board();
 void print_bitboard(u64 bitboard);
-void print_attacked_squares(int side_);
+void print_attacked_squares(int side);
 void print_move(int move);
 void print_move_scores(MoveList* move_list);
 

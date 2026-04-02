@@ -58,7 +58,7 @@ void print_board() {
   printf("     Hash key:  %llx\n\n", board.hash_key);
 }
 
-void print_attacked_squares(int side_) {
+void print_attacked_squares(int side) {
   printf("\n");
 
   for (int rank = 0; rank < 8; ++rank) {
@@ -68,7 +68,7 @@ void print_attacked_squares(int side_) {
       if (!file)
         printf("  %d ", 8 - rank);
 
-      printf(" %d", is_square_attacked(square, side_) ? 1 : 0);
+      printf(" %d", is_square_attacked(square, side) ? 1 : 0);
     }
     printf("\n");
   }

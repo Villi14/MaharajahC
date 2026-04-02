@@ -7,7 +7,7 @@
 
 u64 mask_bishop_attacks(int square);
 u64 mask_rook_attacks(int square);
-u64 mask_pawn_attacks(int side_, int square);
+u64 mask_pawn_attacks(int side, int square);
 u64 mask_knight_attacks(int square);
 u64 mask_king_attacks(int square);
 u64 bishop_attacks_on_the_fly(int square, u64 block);
@@ -49,6 +49,6 @@ static inline u64 get_queen_attacks(const int square, u64 occupancy) {
   return queen_attacks;
 }
 
-int is_square_attacked(int square, int side_);
+int is_square_attacked(int square, int side);
 
 #endif // !ATTACKS_H_

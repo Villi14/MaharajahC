@@ -68,11 +68,11 @@
 
 #define copy_board()                                                       \
   u64 bitboards_copy[12], occupancies_copy[3];                             \
-  int side_copy, enpassant_copy, castle_copy;                              \
+  int sidecopy, enpassant_copy, castle_copy;                              \
   u64 hash_key_copy = board.hash_key;                                      \
   memcpy(bitboards_copy, board.bitboards, sizeof(board.bitboards));        \
   memcpy(occupancies_copy, board.occupancies, sizeof(board.occupancies));  \
-  side_copy = board.side;                                                  \
+  sidecopy = board.side;                                                  \
   enpassant_copy = board.enpassant;                                        \
   castle_copy = board.castle;
 
@@ -80,7 +80,7 @@
 #define take_back()                                                        \
   memcpy(board.bitboards, bitboards_copy, sizeof(board.bitboards));        \
   memcpy(board.occupancies, occupancies_copy, sizeof(board.occupancies));  \
-  board.side = side_copy;                                                  \
+  board.side = sidecopy;                                                  \
   board.enpassant = enpassant_copy;                                        \
   board.castle = castle_copy;                                              \
   board.hash_key = hash_key_copy;

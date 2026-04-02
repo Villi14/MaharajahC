@@ -133,7 +133,7 @@ int make_move(int move, const int move_flag) {
 
     board.occupancies[both] = board.occupancies[white] | board.occupancies[black];
     board.side ^= 1;
-    board.hash_key ^= zobrist_keys.side_key;
+    board.hash_key ^= zobrist_keys.sidekey;
 
     if (is_square_attacked((board.side == white) ? get_ls1b_index(board.bitboards[k]) : get_ls1b_index(board.bitboards[K]), board.side)) {
       take_back();
