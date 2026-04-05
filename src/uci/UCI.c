@@ -93,8 +93,9 @@ void parse_go(char* command) {
   int depth = -1;
   char* argument = nullptr;
 
-  if ((argument = strstr(command, "infinite"))) {}
-  
+  if ((argument = strstr(command, "infinite"))) {
+  }
+
   if ((argument = strstr(command, "binc")) && board.side == black)
     time_controls.inc = atoi(argument + 5);
 
