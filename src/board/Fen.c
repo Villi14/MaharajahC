@@ -87,7 +87,7 @@ void parse_fen(const char* fen) {
   board.hash_key = generate_hash_key();
 }
 
-void reset_board() {
+void reset_board(void) {
   memset(board.bitboards, 0ULL, sizeof(board.bitboards));
   memset(board.occupancies, 0ULL, sizeof(board.occupancies));
   board.side = 0;

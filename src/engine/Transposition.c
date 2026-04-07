@@ -3,9 +3,9 @@
 
 #include "maharajah/engine/Transposition.h"
 
-TranspositionTable transposition_table = { .table = nullptr, .entries = 0 };
+TranspositionTable transposition_table = { .table = NULL, .entries = 0 };
 
-void clear_hash_table() {
+void clear_hash_table(void) {
   tt* hash_entry;
 
   for (hash_entry = transposition_table.table; hash_entry < transposition_table.table + transposition_table.entries; ++hash_entry) {
@@ -20,14 +20,14 @@ void init_hash_table(const int mb) {
   int hash_size = 0x100000 * mb;
   transposition_table.entries = hash_size / sizeof(tt);
 
-  if (transposition_table.table != nullptr) {
+  if (transposition_table.table != NULL) {
     printf("    Clearing hash memory...\n");
     free(transposition_table.table);
   }
 
   transposition_table.table = (tt*)malloc(transposition_table.entries * sizeof(tt));
 
-  if (transposition_table.table == nullptr) {
+  if (transposition_table.table == NULL) {
     printf("    Couldn't allocate memory for hash table, tryinr %dMB...", mb / 2);
     init_hash_table(mb / 2);
   } else {

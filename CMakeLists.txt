@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.22.1)
 
 project(Maharajah VERSION 0.1.0 LANGUAGES C)
 
@@ -31,22 +31,42 @@ endif()
 
 set(BINARY ${PROJECT_NAME})
 
-file(GLOB_RECURSE ALL_SOURCES CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/src/*.c)
-file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS ${PROJECT_SOURCE_DIR}/include/*.h)
+include(${CMAKE_CURRENT_SOURCE_DIR}/MaharajahEngine.cmake)
 
-set(APP_SOURCES ${ALL_SOURCES})
-set(TEST_SOURCES ${ALL_SOURCES})
-list(REMOVE_ITEM TEST_SOURCES ${PROJECT_SOURCE_DIR}/src/cli/main.c)
+set(APP_SOURCES ${MAHARAJAH_ENGINE_SOURCES})
+set(TEST_SOURCES ${MAHARAJAH_ENGINE_SOURCES})
+list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/cli/main.c)
 
-add_executable(${BINARY} ${APP_SOURCES} ${HEADERS})
+option(MAH_BUILD_FFI_SHARED "Build shared FFI library" ON)
+option(MAH_BUILD_FFI_STATIC "Build static FFI library" ON)
+
+add_executable(${BINARY} ${APP_SOURCES} ${MAHARAJAH_ENGINE_HEADERS})
 
 target_include_directories(${BINARY} PRIVATE
-  ${PROJECT_SOURCE_DIR}/include
+  ${MAHARAJAH_ENGINE_INCLUDE_DIR}
 )
 
-add_executable(perft_smoke tests/perft_smoke.c ${TEST_SOURCES} ${HEADERS})
+if (MAH_BUILD_FFI_SHARED)
+  add_library(maharajah_ffi SHARED ${TEST_SOURCES} ${MAHARAJAH_ENGINE_HEADERS})
+  target_include_directories(maharajah_ffi PRIVATE
+    ${MAHARAJAH_ENGINE_INCLUDE_DIR}
+  )
+  target_compile_definitions(maharajah_ffi PRIVATE MAH_FFI_BUILD)
+  set_target_properties(maharajah_ffi PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()
+
+if (MAH_BUILD_FFI_STATIC)
+  add_library(maharajah_ffi_static STATIC ${TEST_SOURCES} ${MAHARAJAH_ENGINE_HEADERS})
+  target_include_directories(maharajah_ffi_static PRIVATE
+    ${MAHARAJAH_ENGINE_INCLUDE_DIR}
+  )
+  target_compile_definitions(maharajah_ffi_static PRIVATE MAH_FFI_BUILD)
+  set_target_properties(maharajah_ffi_static PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()
+
+add_executable(perft_smoke tests/perft_smoke.c ${TEST_SOURCES} ${MAHARAJAH_ENGINE_HEADERS})
 target_include_directories(perft_smoke PRIVATE
-  ${PROJECT_SOURCE_DIR}/include
+  ${MAHARAJAH_ENGINE_INCLUDE_DIR}
 )
 
 enable_testing()

@@ -6,6 +6,6 @@
 #include "maharajah/engine/Masks.h"
 #include "maharajah/util/Utils.h"
 
-int evaluate();
+int evaluate(void);
 
-#endif // !EVALUATE_H_
+#endif // EVALUATE_H_

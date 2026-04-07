@@ -30,7 +30,7 @@ void init_sliders_attacks(int bishop) {
   }
 }
 
-void init_leapers_attacks() {
+static void init_leapers_attacks(void) {
   for (int square = 0; square < 64; ++square) {
     attack_tables.pawn_attacks[white][square] = mask_pawn_attacks(white, square);
     attack_tables.pawn_attacks[black][square] = mask_pawn_attacks(black, square);
@@ -39,7 +39,7 @@ void init_leapers_attacks() {
   }
 }
 
-void init_all() {
+void init_all(void) {
   init_leapers_attacks();
   init_sliders_attacks(bishop);
   init_sliders_attacks(rook);

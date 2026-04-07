@@ -102,7 +102,7 @@ extern const int mvv_lva[0xC][0xC];
 
 extern const int positional_score[2][6][0x40];
 
-extern uint random_state;
+extern unsigned int random_state;
 
 typedef struct {
   int moves[0x100];
@@ -158,6 +158,7 @@ typedef struct {
   int stoptime;
   int timeset;
   int stopped;
+  int stdin_polling_enabled;
 } TimeControls;
 
 extern TimeControls time_controls;

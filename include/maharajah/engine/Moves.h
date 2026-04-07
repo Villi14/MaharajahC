@@ -23,4 +23,4 @@ int make_move(int move, const int move_flag);
 
 void generate_moves(MoveList* move_list);
 
-#endif // !MOVES_H_
+#endif // MOVES_H_

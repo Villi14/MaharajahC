@@ -25,7 +25,7 @@ typedef struct {
 
 extern TranspositionTable transposition_table;
 
-void clear_hash_table();
+void clear_hash_table(void);
 
 void init_hash_table(int mb);
 
@@ -70,4 +70,4 @@ static inline void write_hash_entry(int score, int depth, int hash_flag) {
   hash_entry->depth = depth;
 }
 
-#endif // !TRANSPOSITION_H_
+#endif // TRANSPOSITION_H_

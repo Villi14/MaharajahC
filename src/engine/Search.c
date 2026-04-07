@@ -330,7 +330,7 @@ void enable_pv_scoring(MoveList* move_list) {
   }
 }
 
-int is_repetition() {
+int is_repetition(void) {
   for (int index = 0; index < search_context.repetition_index; ++index)
     if (search_context.repetition_table[index] == board.hash_key)
       return 1;

@@ -17,10 +17,10 @@ extern u64 black_passed_masks[0x40];
 
 extern const int get_rank[0x40];
 
-int get_game_phase_score();
+int get_game_phase_score(void);
 
-void init_evaluation_masks();
+void init_evaluation_masks(void);
 
 u64 set_file_rank_mask(int file_number, int rank_number);
 
-#endif // !MASKS_H_
+#endif // MASKS_H_

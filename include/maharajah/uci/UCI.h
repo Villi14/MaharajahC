@@ -1,12 +1,10 @@
 #ifndef UCI_H_
 #define UCI_H_
 
-int parse_move(const char *move_string);
-void parse_position(char* command);
 void parse_go(char* command);
-void uci_loop();
-int input_waiting();
-void read_input();
-void communicate();
+void uci_loop(void);
+int input_waiting(void);
+void read_input(void);
+void communicate(void);
 
 #endif // UCI_H_

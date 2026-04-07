@@ -9,7 +9,7 @@
 #include "maharajah/board/Fen.h"
 
 
-int main() {
+int main(void) {
   init_all();
     // connect to GUI
     uci_loop();
@@ -20,7 +20,7 @@ int main() {
   return 0;
 }
 #if 0
-int main()
+int main(void)
 {
     // init all
     init_all();
@@ -36,4 +36,3 @@ int main()
     return 0;
 }
 #endif
-

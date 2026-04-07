@@ -1,6 +1,6 @@
 #include "maharajah/engine/Globals.h"
 
-uint random_state = 0x6B8B4567;
+unsigned int random_state = 0x6B8B4567;
 
 Board board = { .enpassant = no_sq };
 
@@ -19,7 +19,8 @@ TimeControls time_controls = {
   .starttime = 0,
   .stoptime = 0,
   .timeset = 0,
-  .stopped = 0
+  .stopped = 0,
+  .stdin_polling_enabled = 1
 };
 
 const int passed_pawn_bonus[8] = { 0, 10, 30, 50, 75, 100, 150, 200 };

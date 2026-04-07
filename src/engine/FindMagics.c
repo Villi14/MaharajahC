@@ -7,8 +7,8 @@
 #include "maharajah/engine/Moves.h"
 #include "maharajah/util/Defines.h"
 
-uint get_random_U32_number() {
-  uint number = random_state;
+unsigned int get_random_U32_number(void) {
+  unsigned int number = random_state;
   number ^= number << 0xD;
   number ^= number >> 0x11;
   number ^= number << 0x5;
@@ -16,7 +16,7 @@ uint get_random_U32_number() {
   return number;
 }
 
-u64 get_random_u64_number() {
+u64 get_random_u64_number(void) {
   u64 n1 = (u64)(get_random_U32_number()) & 0xFFFF;
   u64 n2 = (u64)(get_random_U32_number()) & 0xFFFF;
   u64 n3 = (u64)(get_random_U32_number()) & 0xFFFF;
@@ -24,7 +24,7 @@ u64 get_random_u64_number() {
   return n1 | (n2 << 0x10) | (n3 << 0x20) | (n4 << 0x30);
 }
 
-u64 generate_magic_number() {
+u64 generate_magic_number(void) {
   return get_random_u64_number() & get_random_u64_number() & get_random_u64_number();
 }
 
@@ -74,7 +74,7 @@ u64 find_magic_number(const int square, const int relevant_bits, const int bisho
 }
 
 #if 0
-void init_magic_numbers() {
+void init_magic_numbers(void) {
   for (int square = 0; square < 0x40; ++square)
     rook_magic_numbers[square] = find_magic_number(square, rook_relevant_bits[square], rook);
   for (int square = 0; square < 0x40; ++square)

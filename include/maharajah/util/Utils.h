@@ -39,7 +39,7 @@ static inline int get_ls1b_index(u64 bitboard) {
 #endif
 }
 
-static inline void reset_time_control() {
+static inline void reset_time_control(void) {
   time_controls.quit = 0;
   time_controls.movestogo = 30;
   time_controls.movetime = -1;
@@ -49,6 +49,7 @@ static inline void reset_time_control() {
   time_controls.stoptime = 0;
   time_controls.timeset = 0;
   time_controls.stopped = 0;
+  time_controls.stdin_polling_enabled = 1;
 }
 
 #endif // UTILS_H_

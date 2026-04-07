@@ -6,7 +6,7 @@
 
 ZobristKeys zobrist_keys;
 
-void init_random_keys() {
+void init_random_keys(void) {
   random_state = 1804289383;
   for (int piece = P; piece <= k; ++piece) {
     for (int square = 0; square < 64; ++square)
@@ -22,7 +22,7 @@ void init_random_keys() {
   zobrist_keys.sidekey = get_random_u64_number();
 }
 
-u64 generate_hash_key() {
+u64 generate_hash_key(void) {
   u64 final_key = 0ULL;
   u64 bitboard;
 

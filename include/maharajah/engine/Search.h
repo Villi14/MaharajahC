@@ -9,6 +9,6 @@ void search_position(int depth);
 void sort_moves(MoveList* move_list);
 int score_move(int move);
 void enable_pv_scoring(MoveList* move_list);
-int is_repetition();
+int is_repetition(void);
 
-#endif // !SEARCH_H_
+#endif // SEARCH_H_

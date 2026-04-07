@@ -21,7 +21,7 @@ const int get_rank[0x40] = {
 };
 // clang-format on
 
-int get_game_phase_score() {
+int get_game_phase_score(void) {
   int white_piece_scores = 0, black_piece_scores = 0;
 
   for (int piece = N; piece <= Q; ++piece)
@@ -55,7 +55,7 @@ u64 set_file_rank_mask(const int file_number, const int rank_number) {
   return mask;
 }
 
-void init_evaluation_masks() {
+void init_evaluation_masks(void) {
   for (int rank = 0; rank < 8; ++rank) {
     for (int file = 0; file < 8; ++file) {
       const int square = rank * 8 + file;

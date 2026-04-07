@@ -12,7 +12,7 @@ typedef struct {
 
 extern ZobristKeys zobrist_keys;
 
-void init_random_keys();
-u64 generate_hash_key();
+void init_random_keys(void);
+u64 generate_hash_key(void);
 
-#endif // !ZOBRIST_H_
+#endif // ZOBRIST_H_

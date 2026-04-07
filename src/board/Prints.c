@@ -24,7 +24,7 @@ void print_bitboard(u64 bitboard) {
   printf("     Bitboard: %llu\n\n", bitboard);
 }
 
-void print_board() {
+void print_board(void) {
   printf("\n");
 
   for (int rank = 0; rank < 8; ++rank) {

@@ -4,11 +4,6 @@
 #define version "0.1.0"
 
 #define u64 unsigned long long
-#define uint unsigned int
-
-#ifdef _MSC_VER
-#define nullptr NULL
-#endif
 
 #define empty_board "8/8/8/8/8/8/8/8 b - - "
 #define start_position "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 "

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 
 #if defined(_MSC_VER)
@@ -13,85 +14,19 @@
 #include <unistd.h>
 #endif
 
-#include "maharajah/board/Fen.h"
 #include "maharajah/engine/Globals.h"
-#include "maharajah/engine/Moves.h"
 #include "maharajah/engine/Search.h"
 #include "maharajah/engine/Transposition.h"
+#include "maharajah/parse/Parse.h"
 #include "maharajah/perft/Perft.h"
 #include "maharajah/uci/UCI.h"
 #include "maharajah/util/Defines.h"
 #include "maharajah/util/Utils.h"
 
-int parse_move(const char* move_string) {
-  MoveList move_list = { .count = 0 };
-  generate_moves(&move_list);
-
-  int source_square = (move_string[0] - 'a') + (8 - (move_string[1] - '0')) * 8;
-  int target_square = (move_string[2] - 'a') + (8 - (move_string[3] - '0')) * 8;
-
-  for (int move_count = 0; move_count < move_list.count; ++move_count) {
-    int move = move_list.moves[move_count];
-
-    if (source_square == get_move_source(move) && target_square == get_move_target(move)) {
-      int promoted_piece = get_move_promoted(move);
-      if (promoted_piece) {
-        if ((promoted_piece == Q || promoted_piece == q) && move_string[4] == 'q')
-          return move;
-        else if ((promoted_piece == R || promoted_piece == r) && move_string[4] == 'r')
-          return move;
-        else if ((promoted_piece == B || promoted_piece == b) && move_string[4] == 'b')
-          return move;
-        else if ((promoted_piece == N || promoted_piece == n) && move_string[4] == 'n')
-          return move;
-        continue;
-      }
-
-      return move;
-    }
-  }
-
-  return 0;
-}
-
-void parse_position(char* command) {
-  command += 9;
-  char* current_char = command;
-
-  if (strncmp(command, "startpos", 8) == 0)
-    parse_fen(start_position);
-  else {
-    current_char = strstr(command, "fen");
-    if (current_char == nullptr)
-      parse_fen(start_position);
-    else {
-      current_char += 4;
-      parse_fen(current_char);
-    }
-  }
-
-  current_char = strstr(command, "moves");
-
-  if (current_char != nullptr) {
-    current_char += 6;
-    while (*current_char) {
-      int move = parse_move(current_char);
-      if (move == 0)
-        break;
-      ++search_context.repetition_index;
-      search_context.repetition_table[search_context.repetition_index] = board.hash_key;
-      make_move(move, all_moves);
-      while (*current_char && *current_char != ' ')
-        ++current_char;
-      ++current_char;
-    }
-  }
-}
-
 void parse_go(char* command) {
   reset_time_control();
   int depth = -1;
-  char* argument = nullptr;
+  char* argument = NULL;
 
   if ((argument = strstr(command, "infinite"))) {
   }
@@ -150,11 +85,11 @@ void parse_go(char* command) {
   search_position(depth);
 }
 
-void uci_loop() {
+void uci_loop(void) {
   int max_hash = 0x80;
   int mb = 0x40;
-  setbuf(stdin, nullptr);
-  setbuf(stdout, nullptr);
+  setbuf(stdin, NULL);
+  setbuf(stdout, NULL);
 
   char input[2000];
   printf("id name Maharajah %s\n", version);
@@ -202,7 +137,7 @@ void uci_loop() {
   }
 }
 
-int input_waiting() {
+int input_waiting(void) {
 #ifdef _MSC_VER
   static int init = 0, pipe;
   static HANDLE inh;
@@ -219,7 +154,7 @@ int input_waiting() {
   }
 
   if (pipe) {
-    if (!PeekNamedPipe(inh, nullptr, 0, nullptr, &dw, nullptr))
+    if (!PeekNamedPipe(inh, NULL, 0, NULL, &dw, NULL))
       return 1;
     return dw;
   }
@@ -241,7 +176,7 @@ int input_waiting() {
 #endif
 }
 
-void read_input() {
+void read_input(void) {
   int bytes;
   char input[0x100] = "", *endc;
 
@@ -249,7 +184,7 @@ void read_input() {
     time_controls.stopped = 1;
 
     do {
-      bytes = read(STDIN_FILENO, input, 0x100);
+      bytes = (int)read(STDIN_FILENO, input, 0x100);
     } while (bytes < 0);
     endc = strchr(input, '\n');
 
@@ -264,9 +199,11 @@ void read_input() {
   }
 }
 
-void communicate() {
+void communicate(void) {
   if (time_controls.timeset == 1 && get_time_ms() > time_controls.stoptime) {
     time_controls.stopped = 1;
   }
-  read_input();
+  if (time_controls.stdin_polling_enabled) {
+    read_input();
+  }
 }

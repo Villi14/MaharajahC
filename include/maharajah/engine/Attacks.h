@@ -51,4 +51,4 @@ static inline u64 get_queen_attacks(const int square, u64 occupancy) {
 
 int is_square_attacked(int square, int side);
 
-#endif // !ATTACKS_H_
+#endif // ATTACKS_H_

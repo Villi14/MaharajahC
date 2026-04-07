@@ -1,7 +1,7 @@
 #include "maharajah/engine/Evaluate.h"
 #include "maharajah/engine/Attacks.h"
 
-int evaluate() {
+int evaluate(void) {
   int game_phase_score = get_game_phase_score();
   int game_phase = -1;
 
