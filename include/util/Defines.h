@@ -1,0 +1,90 @@
+#ifndef DEFINES_H_
+#define DEFINES_H_
+
+#define version "0.1.0"
+
+#define u64 unsigned long long
+
+#define empty_board "8/8/8/8/8/8/8/8 b - - 0 1 "
+#define start_position "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 "
+#define tricky_position "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1 "
+#define killer_position "rnbqkb1r/pp1p1pPp/8/2p1pP2/1P1P4/3P3P/P1P1P3/RNBQKBNR w KQkq e6 0 1"
+#define cmk_position "r2q1rk1/ppp2ppp/2n1bn2/2b1p3/3pP3/3P1NPP/PPP1NPB1/R1BQ1RK1 b - - 0 9 "
+#define repetitions "2r3k1/R7/8/1R6/8/8/P4KPP/8 w - - 0 40 "
+
+
+#define set_bit(bitboard, square) ((bitboard) |= (1ULL << (square)))
+#define get_bit(bitboard, square) ((bitboard) & (1ULL << (square)))
+#define pop_bit(bitboard, square) ((bitboard) &= ~(1ULL << (square)))
+
+/*       binary move bits                               hexadecimal constants
+
+   0000 0000 0000 0000 0011 1111    source square       0x3f
+   0000 0000 0000 1111 1100 0000    target square       0xfc0
+   0000 0001 1111 0000 0000 0000    piece               0x1f000
+   0011 1110 0000 0000 0000 0000    promoted piece      0x3e0000
+   0100 0000 0000 0000 0000 0000    capture flag        0x400000
+   1000 0000 0000 0000 0000 0000    double push flag    0x800000
+   0001 0000 0000 0000 0000 0000 0000    enpassant flag  0x1000000
+   0010 0000 0000 0000 0000 0000 0000    castling flag   0x2000000
+*/
+
+// clang-format off
+
+#define encode_move(source, target, piece, promoted, capture, double_push, enpassant, castling) \
+  ((source) |               \
+  ((target) << 6) |         \
+  ((piece) << 0xC) |        \
+  ((promoted) << 0x11) |    \
+  ((capture) << 0x16) |     \
+  ((double_push) << 0x17) | \
+  ((enpassant) << 0x18) |   \
+  ((castling) << 0x19))
+
+// clang-format on
+
+#define get_move_source(move) (move & 0x3f)
+
+#define get_move_target(move) ((move & 0xfc0) >> 6)
+
+#define get_move_piece(move) ((move & 0x1f000) >> 0xC)
+
+#define get_move_promoted(move) ((move & 0x3e0000) >> 0x11)
+
+#define get_move_capture(move) (move & 0x400000)
+
+#define get_move_double(move) (move & 0x800000)
+
+#define get_move_enpassant(move) (move & 0x1000000)
+
+#define get_move_castling(move) (move & 0x2000000)
+
+// clang-format off
+
+#define copy_board()                                                       \
+  u64 bitboards_copy[18], occupancies_copy[3];                             \
+  int sidecopy, enpassant_copy, castle_copy, halfmove_copy,                \
+      standard_rules_copy;                                                 \
+  u64 hash_key_copy = board.hash_key;                                      \
+  memcpy(bitboards_copy, board.bitboards, sizeof(board.bitboards));        \
+  memcpy(occupancies_copy, board.occupancies, sizeof(board.occupancies));  \
+  sidecopy = board.side;                                                  \
+  enpassant_copy = board.enpassant;                                        \
+  castle_copy = board.castle;                                              \
+  halfmove_copy = board.halfmove_clock;                                    \
+  standard_rules_copy = board.standard_rules;
+
+
+#define take_back()                                                        \
+  memcpy(board.bitboards, bitboards_copy, sizeof(board.bitboards));        \
+  memcpy(board.occupancies, occupancies_copy, sizeof(board.occupancies));  \
+  board.side = sidecopy;                                                  \
+  board.enpassant = enpassant_copy;                                        \
+  board.castle = castle_copy;                                              \
+  board.halfmove_clock = halfmove_copy;                                    \
+  board.standard_rules = standard_rules_copy;                              \
+  board.hash_key = hash_key_copy;
+
+// clang-format on  
+
+#endif // DEFINES_H_

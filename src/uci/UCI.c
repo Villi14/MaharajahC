@@ -1,0 +1,219 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+
+#if defined(_MSC_VER)
+#include <io.h>
+#include <stdbool.h>
+#include <windows.h>
+#define STDIN_FILENO 0
+#elif defined(__GNUC__) || defined(__clang__)
+#include <sys/select.h>
+#include <sys/time.h>
+#include <unistd.h>
+#endif
+
+#include "../../include/engine/Globals.h"
+#include "../../include/engine/EngineConfig.h"
+#include "../../include/engine/Search.h"
+#include "../../include/engine/Transposition.h"
+#include "../../include/parse/Parse.h"
+#include "../../include/perft/Perft.h"
+#include "../../include/uci/UCI.h"
+#include "../../include/util/Defines.h"
+#include "../../include/util/Utils.h"
+
+void parse_go(char* command) {
+  reset_time_control();
+  int depth = -1;
+  char* argument = NULL;
+
+  if ((argument = strstr(command, "infinite"))) {
+  }
+
+  if ((argument = strstr(command, "binc")) && board.side == black)
+    time_controls.inc = atoi(argument + 5);
+
+  if ((argument = strstr(command, "winc")) && board.side == white)
+    time_controls.inc = atoi(argument + 5);
+
+  if ((argument = strstr(command, "wtime")) && board.side == white)
+    time_controls.uci_time = atoi(argument + 6);
+
+  if ((argument = strstr(command, "btime")) && board.side == black)
+    time_controls.uci_time = atoi(argument + 6);
+
+  if ((argument = strstr(command, "movestogo")))
+    time_controls.movestogo = atoi(argument + 10);
+
+  if ((argument = strstr(command, "movetime")))
+    time_controls.movetime = atoi(argument + 9);
+
+  if ((argument = strstr(command, "depth")))
+    depth = atoi(argument + 6);
+
+  if (time_controls.movetime != -1) {
+    time_controls.uci_time = time_controls.movetime;
+    time_controls.movestogo = 1;
+  }
+
+  time_controls.starttime = get_time_ms();
+
+  if (time_controls.uci_time != -1) {
+    time_controls.timeset = 1;
+
+    if (time_controls.movestogo > 0)
+      time_controls.uci_time /= time_controls.movestogo;
+
+    if (time_controls.uci_time > 1500)
+      time_controls.uci_time -= 50;
+
+    time_controls.stoptime = time_controls.starttime + time_controls.uci_time + time_controls.inc;
+
+    if (time_controls.uci_time < 1500 && time_controls.inc && depth == 64)
+      time_controls.stoptime = time_controls.starttime + time_controls.inc - 50;
+  }
+
+  if (depth == -1)
+    depth = 0x40;
+
+  if (time_controls.timeset == 0 && time_controls.movetime == -1 && depth != 0x40) {
+    time_controls.stdin_polling_enabled = 0;
+  }
+
+  // Debug: uncomment only for local testing, never in UCI mode
+  // fprintf(stderr, "time: %d  start: %u  stop: %u  depth: %d  timeset:%d\n",
+  //         time_controls.uci_time, time_controls.starttime,
+  //         time_controls.stoptime, depth, time_controls.timeset);
+
+  search_position(depth);
+}
+
+void uci_loop(void) {
+  int max_hash = 0x80;
+  int mb = 0x40;
+  setbuf(stdin, NULL);
+  setbuf(stdout, NULL);
+
+  char input[2000];
+  printf("id name Maharajah %s\n", version);
+  printf("id author Villi\n");
+  printf("option name Hash type spin default 64 min 4 max %d\n", max_hash);
+  printf("option name Skill Level type spin default 10 min 1 max 10\n");
+  printf("uciok\n");
+
+  while (true) {
+    memset(input, 0, sizeof(input));
+    fflush(stdout);
+
+    if (!fgets(input, 2000, stdin))
+      continue;
+
+    if (input[0] == '\n')
+      continue;
+
+    if (strncmp(input, "isready", 7) == 0) {
+      printf("readyok\n");
+      continue;
+    } else if (strncmp(input, "position", 8) == 0) {
+      parse_position(input);
+      clear_hash_table();
+    } else if (strncmp(input, "ucinewgame", 10) == 0) {
+      parse_position("position startpos");
+      clear_hash_table();
+    } else if (strncmp(input, "go", 2) == 0)
+      parse_go(input);
+    else if (strncmp(input, "quit", 4) == 0)
+      break;
+    else if (strncmp(input, "uci", 3) == 0) {
+      printf("id name Maharajah %s\n", version);
+      printf("id author Villi\n");
+      printf("uciok\n");
+    } else if (!strncmp(input, "setoption name Hash value ", 26)) {
+      sscanf(input, "%*s %*s %*s %*s %d", &mb);
+      if (mb < 4)
+        mb = 4;
+      if (mb > max_hash)
+        mb = max_hash;
+      printf("    Set hash table size to %dMB\n", mb);
+
+      init_hash_table(mb);
+    } else if (!strncmp(input, "setoption name Skill Level value ", 34)) {
+      int skill_level = 10;
+      sscanf(input, "%*s %*s %*s %*s %*s %d", &skill_level);
+      set_engine_skill_level(skill_level);
+    }
+  }
+}
+
+int input_waiting(void) {
+#ifdef _MSC_VER
+  static int init = 0, pipe;
+  static HANDLE inh;
+  DWORD dw;
+
+  if (!init) {
+    init = 1;
+    inh = GetStdHandle(STD_INPUT_HANDLE);
+    pipe = !GetConsoleMode(inh, &dw);
+    if (!pipe) {
+      SetConsoleMode(inh, dw & ~(ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT));
+      FlushConsoleInputBuffer(inh);
+    }
+  }
+
+  if (pipe) {
+    if (!PeekNamedPipe(inh, NULL, 0, NULL, &dw, NULL))
+      return 1;
+    return dw;
+  }
+
+  else {
+    GetNumberOfConsoleInputEvents(inh, &dw);
+    return dw <= 1 ? 0 : dw;
+  }
+#elif defined(__GNUC__) || defined(__clang__)
+  fd_set readfds;
+  struct timeval tv;
+  FD_ZERO(&readfds);
+  FD_SET(STDIN_FILENO, &readfds);
+  tv.tv_sec = 0;
+  tv.tv_usec = 0;
+  select(16, &readfds, 0, 0, &tv);
+
+  return (FD_ISSET(STDIN_FILENO, &readfds));
+#endif
+}
+
+void read_input(void) {
+  int bytes;
+  char input[0x100] = "", *endc;
+
+  if (input_waiting()) {
+    time_controls.stopped = 1;
+
+    do {
+      bytes = (int)read(STDIN_FILENO, input, 0x100);
+    } while (bytes < 0);
+    endc = strchr(input, '\n');
+
+    if (endc)
+      *endc = 0;
+    if (strlen(input) > 0) {
+      if (!strncmp(input, "quit", 4))
+        time_controls.quit = 1;
+      else if (!strncmp(input, "stop", 4))
+        time_controls.stopped = 1;
+    }
+  }
+}
+
+void communicate(void) {
+  if (time_controls.timeset == 1 && get_time_ms() > time_controls.stoptime) {
+    time_controls.stopped = 1;
+  }
+  if (time_controls.stdin_polling_enabled) {
+    read_input();
+  }
+}
