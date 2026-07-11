@@ -112,6 +112,11 @@ target_include_directories(draw_rules_smoke PRIVATE
   ${MAHARAJAH_ENGINE_INCLUDE_DIR}
 )
 
+add_executable(pawn_unmoved_smoke tests/pawn_unmoved_smoke.c ${TEST_SOURCES} ${MAHARAJAH_ENGINE_HEADERS})
+target_include_directories(pawn_unmoved_smoke PRIVATE
+  ${MAHARAJAH_ENGINE_INCLUDE_DIR}
+)
+
 add_executable(ffi_api_smoke tests/ffi_api_smoke.c ${TEST_SOURCES} ${MAHARAJAH_ENGINE_HEADERS})
 target_include_directories(ffi_api_smoke PRIVATE
   ${MAHARAJAH_ENGINE_INCLUDE_DIR}
@@ -136,6 +141,7 @@ add_test(NAME search_sanity_smoke COMMAND search_sanity_smoke)
 add_test(NAME evaluate_safety_smoke COMMAND evaluate_safety_smoke)
 add_test(NAME special_moves_smoke COMMAND special_moves_smoke)
 add_test(NAME draw_rules_smoke COMMAND draw_rules_smoke)
+add_test(NAME pawn_unmoved_smoke COMMAND pawn_unmoved_smoke)
 add_test(NAME ffi_api_smoke COMMAND ffi_api_smoke)
 add_test(NAME transposition_smoke COMMAND transposition_smoke)
 add_test(NAME see_smoke COMMAND see_smoke)

@@ -23,6 +23,13 @@ int make_move(int move, const int move_flag) {
     pop_bit(board.bitboards[piece], source_square);
     set_bit(board.bitboards[piece], target_square);
 
+    // Keep the per-pawn "never moved" state exact across make/unmake (the
+    // take_back macro restores it): the mover's source square is spent, and
+    // any unmoved pawn sitting on the target square has just been captured.
+    // No-op when the caller supplied no pawn state (pawn_unmoved == 0).
+    pop_bit(board.pawn_unmoved, source_square);
+    pop_bit(board.pawn_unmoved, target_square);
+
     if (board.side == white) {
       pop_bit(board.occupancies[white], source_square);
       set_bit(board.occupancies[white], target_square);
@@ -79,10 +86,12 @@ int make_move(int move, const int move_flag) {
       if (board.side == white) {
         pop_bit(board.bitboards[p], target_square + 8);
         pop_bit(board.occupancies[black], target_square + 8);
+        pop_bit(board.pawn_unmoved, target_square + 8);
         board.hash_key ^= zobrist_keys.piece_keys[p][target_square + 8];
       } else {
         pop_bit(board.bitboards[P], target_square - 8);
         pop_bit(board.occupancies[white], target_square - 8);
+        pop_bit(board.pawn_unmoved, target_square - 8);
         board.hash_key ^= zobrist_keys.piece_keys[P][target_square - 8];
       }
     }
@@ -141,15 +150,19 @@ int make_move(int move, const int move_flag) {
     board.hash_key ^= zobrist_keys.castle_keys[board.castle];
     board.castle &= castling_rights[source_square];
     board.castle &= castling_rights[target_square];
-    if (board_has_compound_pieces())
-      board.castle = 0;
     board.hash_key ^= zobrist_keys.castle_keys[board.castle];
 
     board.occupancies[both] = board.occupancies[white] | board.occupancies[black];
     board.side ^= 1;
     board.hash_key ^= zobrist_keys.sidekey;
 
-    if (is_square_attacked((board.side == white) ? get_ls1b_index(board.bitboards[k]) : get_ls1b_index(board.bitboards[K]), board.side)) {
+    // Mover's own king must not be left in check. A missing king (kingless
+    // test FEN fed through UCI) can't be in check — get_ls1b_index on an
+    // empty bitboard is undefined, so guard it.
+    const u64 mover_king =
+        (board.side == white) ? board.bitboards[k] : board.bitboards[K];
+    if (mover_king != 0ULL &&
+        is_square_attacked(get_ls1b_index(mover_king), board.side)) {
       take_back();
       return 0;
     } else
@@ -182,12 +195,35 @@ void generate_moves(MoveList* move_list) {
               add_move(move_list, encode_move(source_square, target_square, piece, R, 0, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, B, 0, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, N, 0, 0, 0, 0));
-              add_move(move_list, encode_move(source_square, target_square, piece, A, 0, 0, 0, 0));
-              add_move(move_list, encode_move(source_square, target_square, piece, C, 0, 0, 0, 0));
-              add_move(move_list, encode_move(source_square, target_square, piece, M, 0, 0, 0, 0));
+              // Compound promotion targets (A/C/M) exist only under variant
+              // rules, decided per moving side (side_variant) so a classic
+              // side in a mixed game still promotes to Q/R/B/N only.
+              if (board.side_variant[board.side]) {
+                add_move(move_list, encode_move(source_square, target_square, piece, A, 0, 0, 0, 0));
+                add_move(move_list, encode_move(source_square, target_square, piece, C, 0, 0, 0, 0));
+                add_move(move_list, encode_move(source_square, target_square, piece, M, 0, 0, 0, 0));
+              }
             } else {
               add_move(move_list, encode_move(source_square, target_square, piece, 0, 0, 0, 0, 0));
-              if ((source_square >= a2 && source_square <= h2) && !get_bit(board.occupancies[both], target_square - 8))
+              // Pawn double-step. In standard rules only from the home rank
+              // (2nd). In variant rules a pawn may advance two squares from any
+              // rank when both squares ahead are free: the engine is fed only a
+              // FEN, which carries no per-pawn "has moved" flag, so the home rank
+              // is the unmoved signal under standard play but is meaningless in a
+              // custom setup where pawns start on arbitrary ranks. When the
+              // caller supplies real per-piece state (has_pawn_state, from the
+              // optional 8th FEN field), use it instead of guessing from rank —
+              // it's the only way to tell a virgin custom-start pawn from one
+              // that already spent its lifetime double-step off rank 2.
+              int can_double;
+              if (board.has_pawn_state) {
+                can_double = get_bit(board.pawn_unmoved, source_square) != 0;
+              } else {
+                int on_home_rank = (source_square >= a2 && source_square <= h2);
+                int variant_double = board.side_variant[board.side] && (target_square - 8) >= a8;
+                can_double = on_home_rank || variant_double;
+              }
+              if (can_double && !get_bit(board.occupancies[both], target_square - 8))
                 add_move(move_list, encode_move(source_square, target_square - 8, piece, 0, 0, 1, 0, 0));
             }
           }
@@ -200,9 +236,12 @@ void generate_moves(MoveList* move_list) {
               add_move(move_list, encode_move(source_square, target_square, piece, R, 1, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, B, 1, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, N, 1, 0, 0, 0));
-              add_move(move_list, encode_move(source_square, target_square, piece, A, 1, 0, 0, 0));
-              add_move(move_list, encode_move(source_square, target_square, piece, C, 1, 0, 0, 0));
-              add_move(move_list, encode_move(source_square, target_square, piece, M, 1, 0, 0, 0));
+              // Compound promotion targets exist only in the variant (see above).
+              if (board.side_variant[board.side]) {
+                add_move(move_list, encode_move(source_square, target_square, piece, A, 1, 0, 0, 0));
+                add_move(move_list, encode_move(source_square, target_square, piece, C, 1, 0, 0, 0));
+                add_move(move_list, encode_move(source_square, target_square, piece, M, 1, 0, 0, 0));
+              }
             } else
               add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
             pop_bit(attacks, target_square);
@@ -220,14 +259,14 @@ void generate_moves(MoveList* move_list) {
       }
 
       if (piece == K) {
-        if ((board.castle & wk) && !board_has_compound_pieces()) {
+        if ((board.castle & wk) && !board.side_variant[board.side]) {
           if (!get_bit(board.occupancies[both], f1) && !get_bit(board.occupancies[both], g1)) {
             if (!is_square_attacked(e1, black) && !is_square_attacked(f1, black) && !is_square_attacked(g1, black))
               add_move(move_list, encode_move(e1, g1, piece, 0, 0, 0, 0, 1));
           }
         }
 
-        if ((board.castle & wq) && !board_has_compound_pieces()) {
+        if ((board.castle & wq) && !board.side_variant[board.side]) {
           if (!get_bit(board.occupancies[both], d1) && !get_bit(board.occupancies[both], c1) && !get_bit(board.occupancies[both], b1)) {
             if (!is_square_attacked(e1, black) && !is_square_attacked(d1, black) && !is_square_attacked(c1, black))
               add_move(move_list, encode_move(e1, c1, piece, 0, 0, 0, 0, 1));
@@ -246,12 +285,25 @@ void generate_moves(MoveList* move_list) {
               add_move(move_list, encode_move(source_square, target_square, piece, r, 0, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, b, 0, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, n, 0, 0, 0, 0));
-              add_move(move_list, encode_move(source_square, target_square, piece, a, 0, 0, 0, 0));
-              add_move(move_list, encode_move(source_square, target_square, piece, c, 0, 0, 0, 0));
-              add_move(move_list, encode_move(source_square, target_square, piece, m, 0, 0, 0, 0));
+              // Compound promotion targets exist only in the variant (see above).
+              if (board.side_variant[board.side]) {
+                add_move(move_list, encode_move(source_square, target_square, piece, a, 0, 0, 0, 0));
+                add_move(move_list, encode_move(source_square, target_square, piece, c, 0, 0, 0, 0));
+                add_move(move_list, encode_move(source_square, target_square, piece, m, 0, 0, 0, 0));
+              }
             } else {
               add_move(move_list, encode_move(source_square, target_square, piece, 0, 0, 0, 0, 0));
-              if ((source_square >= a7 && source_square <= h7) && !get_bit(board.occupancies[both], target_square + 8))
+              // Pawn double-step — see the white-pawn note above. Variant pawns
+              // may advance two from any rank when both squares ahead are free.
+              int can_double;
+              if (board.has_pawn_state) {
+                can_double = get_bit(board.pawn_unmoved, source_square) != 0;
+              } else {
+                int on_home_rank = (source_square >= a7 && source_square <= h7);
+                int variant_double = board.side_variant[board.side] && (target_square + 8) <= h1;
+                can_double = on_home_rank || variant_double;
+              }
+              if (can_double && !get_bit(board.occupancies[both], target_square + 8))
                 add_move(move_list, encode_move(source_square, target_square + 8, piece, 0, 0, 1, 0, 0));
             }
           }
@@ -265,9 +317,12 @@ void generate_moves(MoveList* move_list) {
               add_move(move_list, encode_move(source_square, target_square, piece, r, 1, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, b, 1, 0, 0, 0));
               add_move(move_list, encode_move(source_square, target_square, piece, n, 1, 0, 0, 0));
-              add_move(move_list, encode_move(source_square, target_square, piece, a, 1, 0, 0, 0));
-              add_move(move_list, encode_move(source_square, target_square, piece, c, 1, 0, 0, 0));
-              add_move(move_list, encode_move(source_square, target_square, piece, m, 1, 0, 0, 0));
+              // Compound promotion targets exist only in the variant (see above).
+              if (board.side_variant[board.side]) {
+                add_move(move_list, encode_move(source_square, target_square, piece, a, 1, 0, 0, 0));
+                add_move(move_list, encode_move(source_square, target_square, piece, c, 1, 0, 0, 0));
+                add_move(move_list, encode_move(source_square, target_square, piece, m, 1, 0, 0, 0));
+              }
             } else
               add_move(move_list, encode_move(source_square, target_square, piece, 0, 1, 0, 0, 0));
             pop_bit(attacks, target_square);
@@ -285,14 +340,14 @@ void generate_moves(MoveList* move_list) {
       }
       
       if (piece == k) {
-        if ((board.castle & bk) && !board_has_compound_pieces()) {
+        if ((board.castle & bk) && !board.side_variant[board.side]) {
           if (!get_bit(board.occupancies[both], f8) && !get_bit(board.occupancies[both], g8)) {
             if (!is_square_attacked(e8, white) && !is_square_attacked(f8, white) && !is_square_attacked(g8, white))
               add_move(move_list, encode_move(e8, g8, piece, 0, 0, 0, 0, 1));
           }
         }
 
-        if ((board.castle & bq) && !board_has_compound_pieces()) {
+        if ((board.castle & bq) && !board.side_variant[board.side]) {
           if (!get_bit(board.occupancies[both], d8) && !get_bit(board.occupancies[both], c8) && !get_bit(board.occupancies[both], b8)) {
             if (!is_square_attacked(e8, white) && !is_square_attacked(d8, white) && !is_square_attacked(c8, white))
               add_move(move_list, encode_move(e8, c8, piece, 0, 0, 0, 0, 1));

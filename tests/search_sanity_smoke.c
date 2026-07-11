@@ -33,6 +33,30 @@ static int expect_best_move(
   return 0;
 }
 
+// Variant-rules counterpart of expect_best_move: loads the position under the
+// variant profile so a bare board (no compound piece to infer the variant from)
+// still allows compound promotions.
+static int expect_best_move_variant(
+  const char* fen,
+  int depth,
+  const char* expected_move,
+  const char* failure_message
+) {
+  char out_move[16] = {0};
+
+  if (!mah_set_position_fen_with_rules(fen, mah_rules_variant))
+    return fail("search_sanity_smoke failed: could not set FEN.");
+
+  if (!mah_best_move_depth(depth, out_move, (int)sizeof(out_move)))
+    return fail("search_sanity_smoke failed: engine did not return a best move.");
+
+  if (strcmp(out_move, expected_move) != 0) {
+    return fail(failure_message);
+  }
+
+  return 0;
+}
+
 static int expect_no_best_move(
   const char* fen,
   int depth,
@@ -113,7 +137,7 @@ int main(void) {
     return 1;
   }
 
-  if (expect_best_move(
+  if (expect_best_move_variant(
         "7k/P7/8/8/8/8/8/K7 w - - 0 1 ",
         1,
         "a7a8m",

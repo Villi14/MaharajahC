@@ -29,6 +29,20 @@ static int expect_lower_eval(const char* worse_fen,
   return 0;
 }
 
+/* The classic eval has no colour-specific terms, so a position and its
+   colour-flipped mirror must evaluate identically from the mover's side. */
+static int expect_mirror_symmetry(const char* white_fen,
+                                  const char* black_fen,
+                                  const char* failure_message) {
+  const int white_eval = evaluate_fen(white_fen);
+  const int black_eval = evaluate_fen(black_fen);
+
+  if (white_eval != black_eval)
+    return fail(failure_message);
+
+  return 0;
+}
+
 int main(void) {
   init_all();
 
@@ -85,6 +99,30 @@ int main(void) {
         "7k/8/8/4p3/3C4/2B5/8/K7 w - - 0 1 ",
         "7k/8/8/4p3/8/2BC4/8/K7 w - - 0 1 ",
         "evaluate_safety_smoke failed: attacked-but-defended chancellor evaluated no worse than a safer chancellor."
+      ))
+    return 1;
+
+  /* Passed-pawn regression: the bonus must grow as the pawn advances, for
+     Black exactly as for White (the black table lookup goes through
+     mirror_score). */
+  if (expect_lower_eval(
+        "4k3/4p3/8/8/8/8/8/4K3 b - - 0 1 ",
+        "4k3/8/8/8/8/8/4p3/4K3 b - - 0 1 ",
+        "evaluate_safety_smoke failed: black passed pawn near promotion evaluated no better than an unmoved one."
+      ))
+    return 1;
+
+  if (expect_mirror_symmetry(
+        "4k3/4P3/8/8/8/8/8/4K3 w - - 0 1 ",
+        "4k3/8/8/8/8/8/4p3/4K3 b - - 0 1 ",
+        "evaluate_safety_smoke failed: mirrored passed-pawn positions evaluated differently."
+      ))
+    return 1;
+
+  if (expect_mirror_symmetry(
+        "4k3/8/8/8/8/8/4P3/4K3 w - - 0 1 ",
+        "4k3/4p3/8/8/8/8/8/4K3 b - - 0 1 ",
+        "evaluate_safety_smoke failed: mirrored home-rank pawn positions evaluated differently."
       ))
     return 1;
 

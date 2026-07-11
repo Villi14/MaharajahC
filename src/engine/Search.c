@@ -230,8 +230,11 @@ int search_root(int depth, int emit_info) {
       break;
 
     if ((score <= alpha) || (score >= beta)) {
+      // Aspiration window failed: re-search the SAME depth with a full
+      // window (a full window cannot fail, so this retries at most once).
       alpha = -infinity;
       beta = infinity;
+      --current_depth;
       continue;
     }
 
@@ -328,7 +331,19 @@ int negamax(int alpha, int beta, int depth) {
 
   int legal_moves = 0;
 
-  if (depth >= 3 && in_check == 0 && search_context.ply) {
+  // Null-move pruning is unsound in zugzwang-prone positions; require the
+  // side to move to have at least one piece besides king and pawns.
+  const u64 own_nonpawn_material =
+      (board.side == white)
+          ? (board.bitboards[N] | board.bitboards[B] | board.bitboards[R] |
+             board.bitboards[Q] | board.bitboards[A] | board.bitboards[C] |
+             board.bitboards[M])
+          : (board.bitboards[n] | board.bitboards[b] | board.bitboards[r] |
+             board.bitboards[q] | board.bitboards[a] | board.bitboards[c] |
+             board.bitboards[m]);
+
+  if (depth >= 3 && in_check == 0 && search_context.ply &&
+      own_nonpawn_material != 0ULL) {
     copy_board();
     ++search_context.ply;
     ++search_context.repetition_index;
@@ -365,8 +380,11 @@ int negamax(int alpha, int beta, int depth) {
     const int move = move_list.moves[count];
     const int is_quiet_move = get_move_capture(move) == 0 && get_move_promoted(move) == 0;
 
+    // Futility-prune only after at least one legal move has been searched:
+    // pruning every move would fall through to the legal_moves == 0 branch
+    // and misreport the node as mate/stalemate.
     if (depth <= 2 && search_context.ply && in_check == 0 && pv_node == 0 &&
-        has_static_eval && is_quiet_move &&
+        has_static_eval && is_quiet_move && legal_moves > 0 &&
         static_eval + (engine_search_config.futility_margin_per_depth * depth) <= alpha) {
       continue;
     }
@@ -649,29 +667,23 @@ int is_insufficient_material(void) {
   const int white_minors = white_knights + white_bishops;
   const int black_minors = black_knights + black_bishops;
 
+  // FIDE dead positions only: K vs K, K + single minor vs K, and KB vs KB
+  // with both bishops on the same square colour. KNN vs K, KN vs KN and
+  // KB vs KN are NOT dead (helpmates exist), so they are left to the players.
   if (white_minors == 0 && black_minors == 0)
     return 1;
 
-  if (white_minors == 1 && black_minors == 0)
-    return 1;
-
-  if (white_minors == 0 && black_minors == 1)
-    return 1;
-
-  if (white_knights == 2 && white_bishops == 0 && black_minors == 0)
-    return 1;
-
-  if (black_knights == 2 && black_bishops == 0 && white_minors == 0)
-    return 1;
-
-  if (white_minors == 1 && black_minors == 1)
+  if (white_minors + black_minors == 1)
     return 1;
 
   if (white_knights == 0 && black_knights == 0 &&
       white_bishops == 1 && black_bishops == 1) {
     const int white_square = get_ls1b_index(board.bitboards[B]);
     const int black_square = get_ls1b_index(board.bitboards[b]);
-    return ((white_square ^ black_square) & 1) == 0;
+    // Square colour is the parity of rank + file, not of the raw index.
+    const int white_colour = ((white_square >> 3) ^ white_square) & 1;
+    const int black_colour = ((black_square >> 3) ^ black_square) & 1;
+    return white_colour == black_colour;
   }
 
   return 0;

@@ -118,8 +118,9 @@ reports (FEN, move list, short note) and turn them into smoke/regression tests.
 
 ## License
 
-Released under the [WTFPL](LICENSE) — Do What The Fuck You Want To Public
-License, the same license as the upstream BBC `bbc_1.2.c` it is derived from
-(see [Credits](#credits)).
+Released under the [MIT License](LICENSE). The engine derives from the
+WTFPL-licensed BBC `bbc_1.2.c` (see [Credits](#credits)); the WTFPL places no
+restrictions on redistribution, so the derived work is distributed here under
+the MIT License.
 </content>
 </invoke>

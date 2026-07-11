@@ -1,6 +1,8 @@
 #ifndef TRANSPOSITION_H_
 #define TRANSPOSITION_H_
 
+#include <stddef.h>
+
 #include "../../include/util/Defines.h"
 #include "../../include/engine/Globals.h"
 
@@ -30,6 +32,9 @@ void clear_hash_table(void);
 void init_hash_table(int mb);
 
 static inline int read_hash_entry(int alpha, int beta, int depth) {
+  if (transposition_table.table == NULL || transposition_table.entries <= 0)
+    return no_hash_entry;
+
   tt* hash_entry = &transposition_table.table[board.hash_key % transposition_table.entries];
 
   if (hash_entry->hash_key == board.hash_key) {
@@ -57,6 +62,9 @@ static inline int read_hash_entry(int alpha, int beta, int depth) {
 }
 
 static inline void write_hash_entry(int score, int depth, int hash_flag) {
+  if (transposition_table.table == NULL || transposition_table.entries <= 0)
+    return;
+
   tt* hash_entry = &transposition_table.table[board.hash_key % transposition_table.entries];
   if (score < -mate_score)
     score -= search_context.ply;

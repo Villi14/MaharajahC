@@ -98,7 +98,11 @@ void parse_position(char* command) {
       make_move(move, all_moves);
       while (*current_char && *current_char != ' ')
         ++current_char;
-      ++current_char;
+      // Skip separators without stepping past the terminating NUL (an
+      // unconditional ++ here used to read beyond the end of the command
+      // buffer when the move list had no trailing space).
+      while (*current_char == ' ')
+        ++current_char;
     }
   }
 }

@@ -11,13 +11,26 @@
 #include "../../include/engine/Moves.h"
 #include "../../include/perft/Perft.h"
 
+// Milliseconds relative to the first call. Truncating absolute epoch
+// milliseconds to int used to flip sign every ~25 days of wall-clock time,
+// silently breaking the absolute stoptime comparisons in communicate();
+// process-relative time keeps int comparisons valid for ~24 days of uptime.
 int get_time_ms(void) {
 #ifdef _MSC_VER
-  return GetTickCount();
+  static ULONGLONG base_ms;
+  const ULONGLONG now_ms = GetTickCount64();
+  if (base_ms == 0)
+    base_ms = now_ms;
+  return (int)(now_ms - base_ms);
 #else
+  static long long base_ms;
   struct timeval time_value;
   gettimeofday(&time_value, NULL);
-  return (int)(time_value.tv_sec * 1000 + time_value.tv_usec / 1000);
+  const long long now_ms =
+      (long long)time_value.tv_sec * 1000 + time_value.tv_usec / 1000;
+  if (base_ms == 0)
+    base_ms = now_ms;
+  return (int)(now_ms - base_ms);
 #endif
 }
 

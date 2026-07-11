@@ -384,8 +384,8 @@ int evaluate_classic(void) {
         }
 
         if ((black_passed_masks[square] & board.bitboards[P]) == 0) {
-          score_opening -= eval_tables.passed_pawn_bonus[get_rank[square]];
-          score_endgame -= eval_tables.passed_pawn_bonus[get_rank[square]];
+          score_opening -= eval_tables.passed_pawn_bonus[get_rank[eval_tables.mirror_score[square]]];
+          score_endgame -= eval_tables.passed_pawn_bonus[get_rank[eval_tables.mirror_score[square]]];
         }
 
         score_opening += piece_safety_penalty(piece, square);

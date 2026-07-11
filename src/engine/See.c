@@ -110,7 +110,11 @@ static int see_swap(int target, u64 bb[18], u64* ow, u64* ob, int us) {
   else
     *ob |= tmask;
 
-  return victim_val - see_swap(target, bb, ow, ob, us ^ 1);
+  // Stand pat: the side to move may decline the exchange, so this capture is
+  // never worth less than not capturing at all (otherwise a forced losing
+  // recapture here would poison the SEE of the whole preceding sequence).
+  const int gain = victim_val - see_swap(target, bb, ow, ob, us ^ 1);
+  return gain > 0 ? gain : 0;
 }
 
 int see_evaluate(int move) {

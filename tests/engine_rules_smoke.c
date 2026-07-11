@@ -57,7 +57,10 @@ int main(void) {
       return fail("engine_rules_smoke failed: pinned archbishop move was treated as legal.");
   }
 
-  parse_fen("7k/P7/8/8/8/8/8/K7 w - - 0 1 ");
+  // Compound promotions are a variant-rules privilege decided per moving side;
+  // declare White variant via the field-7 FEN extension on these bare boards
+  // that carry no compound piece for the legacy inference to key off.
+  parse_fen("7k/P7/8/8/8/8/8/K7 w - - 0 1 V");
   {
     const int archbishop_promotion = parse_move("a7a8a");
     if (archbishop_promotion == 0 || get_move_promoted(archbishop_promotion) != A)
@@ -66,7 +69,7 @@ int main(void) {
       return fail("engine_rules_smoke failed: archbishop promotion was not applied.");
   }
 
-  parse_fen("7k/P7/8/8/8/8/8/K7 w - - 0 1 ");
+  parse_fen("7k/P7/8/8/8/8/8/K7 w - - 0 1 V");
   {
     const int chancellor_promotion = parse_move("a7a8c");
     if (chancellor_promotion == 0 || get_move_promoted(chancellor_promotion) != C)
@@ -86,6 +89,51 @@ int main(void) {
     return fail("engine_rules_smoke failed: stalemate test position is incorrectly in check.");
   if (count_legal_moves() != 0)
     return fail("engine_rules_smoke failed: stalemate test position still has legal moves.");
+
+  // Mixed game (field 7 = "v"): only Black plays variant rules. The classic
+  // White side may not promote to a compound piece, while the variant Black
+  // side may. Both sides keep the orthodox Q/R/B/N promotions.
+  parse_fen("7k/P7/8/8/8/8/8/K7 w - - 0 1 v");
+  if (parse_move("a7a8a") != 0 || parse_move("a7a8c") != 0 || parse_move("a7a8m") != 0)
+    return fail("engine_rules_smoke failed: classic side promoted to a compound "
+                "piece in a mixed game.");
+  if (parse_move("a7a8q") == 0)
+    return fail("engine_rules_smoke failed: classic side could not promote to a queen.");
+
+  parse_fen("K7/8/8/8/8/8/p7/7k b - - 0 1 v");
+  if (parse_move("a2a1a") == 0 || get_move_promoted(parse_move("a2a1a")) != a)
+    return fail("engine_rules_smoke failed: variant side could not promote to a "
+                "compound piece in a mixed game.");
+
+  // Mixed game castling (field 7 = "v", only Black variant): the classic White
+  // side keeps its castling rights even though Black fields a compound piece
+  // (archbishop on b8). The old board-wide "any compound piece kills castling"
+  // rule wrongly disabled the classic side here.
+  parse_fen("1A2k3/8/8/8/8/8/8/R3K2R w KQ - 0 1 v");
+  {
+    const int kingside = parse_move("e1g1");
+    if (kingside == 0 || !get_move_castling(kingside))
+      return fail("engine_rules_smoke failed: classic side kingside castle was "
+                  "not generated in a mixed game.");
+    if (!make_move(kingside, all_moves) || !get_bit(board.bitboards[K], g1) ||
+        !get_bit(board.bitboards[R], f1))
+      return fail("engine_rules_smoke failed: classic side kingside castle was "
+                  "not applied in a mixed game.");
+  }
+  parse_fen("1A2k3/8/8/8/8/8/8/R3K2R w KQ - 0 1 v");
+  if (parse_move("e1c1") == 0 || !get_move_castling(parse_move("e1c1")))
+    return fail("engine_rules_smoke failed: classic side queenside castle was "
+                "not generated in a mixed game.");
+
+  // Variant side (field 7 = "V", White variant): no castling even though the
+  // FEN advertises KQ rights and the king/rooks sit on their home squares.
+  parse_fen("4k3/8/8/8/8/8/8/R3K2R w KQ - 0 1 V");
+  if (board.castle != 0)
+    return fail("engine_rules_smoke failed: variant side retained castling "
+                "rights from the FEN.");
+  if (parse_move("e1g1") != 0 || parse_move("e1c1") != 0)
+    return fail("engine_rules_smoke failed: variant side was allowed to castle "
+                "in a mixed game.");
 
   free(transposition_table.table);
   return 0;

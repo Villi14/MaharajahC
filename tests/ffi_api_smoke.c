@@ -111,6 +111,75 @@ int main(void) {
   if (mah_apply_move("e7e3"))
     return fail("ffi_api_smoke failed: illegal move was accepted.");
 
+  {
+    char fen_out[128] = {0};
+
+    // A double pawn push must publish the en passant target square and switch
+    // the side to move; the caller-supplied fullmove number is written verbatim.
+    if (!mah_set_position_startpos())
+      return fail("ffi_api_smoke failed: get_fen start position not set.");
+    if (!mah_apply_move("e2e4"))
+      return fail("ffi_api_smoke failed: get_fen setup move e2e4 rejected.");
+    if (!mah_get_fen(fen_out, (int)sizeof(fen_out), 1))
+      return fail("ffi_api_smoke failed: mah_get_fen returned false.");
+    if (strcmp(fen_out,
+               "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1 -") !=
+        0)
+      return fail("ffi_api_smoke failed: mah_get_fen produced an unexpected FEN "
+                  "after a double pawn push.");
+
+    // Moving the king must clear both castling rights for that side, the
+    // halfmove clock must increment for a quiet non-pawn move, and the caller's
+    // fullmove number is echoed back unchanged.
+    if (!mah_set_position_fen("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 5 9 "))
+      return fail("ffi_api_smoke failed: get_fen castling FEN not set.");
+    if (!mah_apply_move("e1f1"))
+      return fail("ffi_api_smoke failed: get_fen king move rejected.");
+    if (!mah_get_fen(fen_out, (int)sizeof(fen_out), 9))
+      return fail("ffi_api_smoke failed: mah_get_fen returned false after king "
+                  "move.");
+    if (strcmp(fen_out, "r3k2r/8/8/8/8/8/8/R4K1R b kq - 6 9 -") != 0)
+      return fail("ffi_api_smoke failed: mah_get_fen did not drop castling "
+                  "rights after a king move.");
+
+    if (mah_get_fen(fen_out, 8, 1))
+      return fail("ffi_api_smoke failed: mah_get_fen accepted an undersized "
+                  "output buffer.");
+
+    // Field 8 (unmoved-pawn state) must survive a get_fen -> set_fen
+    // round-trip, and make_move must keep it exact: once the h6 pawn moves,
+    // its unmoved right is spent and field 8 collapses to "-".
+    if (!mah_set_position_fen("8/5p2/7p/1K6/4a3/5k2/8/8 b - - 25 44 Vv h6"))
+      return fail("ffi_api_smoke failed: pawn-state FEN could not be set.");
+    if (!mah_get_fen(fen_out, (int)sizeof(fen_out), 44))
+      return fail("ffi_api_smoke failed: mah_get_fen failed for a pawn-state "
+                  "position.");
+    if (strcmp(fen_out, "8/5p2/7p/1K6/4a3/5k2/8/8 b - - 25 44 Vv h6") != 0)
+      return fail("ffi_api_smoke failed: mah_get_fen did not round-trip "
+                  "field 8.");
+    if (!mah_apply_move("h6h5"))
+      return fail("ffi_api_smoke failed: pawn-state setup move h6h5 rejected.");
+    if (!mah_get_fen(fen_out, (int)sizeof(fen_out), 45))
+      return fail("ffi_api_smoke failed: mah_get_fen failed after the "
+                  "pawn-state pawn moved.");
+    if (strcmp(fen_out, "8/5p2/8/1K5p/4a3/5k2/8/8 w - - 0 45 Vv -") != 0)
+      return fail("ffi_api_smoke failed: field 8 was not cleared after the "
+                  "unmoved pawn moved.");
+    if (!mah_set_position_fen(fen_out))
+      return fail("ffi_api_smoke failed: round-tripped pawn-state FEN could "
+                  "not be reloaded.");
+  }
+
+  // A FEN without exactly one king per side must be rejected, leaving the
+  // engine on a safe, usable startpos.
+  if (mah_set_position_fen("8/8/8/8/8/8/8/8 w - - 0 1 "))
+    return fail("ffi_api_smoke failed: kingless FEN was accepted.");
+  if (mah_set_position_fen("kk6/8/8/8/8/8/8/K7 w - - 0 1 "))
+    return fail("ffi_api_smoke failed: FEN with two black kings was accepted.");
+  if (mah_game_status() != mah_status_ongoing)
+    return fail("ffi_api_smoke failed: engine was not left on a usable "
+                "position after rejecting an invalid FEN.");
+
   if (!mah_set_position_fen("7k/P7/8/8/8/8/8/K7 w - - 0 1 "))
     return fail("ffi_api_smoke failed: mah_set_position_fen returned false.");
 
@@ -131,7 +200,11 @@ int main(void) {
     return fail("ffi_api_smoke failed: explicit variant-rules FEN did not "
                 "disable standard draw rules.");
 
-  if (!mah_set_position_fen("7k/P7/8/8/8/8/8/K7 w - - 0 1 "))
+  // Amazon promotion is a variant-rules privilege, so load the position under
+  // the variant profile (this bare board carries no compound piece for the
+  // standard/variant inference to key off).
+  if (!mah_set_position_fen_with_rules("7k/P7/8/8/8/8/8/K7 w - - 0 1 ",
+                                       mah_rules_variant))
     return fail("ffi_api_smoke failed: promotion FEN reload returned false.");
 
   if (!mah_apply_move("a7a8m"))
@@ -164,6 +237,9 @@ int main(void) {
   memset(out_move, 0, sizeof(out_move));
   if (!mah_set_position_fen("k7/2Q5/1K6/8/8/8/8/8 b - - 0 1 "))
     return fail("ffi_api_smoke failed: stalemate FEN could not be set.");
+  if (mah_game_status() != mah_status_stalemate)
+    return fail("ffi_api_smoke failed: mah_game_status did not report stalemate "
+                "for a no-legal-moves, not-in-check position.");
   if (mah_best_move_depth(1, out_move, (int)sizeof(out_move)))
     return fail("ffi_api_smoke failed: mah_best_move_depth returned a move in "
                 "stalemate.");
@@ -174,12 +250,34 @@ int main(void) {
   memset(out_move, 0, sizeof(out_move));
   if (!mah_set_position_fen("k7/1M6/2K5/8/8/8/8/8 b - - 0 1 "))
     return fail("ffi_api_smoke failed: checkmate FEN could not be set.");
+  if (mah_game_status() != mah_status_checkmate)
+    return fail("ffi_api_smoke failed: mah_game_status did not report checkmate "
+                "for a no-legal-moves, in-check position.");
   if (mah_best_move_depth(1, out_move, (int)sizeof(out_move)))
     return fail("ffi_api_smoke failed: mah_best_move_depth returned a move in "
                 "checkmate.");
   if (mah_best_move_time(10, out_move, (int)sizeof(out_move)))
     return fail("ffi_api_smoke failed: mah_best_move_time returned a move in "
                 "checkmate.");
+
+  // Regression guard for the online checkmate-hang: the exact position reached
+  // by Be5xh2# in the failing online smoke match must classify as checkmate so
+  // the server can terminate the session instead of leaving both clients
+  // waiting for a completion that never comes.
+  if (!mah_set_position_fen(
+          "2kr3r/1qp2p2/p1p1p3/3p2B1/4P3/P1N2b2/1PP2P1b/1RQ2RK1 w - - 0 20 -"))
+    return fail("ffi_api_smoke failed: online mate FEN could not be set.");
+  if (mah_game_status() != mah_status_checkmate)
+    return fail("ffi_api_smoke failed: online mate position (Be5xh2#) was not "
+                "classified as checkmate.");
+
+  // A fresh start position must classify as ongoing.
+  if (!mah_set_position_startpos())
+    return fail("ffi_api_smoke failed: ongoing-status start position could not "
+                "be set.");
+  if (mah_game_status() != mah_status_ongoing)
+    return fail("ffi_api_smoke failed: start position was not classified as "
+                "ongoing.");
 
   memset(out_move, 0, sizeof(out_move));
   if (!mah_set_position_startpos())

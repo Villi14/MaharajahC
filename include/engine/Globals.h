@@ -132,6 +132,24 @@ typedef struct
   int castle;
   int halfmove_clock;
   int standard_rules;
+  // Per-side rules in a mixed game: side_variant[white]/side_variant[black].
+  // 1 = that side plays variant rules (compound promotion A/C/M, pawn
+  // double-step from any rank); 0 = classic (Q/R/B/N, home-rank double-step
+  // only). Carried by the optional 7th FEN field (see parse_fen). board-wide
+  // standard_rules still governs the draw clocks.
+  int side_variant[2];
+  // Squares currently holding a pawn that has never moved since game start,
+  // used ONLY as the pawn double-step eligibility check when has_pawn_state is
+  // set (see parse_fen / the optional 8th FEN field). Rank-based home-row
+  // detection can't tell a virgin custom-army pawn (started off rank 2/7)
+  // apart from one that already used its lifetime double-step and happens to
+  // still sit off rank 2/7 too — this bitboard carries the real per-piece
+  // "has moved" fact the engine has no other way to know from a bare FEN.
+  // Populated from parse_fen and maintained by make_move (source and target
+  // bits are cleared; take_back restores the previous value), so it stays
+  // exact at every search depth and across mah_apply_move.
+  u64 pawn_unmoved;
+  int has_pawn_state;
   u64 hash_key;
 } Board;
 

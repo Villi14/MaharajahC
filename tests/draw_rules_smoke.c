@@ -136,17 +136,28 @@ int main(void) {
   if (!is_insufficient_material())
     return fail("draw_rules_smoke failed: K+N vs K was not detected as insufficient material.");
 
+  /* Not FIDE-dead positions: checkmates (helpmates) still exist. */
   parse_fen("7k/8/8/8/8/8/8/5NNK w - - 0 1 ");
-  if (!is_insufficient_material())
-    return fail("draw_rules_smoke failed: K+N+N vs K was not detected as insufficient material.");
+  if (is_insufficient_material())
+    return fail("draw_rules_smoke failed: K+N+N vs K was treated as insufficient material.");
 
+  /* Bg1 is dark-squared, bg2 is light-squared: opposite colours, not dead. */
   parse_fen("7k/8/8/8/8/8/6b1/6BK w - - 0 1 ");
+  if (is_insufficient_material())
+    return fail("draw_rules_smoke failed: opposite-coloured K+B vs K+B was treated as insufficient material.");
+
+  /* Bg1 and bf2 are both dark-squared: dead position. */
+  parse_fen("7k/8/8/8/8/8/5b2/6BK w - - 0 1 ");
   if (!is_insufficient_material())
-    return fail("draw_rules_smoke failed: K+B vs K+B was not detected as insufficient material.");
+    return fail("draw_rules_smoke failed: same-coloured K+B vs K+B was not detected as insufficient material.");
 
   parse_fen("7k/8/8/8/8/8/6n1/6BK w - - 0 1 ");
-  if (!is_insufficient_material())
-    return fail("draw_rules_smoke failed: K+B vs K+N was not detected as insufficient material.");
+  if (is_insufficient_material())
+    return fail("draw_rules_smoke failed: K+B vs K+N was treated as insufficient material.");
+
+  parse_fen("7k/8/8/8/8/8/6n1/6NK w - - 0 1 ");
+  if (is_insufficient_material())
+    return fail("draw_rules_smoke failed: K+N vs K+N was treated as insufficient material.");
 
   parse_fen("7k/8/8/8/8/8/6q1/6BK w - - 0 1 ");
   if (is_insufficient_material())

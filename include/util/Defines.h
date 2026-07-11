@@ -1,7 +1,7 @@
 #ifndef DEFINES_H_
 #define DEFINES_H_
 
-#define version "0.1.0"
+#define version "0.2.1"
 
 #define u64 unsigned long long
 
@@ -64,15 +64,18 @@
 #define copy_board()                                                       \
   u64 bitboards_copy[18], occupancies_copy[3];                             \
   int sidecopy, enpassant_copy, castle_copy, halfmove_copy,                \
-      standard_rules_copy;                                                 \
+      standard_rules_copy, side_variant_copy[2];                           \
   u64 hash_key_copy = board.hash_key;                                      \
+  u64 pawn_unmoved_copy = board.pawn_unmoved;                              \
   memcpy(bitboards_copy, board.bitboards, sizeof(board.bitboards));        \
   memcpy(occupancies_copy, board.occupancies, sizeof(board.occupancies));  \
   sidecopy = board.side;                                                  \
   enpassant_copy = board.enpassant;                                        \
   castle_copy = board.castle;                                              \
   halfmove_copy = board.halfmove_clock;                                    \
-  standard_rules_copy = board.standard_rules;
+  standard_rules_copy = board.standard_rules;                              \
+  side_variant_copy[0] = board.side_variant[0];                            \
+  side_variant_copy[1] = board.side_variant[1];
 
 
 #define take_back()                                                        \
@@ -83,7 +86,10 @@
   board.castle = castle_copy;                                              \
   board.halfmove_clock = halfmove_copy;                                    \
   board.standard_rules = standard_rules_copy;                              \
-  board.hash_key = hash_key_copy;
+  board.side_variant[0] = side_variant_copy[0];                            \
+  board.side_variant[1] = side_variant_copy[1];                            \
+  board.hash_key = hash_key_copy;                                          \
+  board.pawn_unmoved = pawn_unmoved_copy;
 
 // clang-format on  
 

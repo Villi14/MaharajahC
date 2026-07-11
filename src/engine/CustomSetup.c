@@ -205,6 +205,8 @@ static void rebuild_board_state(int side_to_move) {
   board.enpassant = no_sq;
   board.halfmove_clock = 0;
   board.standard_rules = 0;
+  board.side_variant[white] = 1;
+  board.side_variant[black] = 1;
   board.hash_key = generate_hash_key();
 }
 
@@ -421,7 +423,9 @@ int custom_position_board_to_fen(char* out, int out_len) {
     return 0;
   }
 
-  snprintf(out + offset, capacity - offset, " %c - - 0 1",
+  // Generated custom positions are fully variant on both sides, so the per-side
+  // variant field (field 7) is "Vv" (see parse_fen / board_to_full_fen).
+  snprintf(out + offset, capacity - offset, " %c - - 0 1 Vv",
            board.side == white ? 'w' : 'b');
   return 1;
 }

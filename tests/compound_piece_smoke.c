@@ -78,7 +78,10 @@ int main(void) {
       return fail("compound_piece_smoke failed: archbishop position hash differs across construction paths.");
   }
 
-  parse_fen("7k/P7/8/8/8/8/8/K7 w - - 0 1 ");
+  // Compound promotions are a variant-rules privilege decided per moving side.
+  // Declare White variant via the field-7 FEN extension (this bare board
+  // carries no compound piece for the legacy inference to key off).
+  parse_fen("7k/P7/8/8/8/8/8/K7 w - - 0 1 V");
   const int promotion_move = parse_move("a7a8m");
   if (promotion_move == 0 || get_move_promoted(promotion_move) != M)
     return fail("compound_piece_smoke failed: amazon promotion move was not parsed.");

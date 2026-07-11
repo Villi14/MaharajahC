@@ -71,8 +71,14 @@ void parse_go(char* command) {
 
     time_controls.stoptime = time_controls.starttime + time_controls.uci_time + time_controls.inc;
 
-    if (time_controls.uci_time < 1500 && time_controls.inc && depth == 64)
-      time_controls.stoptime = time_controls.starttime + time_controls.inc - 50;
+    if (time_controls.uci_time < 1500 && time_controls.inc && depth == 64) {
+      // With a tiny increment the -50ms lag margin could place stoptime in
+      // the past and abort the search before depth 1 completes.
+      int increment_budget = time_controls.inc - 50;
+      if (increment_budget < 5)
+        increment_budget = 5;
+      time_controls.stoptime = time_controls.starttime + increment_budget;
+    }
   }
 
   if (depth == -1)
@@ -107,8 +113,9 @@ void uci_loop(void) {
     memset(input, 0, sizeof(input));
     fflush(stdout);
 
+    // EOF / read error: the GUI is gone, exit instead of busy-looping.
     if (!fgets(input, 2000, stdin))
-      continue;
+      break;
 
     if (input[0] == '\n')
       continue;
@@ -136,7 +143,9 @@ void uci_loop(void) {
         mb = 4;
       if (mb > max_hash)
         mb = max_hash;
-      printf("    Set hash table size to %dMB\n", mb);
+      // Keep the UCI stdout channel protocol-clean; log to stderr like the
+      // hash-table init messages.
+      fprintf(stderr, "    Set hash table size to %dMB\n", mb);
 
       init_hash_table(mb);
     } else if (!strncmp(input, "setoption name Skill Level value ", 34)) {
@@ -194,8 +203,9 @@ void read_input(void) {
     time_controls.stopped = 1;
 
     do {
-      bytes = (int)read(STDIN_FILENO, input, 0x100);
+      bytes = (int)read(STDIN_FILENO, input, sizeof(input) - 1);
     } while (bytes < 0);
+    input[bytes] = '\0';
     endc = strchr(input, '\n');
 
     if (endc)

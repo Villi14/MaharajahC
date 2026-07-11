@@ -41,6 +41,18 @@ int main(void) {
       return fail("see_smoke failed: Qxp with R on d8 should have negative SEE.");
   }
 
+  /* Stand-pat regression: Rxa5 wins the queen. After ...bxa5 White is NOT
+     forced into the losing Qxa5 Rxa5 continuation — SEE must let White stand
+     pat, so the capture stays clearly positive (+Q -R). */
+  parse_fen("r6k/8/1p6/q7/R7/Q7/8/7K w - - 0 1 ");
+  {
+    const int m = parse_move("a4a5");
+    if (m == 0)
+      return fail("see_smoke failed: could not parse a4a5.");
+    if (see_evaluate(m) <= 0)
+      return fail("see_smoke failed: RxQ with stand pat should have positive SEE.");
+  }
+
   free(transposition_table.table);
   return 0;
 }

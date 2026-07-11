@@ -14,16 +14,26 @@ enum {
   mah_rules_variant = 2,
 };
 
+// Terminal-state classification of the live position for the side to move.
+enum {
+  mah_status_ongoing = 0,   // the side to move has at least one legal move
+  mah_status_checkmate = 1, // no legal moves and the king is in check
+  mah_status_stalemate = 2, // no legal moves and the king is not in check
+};
+
 // Initialize engine tables and set position to startpos.
 // Returns 1 on success.
 FFI_PLUGIN_EXPORT int mah_init(void);
 
-// Set position from a FEN string.
+// Set position from a FEN string. A FEN without exactly one king per side is
+// rejected (returns 0) and the engine is left on a safe startpos.
 // Returns 1 on success, 0 on failure.
 FFI_PLUGIN_EXPORT int mah_set_position_fen(const char *fen);
 
 // Set position from a FEN string with an explicit rules profile.
 // rules_profile: 0 = auto, 1 = standard, 2 = variant.
+// A FEN without exactly one king per side is rejected (returns 0) and the
+// engine is left on a safe startpos.
 // Returns 1 on success, 0 on failure.
 FFI_PLUGIN_EXPORT int mah_set_position_fen_with_rules(const char *fen,
                                                       int rules_profile);
@@ -35,6 +45,25 @@ FFI_PLUGIN_EXPORT int mah_set_position_startpos(void);
 // Apply a move in coordinate notation (e.g. "e2e4", "e7e8q").
 // Returns 1 if the move was applied, 0 if invalid/illegal.
 FFI_PLUGIN_EXPORT int mah_apply_move(const char *move);
+
+// Serialize the current position to a FEN string with the six standard
+// fields, field 7 (per-side variant rights, always emitted) and field 8
+// (unmoved-pawn squares, emitted only when the position was loaded with
+// per-pawn state), so a get_fen -> set_fen round-trip is lossless.
+// The engine does not track the fullmove number, so it is supplied by the
+// caller via fullmove_number (values below 1 are clamped to 1) and written as
+// the sixth FEN field. The other fields are read from live engine state.
+// out_len should be at least 128 to hold any legal position (field 8 can add
+// up to 16 square names). Returns 1 on success, 0 on failure (bad args /
+// buffer too small).
+FFI_PLUGIN_EXPORT int mah_get_fen(char *out_fen, int out_len,
+                                  int fullmove_number);
+
+// Classify the live position for the side to move as a terminal state.
+// Returns one of mah_status_ongoing / mah_status_checkmate /
+// mah_status_stalemate. A move must have been applied (or a FEN loaded) first;
+// the classification is for whichever side is to move in the current position.
+FFI_PLUGIN_EXPORT int mah_game_status(void);
 
 // Find best move by depth. Writes move string to out_move.
 // out_len must be at least 5 (or 6 for promotions). Returns 1 if a move is
@@ -56,7 +85,7 @@ FFI_PLUGIN_EXPORT int mah_generate_custom_position_fen(int side_to_move,
                                                        char *out_fen,
                                                        int out_len);
 
-// Resize hash table (MB). Returns 1 on success.
+// Resize hash table (MB, clamped to [4, 1024]). Returns 1 on success.
 FFI_PLUGIN_EXPORT int mah_set_hash_mb(int mb);
 
 // Set engine skill level in the range [1..10]. Returns 1 on success.
