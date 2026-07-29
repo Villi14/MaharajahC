@@ -34,6 +34,39 @@ cmake --build build
 ./build/Maharajah
 ```
 
+## Check a position yourself
+
+Wondering whether a move the app played was really the engine's idea? Ask it
+directly. `--level` is the difficulty as shown in the app (1-5), and it sets
+both the skill level and the thinking time exactly the way the app does:
+
+```bash
+python3 tools/ask_engine.py "2b3k1/2p1r1p1/2p2p1p/p1Pp4/8/1PP4P/P1N2PP1/2K1R3 b - - 0 26" --level 5
+```
+
+```
+Position : 2b3k1/2p1r1p1/2p2p1p/p1Pp4/8/1PP4P/P1N2PP1/2K1R3 b - - 0 26
+To move  : Black
+Strength : level 5  ->  skill 10, 5000 ms of thinking time
+
+  depth   1        +0.22   e7e1
+  ...
+  depth  12        -0.23   e7e1   c2e1 c8d7 e1f3 g8f7 f3d4 h6h5
+
+Best move: e7e1   (e7 - e1)
+```
+
+Every line is one completed search iteration, so you can watch the engine
+change or keep its mind as it looks deeper. `--startpos` uses the normal
+starting position, `--moves "e2e4 e7e5"` plays moves out from the FEN, and
+`--skill` / `--movetime` set strength and time directly instead of via
+`--level`. Run with `--help` for the rest.
+
+Variant rules come from the FEN itself: an optional 7th field carries per-side
+variant rights (`V` for White, `v` for Black, `-` for neither), so
+`... 0 1 Vv` asks the engine to think under variant rules for both sides.
+Without that field the rules are derived from the material on the board.
+
 ## Tests
 
 ```bash
